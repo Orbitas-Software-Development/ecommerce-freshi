@@ -1,0 +1,74 @@
+﻿using ecommerce_freshydeli.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace ecommerce_freshydeli.Controllers
+{
+    [ApiController]
+    [Route("api/priceList")]
+    public class PriceListController:ControllerBase
+    {
+        private readonly ApplicationDbContext ctx;
+
+        public PriceListController(ApplicationDbContext ctx)
+        {
+            this.ctx = ctx;
+        }
+
+        [HttpGet("/getListPriceByCompanyId/{companyId}")]
+        public async Task<ActionResult> getListPriceByCompanyId(int companyId) {
+
+            try { 
+            List<PriceList> priceList =await ctx.PriceList.Where(pl=>pl.CompanyId==companyId).ToListAsync();
+
+            return Ok(priceList);
+            }catch (Exception ex) {
+            
+                return BadRequest(ex.Message);  
+            }
+
+
+
+        }
+
+        [HttpPut("updatePriceList")]
+        public async Task<ActionResult> UpdatePriceList(PriceList priceList)
+        {
+
+            try
+            {
+                ctx.Update(priceList);
+                await ctx.SaveChangesAsync();
+                return Ok(priceList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+
+
+        }
+        [HttpPost("createPriceList")]
+        public async Task<ActionResult> CreatePriceList(PriceList priceList)
+        {
+
+            try
+            {
+                ctx.Add(priceList);
+                await ctx.SaveChangesAsync();
+                return Ok(priceList);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+
+
+        }
+    }
+}

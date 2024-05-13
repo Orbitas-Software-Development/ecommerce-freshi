@@ -1,0 +1,6 @@
+@ecommerce_freshydeli_HostAddress = http://localhost:5022
+
+GET {{ecommerce_freshydeli_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

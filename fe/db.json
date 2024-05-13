@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "precio": 10,
+      "unidadesPorCaja": 20,
+      "img": "/img-pizza01.png",
+      "description": "Pizza Artesanal"
+    },
+    {
+      "id": 2,
+      "precio": 20,
+      "unidadesPorCaja": 23,
+      "img": "/img-pizza02.png",
+      "description": "Pizza Artesanal"
+    },
+    {
+      "id": 3,
+      "precio": 20,
+      "unidadesPorCaja": 23,
+      "img": "/img-pizza03.png",
+      "description": "Pizza Artesanal"
+    },
+    {
+      "id": 4,
+      "precio": 20,
+      "unidadesPorCaja": 23,
+      "img": "/img-pizza04.png",
+      "description": "Pizza Artesanal"
+    },
+    {
+      "id": 5,
+      "precio": 20,
+      "unidadesPorCaja": 23,
+      "img": "/img-pizza05.png",
+      "description": "Pizza Artesanal"
+    },
+    {
+      "id": 6,
+      "precio": 20,
+      "unidadesPorCaja": 23,
+      "img": "/img-pizza07.png",
+      "description": "Pizza Artesanal"
+    }
+  ]
+}
