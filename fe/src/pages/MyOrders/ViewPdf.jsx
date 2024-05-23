@@ -16,7 +16,7 @@ export default function ViewPdf() {
   useEffect(() => {
     axios
       .get(
-        `https://localhost:7065/api/companyInformation/getInfo/${
+        `${process.env.REACT_APP_PRO}/api/companyInformation/getInfo/${
           getUserInfo().branch.client.companyId
         }`
       )

@@ -26,13 +26,14 @@ import AddCategory from "./pages/Category/AddCategory/AddCategory";
 import Iva from "./pages/Iva/Iva";
 import AddIva from "./pages/Iva/AddIva/AddIva";
 import CompanyOrders from "./pages/CompanyOrders/CompanyOrders";
+import Emails from "./pages/Emails/Emails";
+import EditEmail from "./pages/Emails/EditEmail.jsx/EditEmail";
 function App() {
   let location = useLocation().pathname;
 
   return (
     <>
       {location === "/login" ? null : <Navbar />}
-
       <Routes>
         <Route path="/Home" element={<Home />}></Route>
         <Route path="/admindashboard" element={<AdminDashboard />}></Route>
@@ -60,7 +61,9 @@ function App() {
         <Route path="/categoryForm" element={<AddCategory />}></Route>
         <Route path="/iva" element={<Iva />}></Route>
         <Route path="/addIva" element={<AddIva />}></Route>
-        <Route path="/CompanyOrders" element={<CompanyOrders />}></Route>
+        <Route path="/CompanyOrders" element={<CompanyOrders />}></Route>{" "}
+        <Route path="/emails" element={<Emails />}></Route>{" "}
+        <Route path="/editEmail" element={<EditEmail />}></Route>
         <Route path="*" element={<Navigate to="/login" />}></Route>
       </Routes>
       <Footer />

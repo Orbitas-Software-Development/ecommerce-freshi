@@ -20,7 +20,7 @@ export default function CompanyInformation() {
     e.preventDefault();
     setAction(true);
     axios
-      .post(`https://localhost:7065/api/companyInformation/saveInfo`, {
+      .post(`${process.env.REACT_APP_PRO}/api/companyInformation/saveInfo`, {
         ...information,
         ["companyId"]: user.companyId,
       })
@@ -39,7 +39,7 @@ export default function CompanyInformation() {
     setAction(true);
     axios
       .get(
-        `https://localhost:7065/api/companyInformation/getInfo/${user.companyId}`
+        `${process.env.REACT_APP_PRO}/api/companyInformation/getInfo/${user.companyId}`
       )
       .then((res) => {
         res.data.information && setInformation(res.data.information);
@@ -83,7 +83,7 @@ export default function CompanyInformation() {
           )}
         </MicroModal>
         <form
-          class="w-96 mx-auto mt-4 border rounded-md p-8"
+          class="w-3/6 mx-auto mt-4 border rounded-md p-8 mb-5"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">

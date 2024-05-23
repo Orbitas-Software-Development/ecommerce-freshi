@@ -28,6 +28,8 @@ export default function ProductCard({ product }) {
       addedProducts(product);
     }
   };
+  useEffect(() => {}, [productSum]);
+
   return (
     <div className=" rounded-md w-[302px] m-4 bg-gray-50 border pb-2">
       <div className="w-[300px] rounded-md">

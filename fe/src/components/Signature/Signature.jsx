@@ -4,14 +4,17 @@ import MicroModal from "react-micro-modal";
 import orderDetailStore from "../../stores/orderDetailStore";
 import axios from "axios";
 import { getUserInfo } from "../../utils/localStorage/functions";
+import { Link, useNavigate } from "react-router-dom";
 export default function Signature({ action, loading, processed }) {
   //localStorage
   const user = getUserInfo();
   //local
+  //navigate
+  const navigate = new useNavigate();
   const [message, setMessage] = useState(false);
   const [latePayment, setLatePayment] = useState();
   const [confirmed, setconfirmed] = useState(false);
-  confirmed;
+  const [latePaymentMessage, setLatePaymentMessage] = useState();
   //global
   const setSignature = orderDetailStore((state) => state.setSignature);
   const signature = orderDetailStore((state) => state.signature);
@@ -19,11 +22,19 @@ export default function Signature({ action, loading, processed }) {
   useEffect(() => {
     axios
       .get(
-        `https://localhost:7065/api/client/getLatePaymentByCompanyId/${user.branch.clientId}`
+        `${process.env.REACT_APP_PRO}/api/client/getLatePaymentByCompanyId/${user.branch.clientId}`
       )
       .then((res) => {
         setLatePayment(res.data);
+        axios
+          .get(
+            `${process.env.REACT_APP_PRO}/api/companyInformation/getInfo/${user.branch.clientId}`
+          )
+          .then((res) => {
+            setLatePaymentMessage(res.data.information);
+          });
       });
+    setSignature("");
   }, []);
 
   return (
@@ -33,7 +44,7 @@ export default function Signature({ action, loading, processed }) {
         trigger={(open) => (
           <div onClick={open}>
             <button className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg">
-              Confirmar
+              Procesar
             </button>
           </div>
         )}
@@ -42,16 +53,53 @@ export default function Signature({ action, loading, processed }) {
           <>
             {latePayment ? (
               <div>
-                <p className="text-xl">
-                  EL cliente
-                  <b> {user.branch.client.name} se encuentra: </b>{" "}
+                <p className="text-xl text-center">
+                  {latePaymentMessage.latePaymentMessage}
                 </p>
-                <p className="text-xl w-full text-center font-bold text-red-500">
-                  MOROSO
-                </p>
+
+                <div className="flex justify-center">
+                  <button
+                    className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md my-4 text-lg"
+                    onClick={() => {
+                      navigate("/home");
+                      window.location.reload();
+                    }}
+                  >
+                    <i class="fa-solid fa-arrow-left text-lg"></i> Inicio
+                  </button>
+                </div>
               </div>
             ) : !loading ? (
               confirmed ? (
+                <div className="flex justify-center flex-col">
+                  <p className="text-xl text-center">
+                    ¿Desea <b>confirmar</b> su pedido?
+                  </p>
+                  <div className="flex justify-center">
+                    <button
+                      className="bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg"
+                      onClick={(e) => {
+                        close;
+                        setconfirmed(false);
+                      }}
+                    >
+                      Cancelar
+                    </button>
+
+                    <button
+                      className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg"
+                      onClick={(e) => {
+                        if (signature) {
+                          return action();
+                        }
+                        setMessage(true);
+                      }}
+                    >
+                      Confirmar
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <>
                   <div>
                     <div>
@@ -112,38 +160,15 @@ export default function Signature({ action, loading, processed }) {
                         <button
                           className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg"
                           onClick={(e) => {
-                            signature ? action() : setMessage(true);
+                            setconfirmed(true);
                           }}
                         >
-                          Procesar
+                          Confirmar
                         </button>
                       </div>
                     </div>
                   </div>
                 </>
-              ) : (
-                <div className="flex justify-center flex-col">
-                  <p className="text-xl font-bold">
-                    Realizar un pedido es una acción irreversible
-                  </p>
-                  <div className="flex justify-center">
-                    {/*</div>{<button
-                      className="bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg"
-                      onClick={close}
-                    >
-                      Cancelar
-                    </button>
-*/}
-                    <button
-                      className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg"
-                      onClick={(e) => {
-                        setconfirmed(true);
-                      }}
-                    >
-                      Continuar
-                    </button>
-                  </div>
-                </div>
               )
             ) : (
               <div>

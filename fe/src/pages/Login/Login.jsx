@@ -5,6 +5,7 @@ import "./bg.css";
 import { motion } from "framer-motion";
 import Loading from "../../components/Loading/Loading";
 import axios from "axios";
+import * as dotenv from "dotenv";
 const Login = () => {
   //local
   const [userCredentials, setUserCredentials] = useState({});
@@ -20,13 +21,14 @@ const Login = () => {
         ? navigate("/home")
         : navigate("/updatepassword")
       : navigate("/admindashboard");
+    window.location.reload();
   };
   let navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     axios
-      .post("https://localhost:7065/login", userCredentials)
+      .post(`${process.env.REACT_APP_PRO}/login`, userCredentials)
       .then((res) => {
         setLoading(false);
         saveUserInfo(res.data);

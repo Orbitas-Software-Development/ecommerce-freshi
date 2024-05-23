@@ -29,7 +29,7 @@ export default function AddPriceList() {
     priceList?.priceListId
       ? axios
           .put(
-            `https://localhost:7065/api/priceList/updatePriceList`,
+            `${process.env.REACT_APP_PRO}/api/priceList/updatePriceList`,
             priceList
           )
           .then((res) => {
@@ -38,7 +38,7 @@ export default function AddPriceList() {
           })
       : axios
           .post(
-            `https://localhost:7065/api/priceList/createPriceList`,
+            `${process.env.REACT_APP_PRO}/api/priceList/createPriceList`,
             priceList
           )
           .then((res) => {

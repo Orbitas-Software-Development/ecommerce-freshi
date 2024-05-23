@@ -22,7 +22,7 @@ export default function Products() {
     if (e.target.value) {
       return axios
         .get(
-          `https://localhost:7065/api/product/getProductsByCompanyId/${user.companyId}`
+          `${process.env.REACT_APP_PRO}/api/product/getProductsByCompanyId/${user.companyId}`
         )
         .then((res) => {
           setProducts(res.data);
@@ -30,7 +30,7 @@ export default function Products() {
     }
     axios
       .get(
-        `https://localhost:7065/api/product/getProductsByListId/${e.target.value}`
+        `${process.env.REACT_APP_PRO}/api/product/getProductsByListId/${e.target.value}`
       )
       .then((res) => {
         setProducts(res.data);
@@ -40,13 +40,13 @@ export default function Products() {
   useEffect(() => {
     axios
       .get(
-        `https://localhost:7065/api/product/getProductsByCompanyId/${user.companyId}`
+        `${process.env.REACT_APP_PRO}/api/product/getProductsByCompanyId/${user.companyId}`
       )
       .then((res) => {
         setProducts(res.data);
         axios
           .get(
-            `https://localhost:7065/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_PRO}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
             setPriceList(res.data);
@@ -55,7 +55,7 @@ export default function Products() {
   }, []);
   const deleteProductId = (id) => {
     axios
-      .delete(`https://localhost:7065/api/product/deleteProductBy/${id}`)
+      .delete(`${process.env.REACT_APP_PRO}/api/product/deleteProductBy/${id}`)
       .then((res) => {
         setProducts(res.data);
       });
@@ -121,7 +121,7 @@ export default function Products() {
   ];
   return (
     <Layout>
-      <div className="w-full flex flex-col justify-start items-start">
+      <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"
           class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -166,7 +166,9 @@ export default function Products() {
                 ))}
               </select>
             </div>
-            <Table columns={columns} data={products} />
+            <div className="border rounded-md w-full">
+              <Table columns={columns} data={products} />
+            </div>
           </>
         ) : (
           <EmptyResponse

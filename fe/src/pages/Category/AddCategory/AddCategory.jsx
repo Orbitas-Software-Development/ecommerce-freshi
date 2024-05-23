@@ -29,13 +29,19 @@ export default function AddCategory() {
 
     category?.id
       ? axios
-          .put(`https://localhost:7065/api/category/updateCategory`, category)
+          .put(
+            `${process.env.REACT_APP_PRO}/api/category/updateCategory`,
+            category
+          )
           .then((res) => {
             navigate("/category");
             setAction(false);
           })
       : axios
-          .post(`https://localhost:7065/api/category/createCategory`, category)
+          .post(
+            `${process.env.REACT_APP_PRO}/api/category/createCategory`,
+            category
+          )
           .then((res) => {
             navigate("/category");
             setAction(false);

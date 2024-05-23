@@ -22,7 +22,7 @@ export default function ClientDashboard() {
 
   useEffect(() => {
     axios
-      .get(`https://localhost:7065/getClientByCompanyId/${user.id}`)
+      .get(`${process.env.REACT_APP_PRO}/getClientByCompanyId/${user.id}`)
       .then((res) => {
         setGetLoading(false);
         setClients(res.data);
@@ -36,7 +36,7 @@ export default function ClientDashboard() {
   const deleteClient = (clientId) => {
     setDeleteLoading(true);
     axios
-      .delete(`https://localhost:7065/deleteClientById/${clientId}`)
+      .delete(`${process.env.REACT_APP_PRO}/deleteClientById/${clientId}`)
       .then((res) => {
         setClients(res.data);
         toast("Eliminado correctamente");
@@ -51,7 +51,7 @@ export default function ClientDashboard() {
   const updateClient = () => {
     setUpdateLoading(true);
     axios
-      .put(`https://localhost:7065/updateClients`, clients)
+      .put(`${process.env.REACT_APP_PRO}/updateClients`, clients)
       .then((res) => {
         setClients(res.data);
         toast(
@@ -119,7 +119,7 @@ export default function ClientDashboard() {
   return (
     <Layout>
       {
-        <div className="w-full flex flex-col justify-start items-start">
+        <div className="w-full flex flex-col justify-start items-start p-5">
           <button
             type="submit"
             class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -157,9 +157,9 @@ export default function ClientDashboard() {
                       Agregar Cliente <i class="fa-solid fa-plus"></i>
                     </button>
                   </div>
-
-                  <Table columns={columns} data={clients} />
-
+                  <div className="border rounded-md w-full">
+                    <Table columns={columns} data={clients} />
+                  </div>
                   <div className="text-center w-full">
                     <button
                       className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"

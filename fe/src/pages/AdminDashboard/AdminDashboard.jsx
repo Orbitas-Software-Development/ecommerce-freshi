@@ -49,10 +49,15 @@ export default function AdminDashboard() {
             icono={"fa-solid fa-users fa-2xl"}
             route={"CompanyInformation"}
           />
-          <SimpleCard
+          {/*   <SimpleCard
             titulo={"Pedidos"}
             icono={"fa-solid fa-users fa-2xl"}
             route={"CompanyOrders"}
+  />{" "}*/}
+          <SimpleCard
+            titulo={"Correos"}
+            icono={"fa-solid fa-envelope fa-2xl"}
+            route={"emails"}
           />
         </div>
       </div>

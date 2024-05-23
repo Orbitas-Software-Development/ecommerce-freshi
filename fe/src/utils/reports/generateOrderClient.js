@@ -2,7 +2,11 @@ import { jsPDF } from "jspdf";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import { font } from "../../utils/reports/FontBase64";
 import { freshiLogo } from "../../utils/logosBase64/logos";
-import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
+import {
+  getCurrencySimbol,
+  numberWithCommas,
+} from "../../utils/Currency/currencyFunctions";
+
 export const generatePDF = (orders, companyInfo) => {
   var base64Img = freshiLogo;
   var porcentageConverter = (porcentage) => {
@@ -14,21 +18,15 @@ export const generatePDF = (orders, companyInfo) => {
   let array = orders.ordersDetails.map((value, index) => {
     return [
       index + 1,
-      `${index + 1}`,
+      value.product["id"],
       value.product.description,
       value["boxes"],
       value["units"],
       getCurrencySimbol(orders.ordersDetails[0].product.currencyId) +
-        value["price"].toFixed(2),
+        numberWithCommas(value["unitPrice"].toFixed(2)),
       value["iva"] + " %",
       getCurrencySimbol(orders.ordersDetails[0].product.currencyId) +
-        (
-          value["boxes"] * value["units"] * value["price"] +
-          value["boxes"] *
-            value["units"] *
-            value["price"] *
-            porcentageConverter(value["iva"])
-        ).toFixed(2),
+        numberWithCommas(value["totalIva"].toFixed(2)),
     ];
   });
   jsPDF.autoTableSetDefaults({
@@ -56,15 +54,12 @@ export const generatePDF = (orders, companyInfo) => {
       orders.ordersDetails.map((product) => {
         totalPrice =
           totalPrice +
-          product.price * product.units * product.boxes +
-          product.boxes *
-            product.units *
-            product.price *
-            porcentageConverter(product.iva);
+          product.price * product.units +
+          product.units * product.price * porcentageConverter(product.iva);
       });
       return (
         getCurrencySimbol(orders.ordersDetails[0].product.currencyId) +
-        totalPrice.toFixed(2)
+        numberWithCommas(orders.totalIVA)
       );
     } catch (e) {
       console.log(e);
@@ -74,8 +69,12 @@ export const generatePDF = (orders, companyInfo) => {
   //doc.setFontSize(18);
   // doc.text("Orden de compra", 80, 22);
   array.push(["", "", "", "", "", "", "TOTAL:", totalPrice()]);
+  //bold
   doc.setFontSize(12);
-  doc.text(`Órden de Compra: ` + orders.id, 14, 36);
+  doc.text(`Órden de Compra: `, 14, 37);
+  //result
+  doc.text(`Órden de Compra: ` + orders.id, 14, 37);
+  //bold
   doc.setFontSize(12);
   doc.text(
     "Fecha: " +
@@ -85,36 +84,63 @@ export const generatePDF = (orders, companyInfo) => {
     14,
     42
   );
+  //result
+  doc.text(
+    "Fecha: ",
+
+    14,
+    42
+  );
   doc.setFontSize(12);
+  doc.text("Proveedor: ", 14, 47);
   doc.text("Proveedor: " + companyInfo?.provider, 14, 47);
   doc.setFontSize(12);
+  doc.text("Cédula Jurídica: ", 14, 52);
   doc.text("Cédula Jurídica: " + companyInfo?.identifier, 14, 52);
   doc.setFontSize(12);
+  doc.text("Teléfono: ", 14, 57);
   doc.text("Teléfono: " + companyInfo?.phone, 14, 57);
   doc.setFontSize(12);
+  doc.text("Correo Electrónico: ", 14, 62);
   doc.text("Correo Electrónico: " + companyInfo?.email, 14, 62);
   doc.setFontSize(12);
+  doc.text("Dirección: ", 14, 67);
   doc.text("Dirección: " + companyInfo?.direction, 14, 67);
   doc.setFontSize(12);
-  doc.text("Cliente Comprador: " + getUserInfo().branch?.client.name, 14, 72);
+
+  doc.text("Cliente Comprador: ", 14, 74);
+  doc.text("Cliente Comprador: " + getUserInfo().branch?.client.name, 14, 74);
   doc.setFontSize(12);
   doc.text(
     getUserInfo().branch.client.personId === 1
       ? "Cédula: "
       : "Cédula Jurídica: " + getUserInfo().branch?.client.identifier,
     14,
-    77
+    79
+  );
+  doc.text(
+    getUserInfo().branch.client.personId === 1
+      ? "Cédula: "
+      : "Cédula Jurídica: ",
+    14,
+    79
   );
   doc.setFontSize(12);
-  doc.text("Punto de Venta: " + getUserInfo().branch?.name, 14, 82);
+  doc.text("Punto de Venta: ", 14, 84);
+  doc.text("Punto de Venta: " + getUserInfo().branch?.name, 14, 84);
   doc.setFontSize(12);
-  doc.text("Correo: " + getUserInfo().email, 14, 87);
+  doc.text("Correo: ", 14, 89);
+  doc.text("Correo: " + getUserInfo().email, 14, 89);
   doc.setFontSize(12);
-  doc.text("Dirección: " + getUserInfo().branch?.direction, 14, 92);
+  doc.text("Dirección: ", 14, 94);
+  doc.text("Dirección: " + getUserInfo().branch?.direction, 14, 94);
   doc.setFontSize(12);
-  doc.text("Teléfono: " + getUserInfo().branch?.phoneNumber, 14, 97);
-  doc.text("Solicitudo por: " + getUserInfo().fullName, 120, 40);
-  doc.text("Firma: ", 120, 45);
+  doc.text("Teléfono: ", 14, 99);
+  doc.text("Teléfono: " + getUserInfo().branch?.phoneNumber, 14, 99);
+  doc.text("Solicitudo por: ", 200, 40);
+  doc.text("Solicitudo por: " + getUserInfo().fullName, 200, 40);
+  doc.text("Firma: ", 200, 45);
+  doc.text("Firma: ", 200, 45);
 
   doc.autoTable(columns, array, {
     startY: 105,
@@ -166,9 +192,9 @@ export const generatePDF = (orders, companyInfo) => {
       doc.setTextColor(40);
       if (base64Img) {
         doc.addImage(base64Img, "JPEG", data.settings.margin.left, 15, 20, 10);
-        doc.addImage(orders.signatureBase64, "JPEG", 125, 52, 65, 50);
+        doc.addImage(orders.signatureBase64, "JPEG", 200, 52, 65, 50);
       }
-      doc.text("Órden de Compra", data.settings.margin.left + 105, 32);
+      doc.text("ÓRDEN DE COMPRA", data.settings.margin.left + 105, 32);
     },
     didDrawPage: function (data) {
       // Footer
@@ -196,7 +222,7 @@ export const generatePDF = (orders, companyInfo) => {
     doc.putTotalPages(totalPagesExp);
   }
   let pdf = {
-    format: doc.output("datauri").split(",", 1),
+    format: doc.output("datauri").split(",", 1)[0],
     base64: doc.output("datauri").split(",", 2)[1],
   };
 

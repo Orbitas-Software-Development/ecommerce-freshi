@@ -8,7 +8,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { generatePDF } from "../../utils/reports/generateOrder";
-import MicroModal from "react-micro-modal";
+import SimpleModal from "../../components/Modals/SimpleModal";
 import { orderDetailsDto } from "../../utils/DTOs/orderDetailsDto";
 import orderDetailStore from "../../stores/orderDetailStore";
 import Signature from "../../components/Signature/Signature";
@@ -25,56 +25,94 @@ export default function Order() {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+  const [modalData, setModalData] = useState(false);
   //globalset
   const signature = orderDetailStore((state) => state.signature);
   const productsList = productStore((state) => state.products);
   const cancelProducts = productStore((state) => state.cancelProducts);
   const navigate = useNavigate();
-  const notify = () => toast("Orden procesada correctamente");
 
   const sent = async () => {
     setLoading(true);
-    axios
-      .post("https://localhost:7065/createOrder", {
-        UserName: getUserInfo().userName,
-        branchId: userInfo.branchId,
-        pdfReport: orderBase64PDF.base64,
-        userId: userInfo.id,
-        orderDetails: orderDetailsDto(productsList),
-        SignatureBase64: signature,
-      })
-      .then((res) => {
-        // notify();
-        cancelProducts();
-        setProcessed(true);
-        sleep(1300).then(() => {
-          navigate("/myorders");
-        });
+
+    const getTotal = () => {
+      let totalIva = 0;
+      orderDetailsDto(productsList).map((value) => {
+        totalIva += value.total;
       });
+      return totalIva;
+    };
+    const getTotalIva = () => {
+      let totalIva = 0;
+      orderDetailsDto(productsList).map((value) => {
+        totalIva += value.totalIva;
+      });
+      return totalIva;
+    };
+    setTimeout(function () {
+      axios
+        .post(`${process.env.REACT_APP_PRO}/createOrder`, {
+          UserName: getUserInfo().userName,
+          branchId: userInfo.branchId,
+          pdfReport: generatePDF(productsList, info.information, signature)
+            .base64,
+          userId: userInfo.id,
+          orderDetails: orderDetailsDto(productsList),
+          SignatureBase64: signature,
+          total: getTotal(),
+          totalIva: getTotalIva(),
+        })
+        .then((res) => {
+          axios
+            .post(`${process.env.REACT_APP_PRO}/sendOrderReport`, {
+              OrderId: res.data.id,
+              ReportBase64: generatePDF(
+                productsList,
+                info.information,
+                signature,
+                res.data.id
+              ).base64,
+            })
+            .then((res) => {
+              cancelProducts();
+              setProcessed(true);
+              sleep(1300).then(() => {
+                navigate("/myorders");
+              });
+            });
+        });
+    }, 3000);
   };
   useEffect(() => {
+    productsList.length <= 0 && navigate("/home");
+    setModalData({
+      loading: true,
+      text: <>Generando Reporte</>,
+      icon: "loading",
+    });
     axios
       .get(
-        `https://localhost:7065/api/companyInformation/getInfo/${user.branch.client.companyId}`
+        `${process.env.REACT_APP_PRO}/api/companyInformation/getInfo/${user.branch.client.companyId}`
       )
       .then((res) => {
+        setModalData({ loading: false });
         setInfo(res.data);
       })
       .catch((e) => {
+        setModalData({ loading: false });
         console.log(e);
       });
-
-    // orderDetailsDTO();
   }, []);
+  //Se genera el reporte nuevamente
   useEffect(() => {
     setUserInfo(getUserInfo());
-    setOrderBase64PDF(generatePDF(productsList, info.information));
+    setOrderBase64PDF(generatePDF(productsList, info.information, signature));
   }, [info]);
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <ToastContainer position="bottom-center" />
-
       <div className="w-[100vw] ">
         <Link to="/cart">
           <button
@@ -104,18 +142,8 @@ export default function Order() {
                 action={sent}
                 loading={loading}
                 processed={processed}
-                confirmed={confirmed}
               />
             }
-
-            {/*
-              <button
-                className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md my-4 mx-6 text-lg"
-                onClick={(e) => sent()}
-              >
-                "Procesar pedido"
-              </button>
-            */}
           </div>
         </div>
       </div>

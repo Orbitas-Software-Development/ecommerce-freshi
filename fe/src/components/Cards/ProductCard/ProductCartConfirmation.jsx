@@ -7,31 +7,32 @@ export default function ProductCartConfirmation({ product }) {
   //global
   const deleteProduct = productStore((state) => state.deleteProduct);
   const addedProducts = productStore((state) => state.addedProducts);
-  const productsList = productStore((state) => state.products);
+  const setProducts = productStore((state) => state.setProducts);
+  const productListGlobalState = productStore((state) => state.products);
   //local
   const [productSum, setProductSum] = useState(product.quantity);
 
   const addProduct = (product) => {
-    var productExisted = false;
-    if (productsList.length === 0) {
+    //var productExisted = false;
+    /*if (productListGlobalState.length === 0) {
       return addedProducts(product);
-    }
-    productsList.map((productListed) => {
-      if (productListed.id === product.id) {
-        deleteProduct(productListed.id);
-        addedProducts(product);
-        productExisted = true;
+    }*/
+    let productList = productListGlobalState.map((productListed) => {
+      if (product.id === productListed.id) {
+        productListed.quantity = product.quantity;
+        // productExisted = true;
       }
+      return productListed;
     });
-
-    if (!productExisted) {
+    setProducts(productList);
+    /*if (!productExisted) {
       addedProducts(product);
-    }
+    }*/
   };
   const getTotalPrizeNumber = () => {
     let totalPrize = 0;
-    console.log(products);
-    products.map((product) => {
+
+    productListGlobalState.map((product) => {
       totalPrize = product.price * product.unitsPerBox * product.quantity;
     });
     return totalPrize;
@@ -47,7 +48,7 @@ export default function ProductCartConfirmation({ product }) {
       </div>
       <div className="p-2">
         <div className="flex justify-center text-xl">
-          Unidades por caja: {product.unitsPerBox}
+          Unidades por caja: <b> {product.unitsPerBox}</b>
         </div>
         <div className="flex justify-center text-xl">
           <p htmlFor="productPrice" className="">

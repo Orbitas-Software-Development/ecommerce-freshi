@@ -8,11 +8,13 @@ import productStore from "../../stores/productStore";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
 import { NumericFormat } from "react-number-format";
+import SimpleModal from "../../components/Modals/SimpleModal";
 export default function Home() {
   //local
   const [products, setProducts] = useState([]);
   const userInfo = getUserInfo();
   const [getLoading, setGetLoading] = useState(true);
+  const [modalData, setModalData] = useState(false);
   //global
   const productsList = productStore((state) => state.products);
   const cancelProducts = productStore((state) => state.cancelProducts);
@@ -57,21 +59,28 @@ export default function Home() {
   };
 
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
-        `https://localhost:7065/api/BranchPriceList/api/BranchPriceList/${userInfo.branchId}`
+        `${process.env.REACT_APP_PRO}/api/BranchPriceList/api/BranchPriceList/${userInfo.branchId}`
       )
       .then((res) => {
         productDTOlist(res.data);
-        setGetLoading(false);
+
+        setModalData({ loading: false });
       })
       .catch((e) => {
-        setGetLoading(false);
+        setModalData({ loading: false });
       });
   }, []);
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-[85vw] ">
         <h2 className="text-center text-4xl mt-6">{userInfo?.branch?.name}</h2>
         <div className="flex justify-center items-center py-11 ">
@@ -81,40 +90,27 @@ export default function Home() {
             placeholder="buscar producto"
           />
         </div>
-
         <p className="ml-5  text-xl">
           Productos:
           <span className="font-medium text-xl"> {products.length}</span>
         </p>
-        {getLoading ? (
-          <>
-            <div className="text-center w-full p-4  font-bold  text-xl">
-              <div className="flex items-center justify-center">
-                <div className=" flex  items-center justify-center">
-                  <Loading />
-                </div>
+        <>
+          <div className="flex flex-wrap  ">
+            {products.length > 0 ? (
+              <>
+                {products.map((product) => (
+                  <ProductCard product={product} />
+                ))}
+              </>
+            ) : (
+              <div className="text-center w-full">
+                <p className="text-xl font-semibold">
+                  No hay productos asignados a está sucursal
+                </p>
               </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex flex-wrap  ">
-              {products.length > 0 ? (
-                <>
-                  {products.map((product) => (
-                    <ProductCard product={product} />
-                  ))}
-                </>
-              ) : (
-                <div className="text-center w-full">
-                  <p className="text-xl font-semibold">
-                    No hay productos asignados a está sucursal
-                  </p>
-                </div>
-              )}
-            </div>
-          </>
-        )}
+            )}
+          </div>
+        </>
       </div>
       <div className="w-[15vw] border flex flex-col">
         <>
@@ -152,7 +148,7 @@ export default function Home() {
                     value={getTotalPrizeNumber()}
                     thousandSeparator=","
                     decimalScale={2}
-                    prefix={getCurrencySimbol(products[0].currencyId)}
+                    prefix={getCurrencySimbol(products[0]?.currencyId)}
                     id="total"
                     disabled
                   />

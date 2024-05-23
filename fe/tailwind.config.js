@@ -15,5 +15,8 @@ module.exports = {
       pc: "1024px",
       movil: "0px",
     },
+    fontFamily: {
+      sans: ["Roboto", "sans-serif"],
+    },
   },
 };

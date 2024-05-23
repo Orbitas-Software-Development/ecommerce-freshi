@@ -3,12 +3,13 @@ import Layout from "../../components/Layout/Layout";
 import productStore from "../../stores/productStore";
 import ProductCartConfirmation from "../../components/Cards/ProductCard/ProductCartConfirmation";
 import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
+
 export default function Cart() {
   //Route
   //Router
-  let navigate = useNavigate();
+  const navigate = new useNavigate();
   const products = productStore((state) => state.products);
 
   const cancelProducts = productStore((state) => state.cancelProducts);
@@ -32,7 +33,7 @@ export default function Cart() {
     let totalPrize = 0;
     console.log(products);
     products.map((product) => {
-      totalPrize = product.price * product.unitsPerBox * product.quantity;
+      totalPrize += product.price * product.unitsPerBox * product.quantity;
     });
     return totalPrize;
   };
@@ -42,16 +43,15 @@ export default function Cart() {
         <h3 className="text-center mt-3 text-3xl">
           Carrito de compras <i class="fa-solid fa-cart-shopping"></i>
         </h3>
-        <button
-          className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
-          type="button"
-          onClick={() => {
-            navigate("/home");
-            window.location.reload();
-          }}
-        >
-          <i class="fa-solid fa-arrow-left"></i> Inicio
-        </button>
+
+        <Link to="/home">
+          <button
+            className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+            type="button"
+          >
+            <i class="fa-solid fa-arrow-left "></i> Inicio
+          </button>
+        </Link>
         <div className="flex">
           <p className="ml-5  text-lg mr-4">
             Productos:
@@ -192,6 +192,9 @@ export default function Cart() {
                 <button
                   className="bg-gray-300  text-gray-500  font-bold py-2 px-4 rounded-md  mx-2"
                   disabled
+                  onClick={() => {
+                    navigate("/myorders");
+                  }}
                 >
                   Confirmar pedido <i class="fa-solid fa-check"></i>
                 </button>

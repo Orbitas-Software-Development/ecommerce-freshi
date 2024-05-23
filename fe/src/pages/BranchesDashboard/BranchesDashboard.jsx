@@ -16,7 +16,9 @@ export default function BranchesDashboard() {
   useEffect(() => {
     axios
       .get(
-        `https://localhost:7065/getBranchByClient/${getUserInfo().companyId}`
+        `${process.env.REACT_APP_PRO}/getBranchByClient/${
+          getUserInfo().companyId
+        }`
       )
       .then((res) => {
         setBranches(res.data);
@@ -79,12 +81,12 @@ export default function BranchesDashboard() {
   const deleteBranch = (branchId) => {
     setDeleteLoading(true);
     axios
-      .delete(`https://localhost:7065/deleteBranchById/${branchId}`)
+      .delete(`${process.env.REACT_APP_PRO}/deleteBranchById/${branchId}`)
       .then((res) => {
         toast("Eliminado correctamente");
         axios
           .get(
-            `https://localhost:7065/getBranchByClient/${
+            `${process.env.REACT_APP_PRO}/getBranchByClient/${
               getUserInfo().companyId
             }`
           )
@@ -101,7 +103,7 @@ export default function BranchesDashboard() {
 
   return (
     <Layout>
-      <div className="w-full flex flex-col justify-start items-start">
+      <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"
           class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -130,7 +132,9 @@ export default function BranchesDashboard() {
                 Agregar Sucursal <i class="fa-solid fa-plus"></i>
               </button>
             </div>
-            <Table columns={columns} data={branches} />
+            <div className="border rounded-md w-full">
+              <Table columns={columns} data={branches} />
+            </div>
           </>
         ) : (
           <>

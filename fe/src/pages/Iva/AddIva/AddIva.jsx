@@ -28,13 +28,13 @@ export default function AddIva() {
 
     iva?.id
       ? axios
-          .put(`https://localhost:7065/api/iva/updateIva`, iva)
+          .put(`${process.env.REACT_APP_PRO}/api/iva/updateIva`, iva)
           .then((res) => {
             navigate("/iva");
             setAction(false);
           })
       : axios
-          .post(`https://localhost:7065/api/iva/createIva`, iva)
+          .post(`${process.env.REACT_APP_PRO}/api/iva/createIva`, iva)
           .then((res) => {
             navigate("/iva");
             setAction(false);

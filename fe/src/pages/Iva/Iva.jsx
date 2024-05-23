@@ -15,7 +15,7 @@ export default function Iva() {
   useEffect(() => {
     axios
       .get(
-        `https://localhost:7065/api/iva/getIvaByCompanyId/${user.company.id}`
+        `${process.env.REACT_APP_PRO}/api/iva/getIvaByCompanyId/${user.company.id}`
       )
       .then((res) => {
         setIva(res.data);
@@ -58,7 +58,9 @@ export default function Iva() {
           type="button"
           onClick={(e) =>
             axios
-              .delete(`https://localhost:7065/api/iva/deleteIva/${row.id}`)
+              .delete(
+                `${process.env.REACT_APP_PRO}/api/iva/deleteIva/${row.id}`
+              )
               .then((res) => {
                 setIva(res.data);
               })
@@ -71,7 +73,7 @@ export default function Iva() {
   ];
   return (
     <Layout>
-      <div className="w-full flex flex-col justify-start items-start">
+      <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"
           class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -97,7 +99,9 @@ export default function Iva() {
                 Agregar IVA <i class="fa-solid fa-plus"></i>
               </button>
             </div>
-            <Table columns={columns} data={iva} />
+            <div className="border rounded-md w-full">
+              <Table columns={columns} data={iva} />
+            </div>
           </>
         ) : (
           <EmptyResponse

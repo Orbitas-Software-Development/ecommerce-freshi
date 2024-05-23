@@ -29,7 +29,7 @@ export default function AddBranch() {
     setLoading(true);
     console.log(branch);
     axios
-      .post(`https://localhost:7065/createBranch`, branch)
+      .post(`${process.env.REACT_APP_PRO}/createBranch`, branch)
       .then((res) => {
         toast(
           <>
@@ -50,12 +50,12 @@ export default function AddBranch() {
   };
   useEffect(() => {
     axios
-      .get(`https://localhost:7065/getClientByCompanyId/${user.id}`)
+      .get(`${process.env.REACT_APP_PRO}/getClientByCompanyId/${user.id}`)
       .then((res) => {
         setClients(res.data);
         axios
           .get(
-            `https://localhost:7065/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_PRO}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
             setPriceList(res.data);

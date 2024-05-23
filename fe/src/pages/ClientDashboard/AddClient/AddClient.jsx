@@ -28,7 +28,7 @@ export default function AddClient() {
   const createClient = () => {
     setLoading(true);
     axios
-      .post(`https://localhost:7065/createClient`, {
+      .post(`${process.env.REACT_APP_PRO}/createClient`, {
         ...client,
         ["companyId"]: getUserInfo().companyId,
       })
@@ -49,9 +49,11 @@ export default function AddClient() {
       });
   };
   useEffect(() => {
-    axios.get(`https://localhost:7065/api/cuentas/getPersons`).then((res) => {
-      setPersons(res.data);
-    });
+    axios
+      .get(`${process.env.REACT_APP_PRO}/api/cuentas/getPersons`)
+      .then((res) => {
+        setPersons(res.data);
+      });
   }, []);
 
   return (
@@ -60,7 +62,7 @@ export default function AddClient() {
         <ToastContainer position="bottom-center" />
         <button
           type="submit"
-          class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={(e) => {
             navigate("/clientdashboard");
           }}
@@ -73,20 +75,20 @@ export default function AddClient() {
           </h1>
         </div>
         <form
-          class="w-96 mx-auto mt-4 border rounded-md p-8"
+          className="w-96 mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
             >
               Razón Social
             </label>
             <input
               type="text"
               id="name"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Dígite nombre"
               required
               name="name"
@@ -124,14 +126,14 @@ export default function AddClient() {
           <div class="mb-5">
             <label
               for="Identifier"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
               Cédula Jurídica
             </label>
             <input
               type="text"
               id="Identifier"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="identifier"
               required
               onChange={(e) => handleData(e)}
@@ -139,51 +141,51 @@ export default function AddClient() {
               min={6}
             />
           </div>
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="email"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
               Correo electrónico
             </label>
             <input
               type="email"
               id="email"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="email"
               required
               onChange={(e) => handleData(e)}
               placeholder="Dígite correo electrónico"
             />
           </div>{" "}
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="direction"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
               Dirección
             </label>
             <input
               type="direction"
               id="direction"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="direction"
               required
               onChange={(e) => handleData(e)}
               placeholder="Dígite dirección"
             />
           </div>{" "}
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="phone"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
               Teléfono
             </label>
             <input
               type="phone"
               id="phone"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="phone"
               required
               onChange={(e) => handleData(e)}
@@ -192,10 +194,10 @@ export default function AddClient() {
           </div>
           <button
             type="submit"
-            class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             {loading ? (
-              <i class="fa-solid fa-hourglass-half fa-bounce"></i>
+              <i className="fa-solid fa-hourglass-half fa-bounce"></i>
             ) : (
               "Guardar"
             )}

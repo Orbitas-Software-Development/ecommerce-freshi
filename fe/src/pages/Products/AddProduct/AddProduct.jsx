@@ -23,7 +23,10 @@ export default function AddProduct() {
     let productDTO = product;
     productDTO.companyId = user.companyId;
     axios
-      .post(`https://localhost:7065/api/product/createProduct`, productDTO)
+      .post(
+        `${process.env.REACT_APP_PRO}/api/product/createProduct`,
+        productDTO
+      )
       .then((res) => {
         navigate("/products");
       });
@@ -54,23 +57,25 @@ export default function AddProduct() {
     data && setProduct(data);
     axios
       .get(
-        `https://localhost:7065/api/category/getCategoryByCompany/${user.companyId}`
+        `${process.env.REACT_APP_PRO}/api/category/getCategoryByCompany/${user.companyId}`
       )
       .then((res) => {
         setCategory(res.data);
         axios
           .get(
-            `https://localhost:7065/api/iva/getIvaByCompanyId/${user.companyId}`
+            `${process.env.REACT_APP_PRO}/api/iva/getIvaByCompanyId/${user.companyId}`
           )
           .then((res) => {
             setIva(res.data);
             axios
-              .get(`https://localhost:7065/api/currency/getCompanyCurrency`)
+              .get(
+                `${process.env.REACT_APP_PRO}/api/currency/getCompanyCurrency`
+              )
               .then((res) => {
                 setCurrencies(res.data);
                 axios
                   .get(
-                    `https://localhost:7065/getListPriceByCompanyId/${user.company.id}`
+                    `${process.env.REACT_APP_PRO}/getListPriceByCompanyId/${user.company.id}`
                   )
                   .then((res) => {
                     setPriceList(res.data);
@@ -154,6 +159,8 @@ export default function AddProduct() {
                 name="base64Image"
                 onChange={(e) => handleImage(e)}
                 autoComplete="false"
+                height="450px"
+                width="450px"
               />
               <label
                 for="unitsPerBox"
