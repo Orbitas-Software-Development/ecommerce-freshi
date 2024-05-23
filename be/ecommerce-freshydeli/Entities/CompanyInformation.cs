@@ -21,5 +21,8 @@
 
         public string? parameterizableText { get; set; }
 
+        public string? LatePaymentMessage { get; set; }
+        
+
     }
 }

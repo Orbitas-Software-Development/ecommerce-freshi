@@ -13,7 +13,8 @@
 
         public string? BrokenId{ get; set; } = null! ;
  
-
+        public double? Total { get; set; }
+        public double? TotalIVA { get; set; }
         public ICollection<OrderDetails> OrdersDetails { get; set; }= new List<OrderDetails>();
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;

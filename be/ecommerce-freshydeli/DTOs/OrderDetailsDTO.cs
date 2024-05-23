@@ -14,9 +14,11 @@ namespace ecommerce_freshydeli.DTOs
         public int Units { get; set; }
 
 
-        public double Price { get; set; }
+        public double UnitPrice { get; set; }
 
         public double Total { get; set; }
+
+        public double TotalIva { get; set; }
 
         public double ?IVA { get; set; }
 

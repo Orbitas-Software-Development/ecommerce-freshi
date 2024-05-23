@@ -31,7 +31,8 @@ namespace ecommerce_freshydeli.Utilities
             //para guardar o editar los productos
             CreateMap<ProductDTO, Product>().ReverseMap();
 
-            CreateMap<ProductDTO, PriceListProduct>().ReverseMap();
+            CreateMap<ProductDTO, PriceListProduct>().ReverseMap(); 
+            CreateMap<EmailReport, EmailDTO>().ReverseMap();
         }
 
 

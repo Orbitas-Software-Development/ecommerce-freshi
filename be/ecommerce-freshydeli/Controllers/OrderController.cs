@@ -42,8 +42,6 @@ namespace ecommerce_freshydeli.Controllers
                 await applicationDbContext.AddRangeAsync(orderDetail);
                 await applicationDbContext.SaveChangesAsync();
 
-                Console.WriteLine(order.BranchId);
-
                 Branch branch=await applicationDbContext.Branch.Where(b =>b.Id== order.BranchId).Include(b=>b.Client).ThenInclude(c=>c.Company).SingleOrDefaultAsync();
 
                 ApplicationUser user = await userManager.FindByIdAsync(order.UserId);
@@ -52,7 +50,7 @@ namespace ecommerce_freshydeli.Controllers
                 //emails
                 List<EmailReport> emails = await applicationDbContext.EmailReport.Where(er=>er.ReportId== report.Id).ToListAsync();
                 //sendEmail
-                EmailServices.SendOrder(new { orderDTO.UserName, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email,ReportInfo=report,Email= emails }, orderDTO.pdfReport,emails,report);
+            //    EmailServices.SendOrder(new { orderDTO.UserName, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email,ReportInfo=report,Email= emails }, orderDTO.pdfReport,emails,report);
                 
                 return Ok(order);
 
@@ -61,8 +59,31 @@ namespace ecommerce_freshydeli.Controllers
                  return BadRequest(ex);
             }
         }
+        [HttpPost("sendOrderReport")]
+        public async Task<IActionResult> SendOrderReport([FromBody] SendOrderReportDTO SendOrderReportDTO)
+        {
+            try
+            {
+                Order order = await applicationDbContext.Order.Where(o=>o.Id== SendOrderReportDTO.OrderId).Include(o=>o.Branch).ThenInclude(b=>b.Client).FirstOrDefaultAsync();
 
-        [HttpGet("getOrderByUserId/{userId}")]
+                Branch branch = order.Branch;
+
+                ApplicationUser user = await userManager.FindByIdAsync(order.UserId);
+                //Report Information
+                Report report = await applicationDbContext.Report.Where(r => r.Name == "Orden de compra").Where(r => r.CompanyId == branch.Client.CompanyId).FirstOrDefaultAsync();
+                //emails
+                List<EmailReport> emails = await applicationDbContext.EmailReport.Where(er => er.ReportId == report.Id).ToListAsync();
+               
+                EmailServices.SendOrder(new { user.UserName, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
+            
+                return Ok();
+            }catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+            [HttpGet("getOrderByUserId/{userId}")]
         public async Task<IActionResult> GetOrderByUser(string userId)
         {
             try { 

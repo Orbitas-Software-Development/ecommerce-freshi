@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ecommerce_freshydeli;
 
@@ -11,9 +12,11 @@ using ecommerce_freshydeli;
 namespace ecommerce_freshydeli.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240521152920_order_orderdetails")]
+    partial class order_orderdetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,9 +448,6 @@ namespace ecommerce_freshydeli.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Identifier")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LatePaymentMessage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
