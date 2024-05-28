@@ -15,7 +15,7 @@ export default function PriceList() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/getListPriceByCompanyId/${user.company.id}`
+        `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
       )
       .then((res) => {
         setPriceList(res.data);
@@ -40,7 +40,7 @@ export default function PriceList() {
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
-          onClick={(e) => navigate("/priceListForm", { state: row })}
+          onClick={(e) => navigate("/assignProduct", { state: row })}
         >
           Editar
         </button>

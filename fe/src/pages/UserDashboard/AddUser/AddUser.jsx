@@ -26,7 +26,7 @@ export default function AddUser() {
   const createBranch = () => {
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_PRO}/register`, {
+      .post(`${process.env.REACT_APP_DEV}/register`, {
         ...user,
         ["password"]: user.userName,
       })
@@ -44,7 +44,7 @@ export default function AddUser() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/getBranchByClient/${
+        `${process.env.REACT_APP_DEV}/getBranchByClient/${
           getUserInfo().companyId
         }`
       )
@@ -52,7 +52,7 @@ export default function AddUser() {
         setBranches(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_PRO}/getClientByCompanyId/${
+            `${process.env.REACT_APP_DEV}/getClientByCompanyId/${
               getUserInfo().companyId
             }`
           )
@@ -108,7 +108,7 @@ export default function AddUser() {
                   {value.name}
                 </option>
               ))}
-            </select>{" "}
+            </select>
             <label
               for="name"
               class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
@@ -153,6 +153,7 @@ export default function AddUser() {
               required
               name="email"
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
             <label
               for="userName"
@@ -168,6 +169,7 @@ export default function AddUser() {
               required
               name="userName"
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />{" "}
             <label
               for="fullName"
@@ -183,6 +185,7 @@ export default function AddUser() {
               required
               name="fullName"
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
             <label
               for="personalIdentification"
@@ -198,6 +201,7 @@ export default function AddUser() {
               required
               name="personalIdentification"
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
             <label
               for="jobtTitle"
@@ -213,6 +217,7 @@ export default function AddUser() {
               required
               name="jobtTitle"
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
             <label
               for="direction"
@@ -228,6 +233,7 @@ export default function AddUser() {
               required
               name="direction"
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
             <button
               type="submit"

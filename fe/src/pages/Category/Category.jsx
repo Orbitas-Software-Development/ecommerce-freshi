@@ -15,7 +15,7 @@ export default function Category() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/category/getCategoryByCompany/${user.company.id}`
+        `${process.env.REACT_APP_DEV}/api/category/getCategoryByCompany/${user.company.id}`
       )
       .then((res) => {
         setCategory(res.data);
@@ -52,7 +52,7 @@ export default function Category() {
           onClick={(e) =>
             axios
               .delete(
-                `${process.env.REACT_APP_PRO}/api/category/deleteCategory/${row.id}`
+                `${process.env.REACT_APP_DEV}/api/category/deleteCategory/${row.id}`
               )
               .then((res) => {
                 setCategory(res.data);

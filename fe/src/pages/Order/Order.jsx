@@ -51,7 +51,7 @@ export default function Order() {
     };
     setTimeout(function () {
       axios
-        .post(`${process.env.REACT_APP_PRO}/createOrder`, {
+        .post(`${process.env.REACT_APP_DEV}/createOrder`, {
           UserName: getUserInfo().userName,
           branchId: userInfo.branchId,
           pdfReport: generatePDF(productsList, info.information, signature)
@@ -64,7 +64,7 @@ export default function Order() {
         })
         .then((res) => {
           axios
-            .post(`${process.env.REACT_APP_PRO}/sendOrderReport`, {
+            .post(`${process.env.REACT_APP_DEV}/sendOrderReport`, {
               OrderId: res.data.id,
               ReportBase64: generatePDF(
                 productsList,
@@ -92,7 +92,7 @@ export default function Order() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/companyInformation/getInfo/${user.branch.client.companyId}`
+        `${process.env.REACT_APP_DEV}/api/companyInformation/getInfo/${user.branch.client.companyId}`
       )
       .then((res) => {
         setModalData({ loading: false });

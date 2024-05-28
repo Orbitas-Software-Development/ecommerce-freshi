@@ -61,7 +61,7 @@ export default function EditEmail() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/report/getReport/${user.companyId}/${state.report}`
+        `${process.env.REACT_APP_DEV}/api/report/getReport/${user.companyId}/${state.report}`
       )
       .then((res) => {
         setReportForm(res.data.report);
@@ -77,7 +77,7 @@ export default function EditEmail() {
       icon: "loading",
     });
     axios
-      .put(`${process.env.REACT_APP_PRO}/api/report/saveReport`, {
+      .put(`${process.env.REACT_APP_DEV}/api/report/saveReport`, {
         Report: reportForm,
         Emails: emails,
       })

@@ -42,7 +42,7 @@ export default function CompanyOrders() {
     setUserInfo(getUserInfo());
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/getOrderByCompanyId/${
+        `${process.env.REACT_APP_DEV}/getOrderByCompanyId/${
           JSON.parse(localStorage.getItem("user")).companyId
         }`
       )

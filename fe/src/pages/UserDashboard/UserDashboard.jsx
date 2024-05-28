@@ -24,7 +24,7 @@ export default function UserDashboard() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/getUserByCompanyId/${userLocalStorage.companyId}`
+        `${process.env.REACT_APP_DEV}/getUserByCompanyId/${userLocalStorage.companyId}`
       )
       .then((res) => {
         setGetLoading(false);
@@ -39,7 +39,7 @@ export default function UserDashboard() {
   const deleteClient = (clientId) => {
     setDeleteLoading(true);
     axios
-      .delete(`${process.env.REACT_APP_PRO}/deleteClientById/${clientId}`)
+      .delete(`${process.env.REACT_APP_DEV}/deleteClientById/${clientId}`)
       .then((res) => {
         setClients(res.data);
         toast("Eliminado correctamente");
@@ -54,7 +54,7 @@ export default function UserDashboard() {
   const updateClient = () => {
     setUpdateLoading(true);
     axios
-      .put(`${process.env.REACT_APP_PRO}/updateClients`, clients)
+      .put(`${process.env.REACT_APP_DEV}/updateClients`, clients)
       .then((res) => {
         setClients(res.data);
         toast("Actualizado correctamente");
@@ -96,13 +96,13 @@ export default function UserDashboard() {
       selector: (row) =>
         row.emailConfirmed ? (
           <i
-            class="fa-solid fa-circle-xmark  fa-2xl"
-            style={{ color: "#e66565 " }}
+            className="fa-solid fa-square-check  fa-2xl  m-4"
+            style={{ color: "#63E6BE " }}
           ></i>
         ) : (
           <i
-            class="fa-solid fa-square-check fa-2xl"
-            style={{ color: "#63E6BE" }}
+            className="fa-solid fa-circle-xmark fa-2xl m-4"
+            style={{ color: "#e66565" }}
           ></i>
         ),
     },
@@ -110,14 +110,14 @@ export default function UserDashboard() {
       name: "Action",
       cell: (row) => (
         <button
-          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md "
           type="button"
           onClick={(e) => deleteClient(row.id)}
         >
           {!deleteLoading ? (
             "Eliminar"
           ) : (
-            <i class="fa-solid fa-hourglass-half fa-bounce"></i>
+            <i className="fa-solid fa-hourglass-half fa-bounce"></i>
           )}
         </button>
       ),
@@ -130,7 +130,7 @@ export default function UserDashboard() {
         <div className="w-full flex flex-col justify-start items-start p-5">
           <button
             type="submit"
-            class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={(e) => {
               navigate("/admindashboard");
             }}
@@ -147,7 +147,7 @@ export default function UserDashboard() {
             <>
               <div className="text-center w-full p-4 font-bold  text-lg">
                 Cargando
-                <i class="fa-solid fa-hourglass-half fa-bounce"></i>
+                <i className="fa-solid fa-hourglass-half fa-bounce"></i>
               </div>
             </>
           ) : (
@@ -162,7 +162,7 @@ export default function UserDashboard() {
                         navigate("/userForm");
                       }}
                     >
-                      Agregar Usuario <i class="fa-solid fa-plus"></i>
+                      Agregar Usuario <i className="fa-solid fa-plus"></i>
                     </button>
                   </div>
                   <div className="border rounded-md w-full">
@@ -178,12 +178,12 @@ export default function UserDashboard() {
                     >
                       {!updateLoading ? (
                         <>
-                          Guardar <i class="fa-solid fa-floppy-disk"></i>
+                          Guardar <i className="fa-solid fa-floppy-disk"></i>
                         </>
                       ) : (
                         <>
                           Actualizando
-                          <i class="fa-solid fa-hourglass-half fa-bounce"></i>
+                          <i className="fa-solid fa-hourglass-half fa-bounce"></i>
                         </>
                       )}
                     </button>

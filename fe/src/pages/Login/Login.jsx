@@ -1,20 +1,48 @@
 import { useNavigate } from "react-router-dom";
 import { React, useState } from "react";
-import { saveUserInfo } from "../../utils/localStorage/functions";
+import {
+  saveUserInfo,
+  getUserInfo,
+  saveCompanyLogoBase64,
+} from "../../utils/localStorage/functions";
+import { getBase64ImageFromUrl } from "../../utils/Images/images";
 import "./bg.css";
 import { motion } from "framer-motion";
 import Loading from "../../components/Loading/Loading";
 import axios from "axios";
-import * as dotenv from "dotenv";
+
+import TodayGreeting from "../../components/TodayGreeting/TodayGreeting";
 const Login = () => {
   //local
   const [userCredentials, setUserCredentials] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
+  //LocalStorage
+  const userLocalStorage = getUserInfo();
   function handleData(e) {
     setUserCredentials({ ...userCredentials, [e.target.name]: e.target.value });
   }
+  const getImageByCompany = async (response) => {
+    try {
+      if (response?.user.branch) {
+        await getBase64ImageFromUrl(
+          response.user.branch.client.company.pictureBusinessName
+        ).then((img) => {
+          console.log(img);
+          saveCompanyLogoBase64(img);
+        });
+      }
+      await getBase64ImageFromUrl(
+        response.user.company.pictureBusinessName
+      ).then((img) => {
+        console.log(img);
+        saveCompanyLogoBase64(img);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   var redirectByRole = (res) => {
     res.data.role === "client"
       ? res.data.user.emailConfirmed
@@ -28,10 +56,11 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_PRO}/login`, userCredentials)
-      .then((res) => {
+      .post(`${process.env.REACT_APP_DEV}/login`, userCredentials)
+      .then(async (res) => {
         setLoading(false);
         saveUserInfo(res.data);
+        await getImageByCompany(res.data);
         redirectByRole(res);
       })
       .catch((e) => {
@@ -51,9 +80,12 @@ const Login = () => {
           onSubmit={handleLogin}
           className="mt-2 backdrop-blur-3xl  shadow-md shadow-gray-800 rounded-xl px-8 pt-6 pb-8  flex flex-col desktop:min-w-[30%] laptop:min-w-[50%] tablet:min-w-[80%] phone:min-w-[80%]"
         >
+          {" "}
+          <TodayGreeting />
           <div className="m-4 flex justify-center items-center flex-col">
+            {" "}
             <motion.div
-              className="box"
+              className="box mb-3"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{
@@ -61,9 +93,18 @@ const Login = () => {
                 ease: [0, 0.71, 0.2, 1.01],
               }}
             >
-              <img src="/Logo_Freshi.jpg" width="140" height="140" alt="" />
-            </motion.div>
-          </div>
+              {userLocalStorage && (
+                <img
+                  src={
+                    userLocalStorage?.branch?.client?.company
+                      ?.pictureBusinessName
+                  }
+                  width="100"
+                  alt=""
+                />
+              )}
+            </motion.div>{" "}
+          </div>{" "}
           <div className="mb-4">
             <label
               className="block text-black text-lg font-bold mb-2"
@@ -97,6 +138,7 @@ const Login = () => {
               placeholder="******"
               onChange={handleData}
               required
+              minLength={4}
             ></input>
             <p className="text-red-700 text-lg  italic">{errorMessage}</p>
           </div>

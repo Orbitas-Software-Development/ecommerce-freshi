@@ -66,7 +66,7 @@ export default function Home() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/BranchPriceList/api/BranchPriceList/${userInfo.branchId}`
+        `${process.env.REACT_APP_DEV}/api/ClientPriceList/api/ClientPriceList/${userInfo.branch.clientId}`
       )
       .then((res) => {
         productDTOlist(res.data);

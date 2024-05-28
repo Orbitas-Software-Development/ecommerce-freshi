@@ -5,69 +5,94 @@ import Table from "../../components/Tables/Table/Table";
 import clientStore from "../../stores/clientStore";
 import axios from "axios";
 import { getUserInfo } from "../../utils/localStorage/functions";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
-
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function ClientDashboard() {
+  //localstorage
   const user = getUserInfo();
+  //global
   const clients = clientStore((state) => state.clients);
   const setClients = clientStore((state) => state.setClients);
   const setLatePayment = clientStore((state) => state.setLatePayload);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
-  const [getLoading, setGetLoading] = useState(true);
-
+  //route
   const navigate = new useNavigate();
-
+  //modal
+  const [modalData, setModalData] = useState(false);
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
-      .get(`${process.env.REACT_APP_PRO}/getClientByCompanyId/${user.id}`)
-      .then((res) => {
-        setGetLoading(false);
+      .get(`${process.env.REACT_APP_DEV}/getClientByCompanyId/${user.id}`)
+      .then(async (res) => {
         setClients(res.data);
+        setModalData({
+          loading: false,
+        });
       })
       .catch((e) => {
-        setGetLoading(false);
-        toast("Error al comunicarse con el servidor");
+        errorResponseModalHandle({
+          route: "/admindashboard",
+          navigate: navigate,
+          setModalData,
+        });
       });
   }, []);
 
   const deleteClient = (clientId) => {
-    setDeleteLoading(true);
+    setModalData({
+      loading: true,
+      message: "Eliminando",
+      icon: "loading",
+    });
+
     axios
-      .delete(`${process.env.REACT_APP_PRO}/deleteClientById/${clientId}`)
+      .delete(`${process.env.REACT_APP_DEV}/deleteClientById/${clientId}`)
       .then((res) => {
         setClients(res.data);
-        toast("Eliminado correctamente");
-        setDeleteLoading(false);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+          message: "Eliminado",
+        });
       })
       .catch((e) => {
-        toast("No se ha eliminado");
-        setDeleteLoading(false);
+        errorResponseModalHandle({
+          setModalData,
+          time: 3000,
+        });
       });
   };
 
   const updateClient = () => {
-    setUpdateLoading(true);
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
     axios
-      .put(`${process.env.REACT_APP_PRO}/updateClients`, clients)
+      .put(`${process.env.REACT_APP_DEV}/updateClients`, clients)
       .then((res) => {
         setClients(res.data);
-        toast(
-          <>
-            <i
-              class="fa-solid fa-circle-check"
-              style={{ color: "#63E6BE" }}
-            ></i>
-            Se ha Actualizado correctamente
-          </>
-        );
-
-        setUpdateLoading(false);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+        });
       })
       .catch((e) => {
-        setUpdateLoading(false);
+        errorResponseModalHandle({
+          setModalData,
+          time: 3000,
+        });
       });
   };
 
@@ -106,11 +131,7 @@ export default function ClientDashboard() {
           type="button"
           onClick={(e) => deleteClient(row.id)}
         >
-          {!deleteLoading ? (
-            "Eliminar"
-          ) : (
-            <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-          )}
+          Eliminar
         </button>
       ),
     },
@@ -118,6 +139,7 @@ export default function ClientDashboard() {
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       {
         <div className="w-full flex flex-col justify-start items-start p-5">
           <button
@@ -135,61 +157,45 @@ export default function ClientDashboard() {
             </h1>
           </div>
           <ToastContainer position="bottom-center" />
-          {getLoading ? (
-            <>
-              <div className="text-center w-full p-4 font-bold  text-lg">
-                Cargando
-                <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-              </div>
-            </>
-          ) : (
-            <>
-              {clients.length > 0 ? (
-                <>
-                  <div>
-                    <button
-                      className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
-                      type="button"
-                      onClick={(e) => {
-                        navigate("/clientform");
-                      }}
-                    >
-                      Agregar Cliente <i class="fa-solid fa-plus"></i>
-                    </button>
-                  </div>
-                  <div className="border rounded-md w-full">
-                    <Table columns={columns} data={clients} />
-                  </div>
-                  <div className="text-center w-full">
-                    <button
-                      className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
-                      type="button"
-                      onClick={(e) => {
-                        updateClient();
-                      }}
-                    >
-                      {!updateLoading ? (
-                        <>
-                          Guardar <i class="fa-solid fa-floppy-disk"></i>
-                        </>
-                      ) : (
-                        <>
-                          Actualizando
-                          <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <EmptyResponse
-                  message={"No hay clientes registrados"}
-                  redirectRoute={"clientform"}
-                  addMessage={"Agregar Cliente"}
-                />
-              )}
-            </>
-          )}
+          <>
+            {clients.length > 0 ? (
+              <>
+                <div>
+                  <button
+                    className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+                    type="button"
+                    onClick={(e) => {
+                      navigate("/clientform");
+                    }}
+                  >
+                    Agregar Cliente <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                <div className="border rounded-md w-full">
+                  <Table columns={columns} data={clients} />
+                </div>
+                <div className="text-center w-full">
+                  <button
+                    className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+                    type="button"
+                    onClick={(e) => {
+                      updateClient();
+                    }}
+                  >
+                    <>
+                      Guardar <i class="fa-solid fa-floppy-disk"></i>
+                    </>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <EmptyResponse
+                message={"No hay clientes registrados"}
+                redirectRoute={"clientform"}
+                addMessage={"Agregar Cliente"}
+              />
+            )}
+          </>
         </div>
       }
     </Layout>

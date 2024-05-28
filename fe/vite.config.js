@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
   return {
     define: {
       "process.env.REACT_APP_DEV": JSON.stringify(env.REACT_APP_DEV),
-      "process.env.REACT_APP_PRO": JSON.stringify(env.REACT_APP_PRO),
+      "process.env.REACT_APP_PROD": JSON.stringify(env.REACT_APP_PROD),
     },
     plugins: [
       react(),

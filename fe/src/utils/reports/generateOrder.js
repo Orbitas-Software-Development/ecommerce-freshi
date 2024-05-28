@@ -1,7 +1,10 @@
 import { jsPDF } from "jspdf";
-import { getUserInfo } from "../../utils/localStorage/functions";
+import {
+  getUserInfo,
+  getValueLocalStorage,
+} from "../../utils/localStorage/functions";
 import { font } from "../../utils/reports/FontBase64";
-import { freshiLogo } from "../../utils/logosBase64/logos";
+
 import {
   getCurrencySimbol,
   numberWithCommas,
@@ -12,7 +15,9 @@ export const generatePDF = (
   signature,
   orderId = "Por definir"
 ) => {
-  var base64Img = freshiLogo;
+  var logo = new Image(30, "auto");
+  logo.src = getValueLocalStorage("companyLogo");
+
   var porcentageConverter = (porcentage) => {
     if (porcentage < 10) {
       return parseFloat("0.0" + porcentage.toString());
@@ -194,8 +199,15 @@ export const generatePDF = (
       // Header
       doc.setFontSize(20);
       doc.setTextColor(40);
-      if (base64Img) {
-        doc.addImage(base64Img, "JPEG", data.settings.margin.left, 15, 20, 10);
+      if (getValueLocalStorage("companyLogo")) {
+        doc.addImage(
+          logo,
+          "JPEG",
+          data.settings.margin.left,
+          15,
+          logo.width,
+          logo.height
+        );
         if (signature) {
           doc.addImage(signature, "JPEG", 200, 52, 65, 50);
         }

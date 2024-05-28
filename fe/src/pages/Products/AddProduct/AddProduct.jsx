@@ -22,9 +22,10 @@ export default function AddProduct() {
 
     let productDTO = product;
     productDTO.companyId = user.companyId;
+    productDTO.currencyId = 1;
     axios
       .post(
-        `${process.env.REACT_APP_PRO}/api/product/createProduct`,
+        `${process.env.REACT_APP_DEV}/api/product/createProduct`,
         productDTO
       )
       .then((res) => {
@@ -57,25 +58,25 @@ export default function AddProduct() {
     data && setProduct(data);
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/category/getCategoryByCompany/${user.companyId}`
+        `${process.env.REACT_APP_DEV}/api/category/getCategoryByCompany/${user.companyId}`
       )
       .then((res) => {
         setCategory(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_PRO}/api/iva/getIvaByCompanyId/${user.companyId}`
+            `${process.env.REACT_APP_DEV}/api/iva/getIvaByCompanyId/${user.companyId}`
           )
           .then((res) => {
             setIva(res.data);
             axios
               .get(
-                `${process.env.REACT_APP_PRO}/api/currency/getCompanyCurrency`
+                `${process.env.REACT_APP_DEV}/api/currency/getCompanyCurrency`
               )
               .then((res) => {
                 setCurrencies(res.data);
                 axios
                   .get(
-                    `${process.env.REACT_APP_PRO}/getListPriceByCompanyId/${user.company.id}`
+                    `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
                   )
                   .then((res) => {
                     setPriceList(res.data);
@@ -89,7 +90,7 @@ export default function AddProduct() {
     <Layout>
       <div className="flex flex-row justify-start items-start">
         <button
-          class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={(e) => {
             navigate("/products");
           }}
@@ -97,55 +98,52 @@ export default function AddProduct() {
           Atras
         </button>
       </div>
-      <div className="w-full flex flex-row justify-center items-start">
-        <div>
-          <div className="w-full">
+      <div className="w-full flex flex-column justify-center items-start">
+        <div className="w-1/3">
+          <div>
             <h1 className="mt-4 font-semibold text-3xl text-center">
               Producto
             </h1>
-          </div>{" "}
-          <form
-            class="mx-auto mt-4 border rounded-md p-8"
-            onSubmit={handleSubmit}
-          >
-            <div class="mb-5">
+          </div>
+          <form className="mt-4 border rounded-md p-4 " onSubmit={handleSubmit}>
+            <div className="mb-5 W-F">
               <label
                 for="description"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Descripción
               </label>
               <input
                 type="text"
                 id="description"
-                class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Digíte descripción"
                 required
                 name="description"
                 value={product?.description || ""}
                 onChange={(e) => handleData(e)}
-                autoComplete="false"
+                autoComplete="off"
               />
               <label
                 for="code"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Código
               </label>
               <input
                 type="text"
                 id="code"
-                class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Digíte código"
                 required
                 name="code"
                 value={product?.code || ""}
                 onChange={(e) => handleData(e)}
-                autoComplete="false"
+                autoComplete="off"
               />
               <label
                 for="base64Image"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Imagen
               </label>
@@ -153,52 +151,52 @@ export default function AddProduct() {
                 type="file"
                 accept="image/png, image/jpeg"
                 id="base64Image"
-                class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Imagen"
                 required
                 name="base64Image"
                 onChange={(e) => handleImage(e)}
-                autoComplete="false"
+                autoComplete="off"
                 height="450px"
                 width="450px"
               />
               <label
                 for="unitsPerBox"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Unidades por cajas
               </label>
               <input
                 type="number"
                 id="unitsPerBox"
-                class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Digíte unidades por cajas"
                 required
                 name="unitsPerBox"
                 value={product?.unitsPerBox || ""}
                 onChange={(e) => handleData(e)}
-                autoComplete="false"
+                autoComplete="off"
               />
               <label
                 for="unitWeight"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Peso
               </label>
               <input
                 type="text"
                 id="number"
-                class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Digíte peso"
                 required
                 name="unitWeight"
                 value={product?.unitWeight || ""}
                 onChange={(e) => handleData(e)}
-                autoComplete="false"
+                autoComplete="off"
               />
               <label
                 for="category"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Categoria
               </label>
@@ -227,7 +225,7 @@ export default function AddProduct() {
               </select>{" "}
               <label
                 for="iva"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Iva
               </label>
@@ -252,9 +250,9 @@ export default function AddProduct() {
                   )
                 )}
               </select>
-              <label
+              {/*   <label
                 for="currency"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Moneda
               </label>
@@ -280,9 +278,9 @@ export default function AddProduct() {
                   )
                 )}
               </select>
-              <label
+           }  <label
                 for="currency"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Lista
               </label>
@@ -301,34 +299,35 @@ export default function AddProduct() {
                     {value.name}
                   </option>
                 ))}
-              </select>{" "}
+              </select>
               <label
                 for="price"
-                class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Precio
               </label>
               <input
                 type="price"
                 id="price"
-                class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Digíte precio"
                 required
                 name="price"
                 value={product?.price || ""}
                 onChange={(e) => handleData(e)}
-                autoComplete="false"
+                autoComplete="off"
               />
+              */}
             </div>
             <button
               type="submit"
-              class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Guardar
             </button>
           </form>
-        </div>{" "}
-        <div className="h-full">
+        </div>
+        <div className="">
           <h1 className="mt-4 font-semibold text-3xl text-center">Imagen</h1>
           <div className="h-full flex justify-center items-start mt-4 ml-2">
             <img

@@ -20,7 +20,7 @@ export default function CompanyInformation() {
     e.preventDefault();
     setAction(true);
     axios
-      .post(`${process.env.REACT_APP_PRO}/api/companyInformation/saveInfo`, {
+      .post(`${process.env.REACT_APP_DEV}/api/companyInformation/saveInfo`, {
         ...information,
         ["companyId"]: user.companyId,
       })
@@ -39,7 +39,7 @@ export default function CompanyInformation() {
     setAction(true);
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/companyInformation/getInfo/${user.companyId}`
+        `${process.env.REACT_APP_DEV}/api/companyInformation/getInfo/${user.companyId}`
       )
       .then((res) => {
         res.data.information && setInformation(res.data.information);
@@ -192,6 +192,24 @@ export default function CompanyInformation() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite el Texto"
               value={information?.parameterizableText || ""}
+            />
+          </div>{" "}
+          <div class="mb-5">
+            <label
+              for="phone"
+              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+            >
+              Texto Morosidad (Órden de Compra)
+            </label>
+            <textarea
+              type="text"
+              id="latePaymentMessage"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              name="latePaymentMessage"
+              required
+              onChange={(e) => handleData(e)}
+              placeholder="Dígite el Texto"
+              value={information?.latePaymentMessage || ""}
             />
           </div>
           <button

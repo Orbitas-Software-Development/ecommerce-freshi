@@ -29,7 +29,7 @@ export default function AddPriceList() {
     priceList?.priceListId
       ? axios
           .put(
-            `${process.env.REACT_APP_PRO}/api/priceList/updatePriceList`,
+            `${process.env.REACT_APP_DEV}/api/priceList/updatePriceList`,
             priceList
           )
           .then((res) => {
@@ -38,11 +38,11 @@ export default function AddPriceList() {
           })
       : axios
           .post(
-            `${process.env.REACT_APP_PRO}/api/priceList/createPriceList`,
+            `${process.env.REACT_APP_DEV}/api/priceList/createPriceList`,
             priceList
           )
           .then((res) => {
-            navigate("/priceList");
+            navigate("/assignProduct");
             setAction(false);
           });
   }
@@ -75,7 +75,7 @@ export default function AddPriceList() {
         </button>
         <div className="w-full">
           <h1 className="mt-4 font-semibold text-3xl text-center">
-            Categorias
+            Agregar lista de precio
           </h1>
         </div>
         <form

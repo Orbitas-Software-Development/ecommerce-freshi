@@ -22,7 +22,7 @@ export default function Products() {
     if (e.target.value) {
       return axios
         .get(
-          `${process.env.REACT_APP_PRO}/api/product/getProductsByCompanyId/${user.companyId}`
+          `${process.env.REACT_APP_DEV}/api/product/getProductsByCompanyId/${user.companyId}`
         )
         .then((res) => {
           setProducts(res.data);
@@ -30,7 +30,7 @@ export default function Products() {
     }
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/product/getProductsByListId/${e.target.value}`
+        `${process.env.REACT_APP_DEV}/api/product/getProductsByListId/${e.target.value}`
       )
       .then((res) => {
         setProducts(res.data);
@@ -40,13 +40,13 @@ export default function Products() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/product/getProductsByCompanyId/${user.companyId}`
+        `${process.env.REACT_APP_DEV}/api/product/getProductsByCompanyId/${user.companyId}`
       )
       .then((res) => {
         setProducts(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_PRO}/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
             setPriceList(res.data);
@@ -55,7 +55,7 @@ export default function Products() {
   }, []);
   const deleteProductId = (id) => {
     axios
-      .delete(`${process.env.REACT_APP_PRO}/api/product/deleteProductBy/${id}`)
+      .delete(`${process.env.REACT_APP_DEV}/api/product/deleteProductBy/${id}`)
       .then((res) => {
         setProducts(res.data);
       });
@@ -146,7 +146,7 @@ export default function Products() {
               >
                 Agregar Producto <i class="fa-solid fa-plus"></i>
               </button>
-
+              {/*
               <select
                 required
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 m-2 mx-6"
@@ -163,8 +163,7 @@ export default function Products() {
                   <option key={index} value={value.priceListId}>
                     {value.name}
                   </option>
-                ))}
-              </select>
+                ))} */}
             </div>
             <div className="border rounded-md w-full">
               <Table columns={columns} data={products} />

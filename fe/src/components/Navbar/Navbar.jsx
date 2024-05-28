@@ -1,37 +1,32 @@
 import { React, useEffect, useState } from "react";
-
+import { getUserInfo, getName } from "../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
+import TodayGreeting from "../TodayGreeting/TodayGreeting";
 
 const Navbar = () => {
-  const [userName, setUserName] = useState("");
-  useEffect(() => {
-    try {
-      let role = JSON.parse(localStorage.getItem("role"));
-      if (role === "admin") {
-        return setUserName(JSON.parse(localStorage.getItem("user")).login);
-      }
-      setUserName(JSON.parse(localStorage.getItem("user")).userName);
-    } catch (error) {
-      console.log(error);
+  const userLocalStorage = getUserInfo();
+  console.log(getName());
+  const getNavImage = () => {
+    if (userLocalStorage?.branch) {
+      return userLocalStorage?.branch?.client?.company?.pictureBusinessName;
     }
-  });
-
+    return userLocalStorage?.company?.pictureBusinessName;
+  };
   const navigate = useNavigate();
   return (
     <nav className="h-[8vh]  sticky top-[0rem] bg-green-700 flex items-center justify-between shadow-sm shadow-gray-900 z-10">
       <div className="flex items-center pl-2">
-        <img
-          width="110"
-          height="90"
-          src="/Logo_Freshi.jpg"
-          alt=""
-          decoding="async"
-          loading="lazy"
-        />
+        {userLocalStorage && <img src={getNavImage()} width="100" alt="" />}
       </div>
       <div className="flex justify-center items-center">
-        <span className="text-primary-50 font-semibold mr-2 text-xl">
-          {userName}
+        <span className="text-primary-50 mr-2 text-lg  flex justify-center items-center">
+          Hola
+        </span>
+        <span className="text-primary-50 mr-2 text-lg  flex justify-center items-center">
+          <b>{getName()}</b>,
+        </span>
+        <span className="text-primary-50 mr-2 text-lg  flex justify-center items-center">
+          <TodayGreeting />
         </span>
         <div className="flex justify-center items-center">
           <button

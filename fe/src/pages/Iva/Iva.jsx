@@ -15,7 +15,7 @@ export default function Iva() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/api/iva/getIvaByCompanyId/${user.company.id}`
+        `${process.env.REACT_APP_DEV}/api/iva/getIvaByCompanyId/${user.company.id}`
       )
       .then((res) => {
         setIva(res.data);
@@ -59,7 +59,7 @@ export default function Iva() {
           onClick={(e) =>
             axios
               .delete(
-                `${process.env.REACT_APP_PRO}/api/iva/deleteIva/${row.id}`
+                `${process.env.REACT_APP_DEV}/api/iva/deleteIva/${row.id}`
               )
               .then((res) => {
                 setIva(res.data);

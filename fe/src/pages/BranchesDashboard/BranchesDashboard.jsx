@@ -5,23 +5,47 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 import Table from "../../components/Tables/Table/Table";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function BranchesDashboard() {
+  //global
   const branches = branchStore((state) => state.branches);
   const setBranches = branchStore((state) => state.setBranches);
+  //local
   const [deleteLoading, setDeleteLoading] = useState(false);
+  //route
   const navigate = new useNavigate();
+  //modal
+  const [modalData, setModalData] = useState(false);
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
-        `${process.env.REACT_APP_PRO}/getBranchByClient/${
+        `${process.env.REACT_APP_DEV}/getBranchByClient/${
           getUserInfo().companyId
         }`
       )
       .then((res) => {
         setBranches(res.data);
+        setModalData({
+          loading: false,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        errorResponseModalHandle({
+          route: "/admindashboard",
+          navigate: navigate,
+          setModalData,
+        });
       });
   }, []);
   const columns = [
@@ -69,40 +93,49 @@ export default function BranchesDashboard() {
           type="button"
           onClick={(e) => deleteBranch(row.id)}
         >
-          {!deleteLoading ? (
-            "Eliminar"
-          ) : (
-            <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-          )}
+          Eliminar
         </button>
       ),
     },
   ];
   const deleteBranch = (branchId) => {
-    setDeleteLoading(true);
+    setModalData({
+      loading: true,
+      text: <>Eliminando</>,
+      icon: "loading",
+    });
     axios
-      .delete(`${process.env.REACT_APP_PRO}/deleteBranchById/${branchId}`)
+      .delete(`${process.env.REACT_APP_DEV}/deleteBranchById/${branchId}`)
       .then((res) => {
-        toast("Eliminado correctamente");
+        setModalData({
+          loading: false,
+        });
         axios
           .get(
-            `${process.env.REACT_APP_PRO}/getBranchByClient/${
+            `${process.env.REACT_APP_DEV}/getBranchByClient/${
               getUserInfo().companyId
             }`
           )
           .then((res) => {
             setBranches(res.data);
+            okResponseModalHandle({
+              setModalData,
+              time: 1000,
+              message: "Eliminado",
+            });
           });
-        setDeleteLoading(false);
       })
       .catch((e) => {
-        toast("No se ha eliminado");
-        setDeleteLoading(false);
+        errorResponseModalHandle({
+          setModalData,
+          time: 3000,
+        });
       });
   };
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"
@@ -118,7 +151,7 @@ export default function BranchesDashboard() {
             Sucursales
           </h1>
         </div>
-        <ToastContainer position="bottom-center" />
+
         {branches.length > 0 ? (
           <>
             <div>
