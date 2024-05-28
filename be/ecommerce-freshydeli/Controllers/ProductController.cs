@@ -90,17 +90,17 @@ namespace ecommerce_freshydeli.Controllers
         {
             Product product = Mapper.Map<Product>(productDTO);
 
-            PriceListProduct priceListProduct = Mapper.Map<PriceListProduct>(productDTO);
+  //          PriceListProduct priceListProduct = Mapper.Map<PriceListProduct>(productDTO);
 
             await Context.AddAsync(product);
 
             await Context.SaveChangesAsync();
 
-            priceListProduct.ProductId = product.Id;
+      //      priceListProduct.ProductId = product.Id;
 
-            await Context.AddAsync(priceListProduct);
+        //    await Context.AddAsync(priceListProduct);
 
-            await Context.SaveChangesAsync();
+//            await Context.SaveChangesAsync();
 
 
             return Ok(productDTO);

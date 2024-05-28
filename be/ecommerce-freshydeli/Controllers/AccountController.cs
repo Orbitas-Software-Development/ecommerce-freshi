@@ -85,7 +85,7 @@ namespace ecommerce_freshydeli.Controllers
 
             ApplicationUserDTO userDTO = mapper.Map<ApplicationUserDTO>(user);
 
-            userDTO.Branch = await applicationDbContext.Branch.Where(branch => branch.Id == userDTO.BranchId).Include(context=>context.Client).SingleAsync();
+            userDTO.Branch = await applicationDbContext.Branch.Where(branch => branch.Id == userDTO.BranchId).Include(b=>b.Client).ThenInclude(c => c.Company).SingleAsync();
 
             var claims = new List<Claim>()
             {

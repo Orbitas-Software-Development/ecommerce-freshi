@@ -74,16 +74,24 @@ namespace ecommerce_freshydeli.Controllers
 
                 await ctx.AddAsync(branch);
                 await ctx.SaveChangesAsync();
+
+                /*
                 
                 BranchPriceListDTO branchPriceListDTO = new BranchPriceListDTO();
+
                 branchPriceListDTO.PriceListId = Int32.Parse(branchDTO.PriceListId);
+
                 branchPriceListDTO.BranchId = branch.Id;
 
                 BranchPriceList branchPriceList = mapper.Map<BranchPriceList>(branchPriceListDTO);
 
+               
+
+
+
                 await ctx.AddAsync(branchPriceList);
 
-                await ctx.SaveChangesAsync();
+                await ctx.SaveChangesAsync(); */
 
                 return (Ok(branch));
 

@@ -50,7 +50,7 @@ namespace ecommerce_freshydeli
 
         public DbSet<PriceListProduct> PriceListProduct { get; set; }
 
-        public DbSet<BranchPriceList> BranchPriceLists { get; set; }
+        public DbSet<ClientPriceList> ClientPriceList { get; set; }
         public DbSet<Currency> Currency { get; set; }
 
         public DbSet<CompanyInformation> CompanyInformation { get; set; }

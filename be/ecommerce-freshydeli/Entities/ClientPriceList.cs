@@ -1,6 +1,6 @@
 ﻿namespace ecommerce_freshydeli.Entities
 {
-    public class BranchPriceList
+    public class ClientPriceList
     {
         public int Id { get; set; }
 
@@ -8,8 +8,8 @@
 
         public PriceList PriceList { get; set; }
 
-        public int BranchId { get; set; }   
+        public int ClientId { get; set; }   
 
-        public Branch Branch { get; set; }
+        public Client Client { get; set; }
     }
 }

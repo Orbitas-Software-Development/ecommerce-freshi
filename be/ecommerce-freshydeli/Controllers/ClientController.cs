@@ -87,6 +87,16 @@ namespace ecommerce_freshydeli.Controllers
                 Client client = mapper.Map<Client>(clientDTO);
                 await ctx.AddAsync(client);
                 await ctx.SaveChangesAsync();
+
+                ClientPriceListDTO clientPriceListDTO = new ClientPriceListDTO();
+                clientPriceListDTO.PriceListId = Int32.Parse(clientDTO.PriceListId);
+              
+                clientPriceListDTO.ClientId = client.Id;
+                ClientPriceList clientPriceList = mapper.Map<ClientPriceList>(
+                clientPriceListDTO);
+                await ctx.AddAsync(clientPriceList);
+                await ctx.SaveChangesAsync();
+
                 return Ok(client);
             }
             catch (Exception ex)
@@ -96,12 +106,12 @@ namespace ecommerce_freshydeli.Controllers
 
         }
 
-        [HttpGet("getLatePaymentByCompanyId/{CompanyId}")]
-        public async Task<ActionResult> GetLatePaymentByCompanyId(int CompanyId)
+        [HttpGet("getLatePaymentByClientId/{clientId}")]
+        public async Task<ActionResult> GetLatePaymentByClient(int clientId)
         {
             try
             {
-               Client client = await ctx.Client.Where(c => c.CompanyId == CompanyId).FirstAsync();
+               Client client = await ctx.Client.Where(c => c.Id == clientId).FirstAsync();
 
                 return Ok(client.LatePayment);
             }

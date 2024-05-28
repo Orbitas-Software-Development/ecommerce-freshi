@@ -18,6 +18,7 @@
         public string? Phone { get; set; }
 
         public int? PersonId { get; set; }
+        public string? PriceListId { get; set; }
 
     }
 }

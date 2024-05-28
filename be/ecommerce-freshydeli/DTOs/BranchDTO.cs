@@ -15,7 +15,7 @@
 
         public int ClientId { get; set; }
 
-        public string PriceListId { get; set; }
+
 
     }
 }
