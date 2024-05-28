@@ -64,7 +64,7 @@ namespace ecommerce_freshydeli.Services
                 var bytes = Convert.FromBase64String(pdfReport);
                 MemoryStream strm = new MemoryStream(bytes);
                 //document  name
-                var fileName = $"{report.DocumentName} - {parameters.OrderId}.pdf";
+                var fileName = $"{parameters.ClientName} - {report.DocumentName} - {parameters.OrderId}.pdf";
                 Attachment attachment = new Attachment(strm, fileName);
                 ContentDisposition contentDisposition = attachment.ContentDisposition;
                 attachment.ContentId = fileName;

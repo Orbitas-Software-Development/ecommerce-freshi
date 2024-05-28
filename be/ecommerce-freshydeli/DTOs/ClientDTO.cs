@@ -11,7 +11,9 @@
 
         public Boolean ?LatePayment { get; set; }
 
-        public Boolean? Active { get; set; } = true; public string? Email { get; set; }
+        public Boolean? Active { get; set; } = true;
+        public Boolean? isClient { get; set; } = true;
+        public string? Email { get; set; }
 
         public string? Direction { get; set; }
 

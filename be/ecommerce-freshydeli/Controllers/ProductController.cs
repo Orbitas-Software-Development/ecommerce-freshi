@@ -105,5 +105,27 @@ namespace ecommerce_freshydeli.Controllers
 
             return Ok(productDTO);
         }
+
+        [HttpPost("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO productDTO)
+        {
+            Product product = Mapper.Map<Product>(productDTO);
+
+            //          PriceListProduct priceListProduct = Mapper.Map<PriceListProduct>(productDTO);
+
+            Context.Product.Update(product);
+
+            await Context.SaveChangesAsync();
+
+            //      priceListProduct.ProductId = product.Id;
+
+            //    await Context.AddAsync(priceListProduct);
+
+            //            await Context.SaveChangesAsync();
+
+
+            return Ok(productDTO);
+        }
+
     }
 }

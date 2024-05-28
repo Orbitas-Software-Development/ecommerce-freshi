@@ -26,6 +26,8 @@
 
         public Boolean Active { get; set; } = true;
 
+        public Boolean isClient { get; set; } = true;
+
         public Boolean LatePayment { get; set; } = false;
     }
 }

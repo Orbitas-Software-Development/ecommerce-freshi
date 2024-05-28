@@ -40,15 +40,34 @@ namespace ecommerce_freshydeli.Controllers
             {
 
                 Client client = await ctx.Client.Where(c => c.Id == Id).SingleOrDefaultAsync();
-                if (client != null)
+
+                
+
+                List<Order> orders=await ctx.Order.Include(o=>o.Branch).ThenInclude(b=>b.Client).ToListAsync();
+
+                var orderByClient= orders.Find(o => o.Branch.Client.Id == Id);
+
+
+                if(orderByClient == null)
                 {
+                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
+                    List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
+                    ctx.Branch.RemoveRange(branches);                  
+                    ctx.Client.Remove(client);
+                    await ctx.SaveChangesAsync();
+                    return Ok(clients);
+                }
+
+                if (orderByClient != null)
+                {
+                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
+                    List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
+                    List<Branch> newBranches=branches.Select(b => { b.Active = false; return b; }).ToList();
                     client.Active = false;
+                    ctx.UpdateRange(newBranches);
                     ctx.Update(client);
                     await ctx.SaveChangesAsync();
                     //ctx.Client.Remove(client); --> hay que hacer una validaci[on que no tenga nada relacionado
-
-                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
-
                     return Ok(clients);
                 }
                 else
