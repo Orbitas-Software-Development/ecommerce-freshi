@@ -21,6 +21,7 @@ export default function ClientDashboard() {
   const clients = clientStore((state) => state.clients);
   const setClients = clientStore((state) => state.setClients);
   const setLatePayment = clientStore((state) => state.setLatePayload);
+  const setActiveUser = clientStore((state) => state.setActiveUser);
   //route
   const navigate = new useNavigate();
   //modal
@@ -32,7 +33,7 @@ export default function ClientDashboard() {
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_DEV}/getClientByCompanyId/${user.id}`)
+      .get(`${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.id}`)
       .then(async (res) => {
         setClients(res.data);
         setModalData({
@@ -56,7 +57,7 @@ export default function ClientDashboard() {
     });
 
     axios
-      .delete(`${process.env.REACT_APP_DEV}/deleteClientById/${clientId}`)
+      .delete(`${process.env.REACT_APP_PROD}/deleteClientById/${clientId}`)
       .then((res) => {
         setClients(res.data);
         okResponseModalHandle({
@@ -80,7 +81,7 @@ export default function ClientDashboard() {
       icon: "loading",
     });
     axios
-      .put(`${process.env.REACT_APP_DEV}/updateClients`, clients)
+      .put(`${process.env.REACT_APP_PROD}/updateClients`, clients)
       .then((res) => {
         setClients(res.data);
         okResponseModalHandle({
@@ -124,7 +125,17 @@ export default function ClientDashboard() {
       ),
     },
     {
-      name: "Action",
+      name: "Activo",
+      cell: (row) => (
+        <input
+          type="checkbox"
+          checked={row.isClient}
+          onChange={(e) => setActiveUser(row.id)}
+        />
+      ),
+    },
+    {
+      name: "Acción",
       cell: (row) => (
         <button
           className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"

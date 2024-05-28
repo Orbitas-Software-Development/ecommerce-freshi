@@ -36,7 +36,7 @@ export default function AddClient() {
       icon: "loading",
     });
     axios
-      .post(`${process.env.REACT_APP_DEV}/createClient`, {
+      .post(`${process.env.REACT_APP_PROD}/createClient`, {
         ...client,
         ["companyId"]: user.companyId,
       })
@@ -64,12 +64,12 @@ export default function AddClient() {
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_DEV}/api/cuentas/getPersons`)
+      .get(`${process.env.REACT_APP_PROD}/api/cuentas/getPersons`)
       .then((res) => {
         setPersons(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
             setPriceList(res.data);

@@ -15,7 +15,7 @@ export default function PriceList() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
+        `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
       )
       .then((res) => {
         setPriceList(res.data);

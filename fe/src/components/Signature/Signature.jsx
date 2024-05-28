@@ -22,13 +22,13 @@ export default function Signature({ action, loading, processed }) {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/client/getLatePaymentByClientId/${user.branch.clientId}`
+        `${process.env.REACT_APP_PROD}/api/client/getLatePaymentByClientId/${user.branch.clientId}`
       )
       .then((res) => {
         setLatePayment(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/api/companyInformation/getInfo/${user.branch.client.companyId}`
+            `${process.env.REACT_APP_PROD}/api/companyInformation/getInfo/${user.branch.client.companyId}`
           )
           .then((res) => {
             setLatePaymentMessage(res.data.information);

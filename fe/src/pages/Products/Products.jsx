@@ -22,7 +22,7 @@ export default function Products() {
     if (e.target.value) {
       return axios
         .get(
-          `${process.env.REACT_APP_DEV}/api/product/getProductsByCompanyId/${user.companyId}`
+          `${process.env.REACT_APP_PROD}/api/product/getProductsByCompanyId/${user.companyId}`
         )
         .then((res) => {
           setProducts(res.data);
@@ -30,7 +30,7 @@ export default function Products() {
     }
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/product/getProductsByListId/${e.target.value}`
+        `${process.env.REACT_APP_PROD}/api/product/getProductsByListId/${e.target.value}`
       )
       .then((res) => {
         setProducts(res.data);
@@ -40,13 +40,13 @@ export default function Products() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/product/getProductsByCompanyId/${user.companyId}`
+        `${process.env.REACT_APP_PROD}/api/product/getProductsByCompanyId/${user.companyId}`
       )
       .then((res) => {
         setProducts(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
             setPriceList(res.data);
@@ -55,7 +55,7 @@ export default function Products() {
   }, []);
   const deleteProductId = (id) => {
     axios
-      .delete(`${process.env.REACT_APP_DEV}/api/product/deleteProductBy/${id}`)
+      .delete(`${process.env.REACT_APP_PROD}/api/product/deleteProductBy/${id}`)
       .then((res) => {
         setProducts(res.data);
       });

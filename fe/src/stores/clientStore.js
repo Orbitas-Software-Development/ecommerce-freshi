@@ -12,7 +12,17 @@ const clientState = create((set) => ({
         if (value.id === id) {
           value.latePayment = !value.latePayment;
         }
-        console.log(value);
+
+        return value;
+      }),
+    }));
+  },
+  setActiveUser: (id) => {
+    set((state) => ({
+      clients: state.clients.map((value) => {
+        if (value.id === id) {
+          value.isClient = !value.isClient;
+        }
         return value;
       }),
     }));

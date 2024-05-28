@@ -13,7 +13,7 @@ export default function AssignProduct() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/product/getProductsByCompanyId/${user.companyId}`
+        `${process.env.REACT_APP_PROD}/api/product/getProductsByCompanyId/${user.companyId}`
       )
       .then((res) => {
         setProduct(res.data);

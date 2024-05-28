@@ -26,7 +26,7 @@ export default function AddUser() {
   const createBranch = () => {
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_DEV}/register`, {
+      .post(`${process.env.REACT_APP_PROD}/register`, {
         ...user,
         ["password"]: user.userName,
       })
@@ -44,7 +44,7 @@ export default function AddUser() {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/getBranchByClient/${
+        `${process.env.REACT_APP_PROD}/getBranchByClient/${
           getUserInfo().companyId
         }`
       )
@@ -52,7 +52,7 @@ export default function AddUser() {
         setBranches(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/getClientByCompanyId/${
+            `${process.env.REACT_APP_PROD}/getClientByCompanyId/${
               getUserInfo().companyId
             }`
           )

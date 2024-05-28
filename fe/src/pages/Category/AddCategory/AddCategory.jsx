@@ -30,7 +30,7 @@ export default function AddCategory() {
     category?.id
       ? axios
           .put(
-            `${process.env.REACT_APP_DEV}/api/category/updateCategory`,
+            `${process.env.REACT_APP_PROD}/api/category/updateCategory`,
             category
           )
           .then((res) => {
@@ -39,7 +39,7 @@ export default function AddCategory() {
           })
       : axios
           .post(
-            `${process.env.REACT_APP_DEV}/api/category/createCategory`,
+            `${process.env.REACT_APP_PROD}/api/category/createCategory`,
             category
           )
           .then((res) => {

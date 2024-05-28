@@ -20,7 +20,7 @@ export default function CompanyInformation() {
     e.preventDefault();
     setAction(true);
     axios
-      .post(`${process.env.REACT_APP_DEV}/api/companyInformation/saveInfo`, {
+      .post(`${process.env.REACT_APP_PROD}/api/companyInformation/saveInfo`, {
         ...information,
         ["companyId"]: user.companyId,
       })
@@ -39,7 +39,7 @@ export default function CompanyInformation() {
     setAction(true);
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/companyInformation/getInfo/${user.companyId}`
+        `${process.env.REACT_APP_PROD}/api/companyInformation/getInfo/${user.companyId}`
       )
       .then((res) => {
         res.data.information && setInformation(res.data.information);

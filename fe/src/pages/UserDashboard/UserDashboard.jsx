@@ -11,7 +11,7 @@ import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
 
 export default function UserDashboard() {
   //global
-  const userLocalStorage = getUserInfo();
+  const user = getUserInfo();
   const clients = clientStore((state) => state.clients);
   const setClients = clientStore((state) => state.setClients);
   //local
@@ -23,9 +23,7 @@ export default function UserDashboard() {
   //GetUsers
   useEffect(() => {
     axios
-      .get(
-        `${process.env.REACT_APP_DEV}/getUserByCompanyId/${userLocalStorage.companyId}`
-      )
+      .get(`${process.env.REACT_APP_PROD}/getUserByCompanyId/${user.companyId}`)
       .then((res) => {
         setGetLoading(false);
         setClients(res.data);
@@ -36,10 +34,12 @@ export default function UserDashboard() {
       });
   }, []);
 
-  const deleteClient = (clientId) => {
+  const deleteClient = (clientId, companyId) => {
     setDeleteLoading(true);
     axios
-      .delete(`${process.env.REACT_APP_DEV}/deleteClientById/${clientId}`)
+      .delete(
+        `${process.env.REACT_APP_PROD}/deleteUser/${clientId}/${companyId}`
+      )
       .then((res) => {
         setClients(res.data);
         toast("Eliminado correctamente");
@@ -54,7 +54,7 @@ export default function UserDashboard() {
   const updateClient = () => {
     setUpdateLoading(true);
     axios
-      .put(`${process.env.REACT_APP_DEV}/updateClients`, clients)
+      .put(`${process.env.REACT_APP_PROD}/updateClients`, clients)
       .then((res) => {
         setClients(res.data);
         toast("Actualizado correctamente");
@@ -112,7 +112,7 @@ export default function UserDashboard() {
         <button
           className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md "
           type="button"
-          onClick={(e) => deleteClient(row.id)}
+          onClick={(e) => deleteClient(row.id, user.companyId)}
         >
           {!deleteLoading ? (
             "Eliminar"

@@ -23,14 +23,23 @@ export default function AddProduct() {
     let productDTO = product;
     productDTO.companyId = user.companyId;
     productDTO.currencyId = 1;
-    axios
-      .post(
-        `${process.env.REACT_APP_DEV}/api/product/createProduct`,
-        productDTO
-      )
-      .then((res) => {
-        navigate("/products");
-      });
+    productDTO?.id
+      ? axios
+          .post(
+            `${process.env.REACT_APP_PROD}/api/product/UpdateProduct`,
+            productDTO
+          )
+          .then((res) => {
+            navigate("/products");
+          })
+      : axios
+          .post(
+            `${process.env.REACT_APP_PROD}/api/product/createProduct`,
+            productDTO
+          )
+          .then((res) => {
+            navigate("/products");
+          });
   };
   const handleData = (e) => {
     e.preventDefault();
@@ -58,25 +67,25 @@ export default function AddProduct() {
     data && setProduct(data);
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/category/getCategoryByCompany/${user.companyId}`
+        `${process.env.REACT_APP_PROD}/api/category/getCategoryByCompany/${user.companyId}`
       )
       .then((res) => {
         setCategory(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/api/iva/getIvaByCompanyId/${user.companyId}`
+            `${process.env.REACT_APP_PROD}/api/iva/getIvaByCompanyId/${user.companyId}`
           )
           .then((res) => {
             setIva(res.data);
             axios
               .get(
-                `${process.env.REACT_APP_DEV}/api/currency/getCompanyCurrency`
+                `${process.env.REACT_APP_PROD}/api/currency/getCompanyCurrency`
               )
               .then((res) => {
                 setCurrencies(res.data);
                 axios
                   .get(
-                    `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
+                    `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
                   )
                   .then((res) => {
                     setPriceList(res.data);

@@ -35,7 +35,7 @@ export default function AddBranch() {
       icon: "loading",
     });
     axios
-      .post(`${process.env.REACT_APP_DEV}/createBranch`, branch)
+      .post(`${process.env.REACT_APP_PROD}/createBranch`, branch)
       .then((res) => {
         okResponseModalHandle({
           setModalData,
@@ -60,7 +60,7 @@ export default function AddBranch() {
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_DEV}/getClientByCompanyId/${user.id}`)
+      .get(`${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.id}`)
       .then((res) => {
         setClients(res.data);
         setModalData({
@@ -68,7 +68,7 @@ export default function AddBranch() {
         });
         /* axios
           .get(
-            `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
             setPriceList(res.data);
