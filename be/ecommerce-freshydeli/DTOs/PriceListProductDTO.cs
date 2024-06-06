@@ -2,7 +2,7 @@
 {
     public class PriceListProductDTO
     {
-        public int PriceListId { get; set; }
+        public int Id { get; set; }
 
         public int? ProductId { get; set; }
 

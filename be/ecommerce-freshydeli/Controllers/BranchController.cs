@@ -79,7 +79,13 @@ namespace ecommerce_freshydeli.Controllers
                 
                 BranchPriceListDTO branchPriceListDTO = new BranchPriceListDTO();
 
-                branchPriceListDTO.PriceListId = Int32.Parse(branchDTO.PriceListId);
+                branchPriceListDTO.
+                
+                = Int32.Parse(branchDTO.
+                
+                
+                
+                );
 
                 branchPriceListDTO.BranchId = branch.Id;
 
