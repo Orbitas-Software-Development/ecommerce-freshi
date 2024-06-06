@@ -57,7 +57,7 @@ namespace ecommerce_freshydeli.Controllers
 
             try
             {
-                ctx.Add(priceList);
+               await ctx.AddAsync(priceList);
                 await ctx.SaveChangesAsync();
                 return Ok(priceList);
             }
