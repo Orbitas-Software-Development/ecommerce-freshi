@@ -7,6 +7,7 @@ export const okResponseModalHandle = ({
   modalIcon = "check",
   route = "",
   navigate = "",
+  routeState = "",
 }) => {
   setModalData({
     loading: true,
@@ -18,6 +19,7 @@ export const okResponseModalHandle = ({
     setModalData({
       loading: false,
     });
+    routeState && navigate(route, routeState);
     route && navigate(route);
   }, time);
 };

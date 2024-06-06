@@ -29,5 +29,5 @@ export const getName = (key) => {
   if (role === "admin") {
     return user.firstName + " " + user.lastName;
   }
-  return user.fullName;
+  return user?.fullName;
 };

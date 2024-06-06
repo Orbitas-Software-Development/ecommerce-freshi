@@ -106,7 +106,7 @@ namespace ecommerce_freshydeli.Controllers
             return Ok(productDTO);
         }
 
-        [HttpPost("UpdateProduct")]
+        [HttpPut("UpdateProduct")]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductDTO productDTO)
         {
             Product product = Mapper.Map<Product>(productDTO);

@@ -5,7 +5,9 @@ namespace ecommerce_freshydeli.Entities
     public class Product
     {
         public int Id { get; set; }
-     
+
+        public string Name { get; set; }
+
         public string Description { get; set; }
 
         public string Code { get; set; }
@@ -28,6 +30,7 @@ namespace ecommerce_freshydeli.Entities
         public Iva? Iva { get; set; }
 
         public int CurrencyId { get; set; } = 1;
+
         public Currency? Currency { get; set; }
 
         public DateTime DateTime { get; set; }=DateTime.Now;

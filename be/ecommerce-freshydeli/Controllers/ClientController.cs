@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ecommerce_freshydeli.DTOs;
 using ecommerce_freshydeli.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.Design;
 
 namespace ecommerce_freshydeli.Controllers
 {
@@ -12,11 +14,12 @@ namespace ecommerce_freshydeli.Controllers
     {
         private readonly ApplicationDbContext ctx;
         private readonly IMapper mapper;
-
-        public ClientController(ApplicationDbContext applicationDbContext, IMapper mapper)
+        private readonly UserManager<ApplicationUser> userManager;
+        public ClientController(ApplicationDbContext applicationDbContext, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             this.ctx = applicationDbContext;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
 
@@ -54,6 +57,14 @@ namespace ecommerce_freshydeli.Controllers
                     List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
                     ctx.Branch.RemoveRange(branches);                  
                     ctx.Client.Remove(client);
+
+                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Id).ToListAsync();
+                    foreach (ApplicationUser user in users)
+                    {
+                        userManager.DeleteAsync(user);
+                    }
+
+
                     await ctx.SaveChangesAsync();
                     return Ok(clients);
                 }
@@ -61,8 +72,19 @@ namespace ecommerce_freshydeli.Controllers
                 if (orderByClient != null)
                 {
                     List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
+                    
                     List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
                     List<Branch> newBranches=branches.Select(b => { b.Active = false; return b; }).ToList();
+            
+                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Id).ToListAsync();
+                    List<ApplicationUser> newUsers =  users.Select(b => { b.Active = false; return b; }).ToList();
+
+                    foreach(ApplicationUser user in newUsers)
+                    {
+                        userManager.UpdateAsync(user);
+                    }
+
+                  
                     client.Active = false;
                     ctx.UpdateRange(newBranches);
                     ctx.Update(client);
