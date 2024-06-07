@@ -1,4 +1,6 @@
-﻿namespace ecommerce_freshydeli.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ecommerce_freshydeli.Entities
 {
     public class PriceListProduct
     {
@@ -12,7 +14,7 @@
 
         public Product Product { get; set; }
 
-  
+        [Precision(18, 2)]
         public decimal Price { get; set; }
     }
 }
