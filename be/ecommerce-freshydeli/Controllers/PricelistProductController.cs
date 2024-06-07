@@ -17,7 +17,7 @@ namespace ecommerce_freshydeli.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost("/createPricelistProduct")]
+        [HttpPost("createPricelistProduct")]
         public async Task<ActionResult> CreatePricelistProduct([FromBody] List<PriceListProductDTO> priceListProductDTOs)
         {
             try { 
