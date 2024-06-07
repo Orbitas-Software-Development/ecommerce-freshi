@@ -17,7 +17,7 @@ namespace ecommerce_freshydeli.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("/createPricelistProduct")]
         public async Task<ActionResult> CreatePricelistProduct([FromBody] List<PriceListProductDTO> priceListProductDTOs)
         {
             try { 
@@ -39,6 +39,18 @@ namespace ecommerce_freshydeli.Controllers
                await ctx.SaveChangesAsync();
 
                 return Ok(priceListProducts);
+
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
+        [HttpGet("getPricelistProductByPriceListId/{id}")]
+        public async Task<ActionResult> GetPricelistProductByPriceListId(int id)
+        {
+            try
+            {
+                List<PriceListProduct>priceListProduct = await ctx.PriceListProduct.Where(plp => plp.PriceListId == id).ToListAsync();
+            
+                return Ok(priceListProduct);
 
             }
             catch (Exception ex) { return BadRequest(ex.Message); }

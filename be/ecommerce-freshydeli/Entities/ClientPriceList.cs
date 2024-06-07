@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public int  PriceListId { get; set; }   
+        public int? PriceListId { get; set; }   
 
         public PriceList PriceList { get; set; }
 
