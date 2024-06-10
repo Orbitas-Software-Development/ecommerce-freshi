@@ -55,5 +55,18 @@ namespace ecommerce_freshydeli.Controllers
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
+        [HttpDelete("deletePriceListProductByPriceListId/{id}")]
+        public async Task<ActionResult> DeletePriceListProductByPriceListId(int id)
+        {
+            try
+            {
+                List<PriceListProduct> priceListProduct = await ctx.PriceListProduct.Where(plp => plp.PriceListId == id).ToListAsync();
+                ctx.RemoveRange(priceListProduct);
+
+                return Ok(priceListProduct);
+
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+        }
     }
 }

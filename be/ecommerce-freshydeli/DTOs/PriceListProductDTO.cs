@@ -1,4 +1,6 @@
-﻿namespace ecommerce_freshydeli.DTOs
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ecommerce_freshydeli.DTOs
 {
     public class PriceListProductDTO
     {
