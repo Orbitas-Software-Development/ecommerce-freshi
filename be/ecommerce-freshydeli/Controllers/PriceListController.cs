@@ -76,16 +76,17 @@ namespace ecommerce_freshydeli.Controllers
 
             try
             {
-              PriceList priceList  = await ctx.PriceList.Where(p=>p.Id== id).FirstOrDefaultAsync();
-             if(priceList==null) return BadRequest();
+                PriceList priceList = await ctx.PriceList.Where(p => p.Id == id).FirstOrDefaultAsync();
+               
+                if (priceList==null) return BadRequest();
+                List<PriceList> priceLists = await ctx.PriceList.ToListAsync();
                 ctx.Remove(priceList);
                 await ctx.SaveChangesAsync();
-                return Ok();
+                return Ok(priceLists);
                
             }
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
 
