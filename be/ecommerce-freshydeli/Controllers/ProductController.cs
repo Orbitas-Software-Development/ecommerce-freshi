@@ -132,7 +132,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try { 
             List<Product> products = await Context.Product.Where(i => i.IvaId == id).ToListAsync();
-            return Ok(products);
+            return Ok(products.Count);
             }catch(Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -145,7 +145,7 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
                 List<Product> products = await Context.Product.Where(i => i.CategoryId == id).ToListAsync();
-                return Ok(products);
+                return Ok(products.Count);
             }
             catch (Exception ex)
             {
