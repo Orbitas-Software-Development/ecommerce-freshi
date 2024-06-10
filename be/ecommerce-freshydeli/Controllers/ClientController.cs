@@ -44,14 +44,15 @@ namespace ecommerce_freshydeli.Controllers
 
                 Client client = await ctx.Client.Where(c => c.Id == Id).SingleOrDefaultAsync();
 
-                
-
                 List<Order> orders=await ctx.Order.Include(o=>o.Branch).ThenInclude(b=>b.Client).ToListAsync();
 
                 var orderByClient= orders.Find(o => o.Branch.Client.Id == Id);
 
+                List<ClientPriceList> clientPriceList = await ctx.ClientPriceList.Where(cp => cp.ClientId == Id).ToListAsync();
 
-                if(orderByClient == null)
+                ctx.RemoveRange(clientPriceList);
+
+                if (orderByClient == null)
                 {
                     List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
                     List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
@@ -92,6 +93,9 @@ namespace ecommerce_freshydeli.Controllers
                     //ctx.Client.Remove(client); --> hay que hacer una validaci[on que no tenga nada relacionado
                     return Ok(clients);
                 }
+
+             
+
                 else
                 {
                     return BadRequest(new { message = "El usuario no existe" });

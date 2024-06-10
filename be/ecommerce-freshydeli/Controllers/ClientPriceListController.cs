@@ -18,7 +18,7 @@ namespace ecommerce_freshydeli.Controllers
             this.ctx = ctx;
         }
 
-        [HttpGet("api/ClientPriceList/{clientId}")]
+        [HttpGet("geProductListByClientId{clientId}")]
         public async Task<ActionResult> ClientPriceList(int clientId)
         {
 
