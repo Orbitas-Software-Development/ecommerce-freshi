@@ -70,5 +70,27 @@ namespace ecommerce_freshydeli.Controllers
 
 
         }
+        [HttpDelete("deletePriceList/{id}")]
+        public async Task<ActionResult> CreatePriceList(int id)
+        {
+
+            try
+            {
+              PriceList priceList  = await ctx.PriceList.Where(p=>p.Id== id).FirstOrDefaultAsync();
+             if(priceList==null) return BadRequest();
+                ctx.Remove(priceList);
+                await ctx.SaveChangesAsync();
+                return Ok();
+               
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+
+
+        }
     }
 }
