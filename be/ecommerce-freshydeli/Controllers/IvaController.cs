@@ -44,14 +44,16 @@ namespace ecommerce_freshydeli.Controllers
         public async Task<IActionResult>DeleteIva(int id)
         {   
             Iva iva=Context.Iva.Where(i=>i.Id == id).FirstOrDefault();  
+            if (iva == null)return NotFound();
 
             Context.Remove(iva);
-            
-            List<Iva> ivaList = await Context.Iva.Where(i => i.CompanyId==iva.CompanyId).ToListAsync();
-            
             await Context.SaveChangesAsync();
 
+            List<Iva> ivaList = await Context.Iva.Where(i => i.CompanyId==iva.CompanyId).ToListAsync();
+            
             return Ok(ivaList);
         }
+
+   
     }
 }

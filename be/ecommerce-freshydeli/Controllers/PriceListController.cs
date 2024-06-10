@@ -78,7 +78,7 @@ namespace ecommerce_freshydeli.Controllers
             {
                 PriceList priceList = await ctx.PriceList.Where(p => p.Id == id).FirstOrDefaultAsync();
                
-                if (priceList==null) return BadRequest();
+                if (priceList==null) return NotFound();
         
                 ctx.Remove(priceList);
                 await ctx.SaveChangesAsync(); 

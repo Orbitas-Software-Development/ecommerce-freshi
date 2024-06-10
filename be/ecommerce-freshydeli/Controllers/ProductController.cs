@@ -127,5 +127,32 @@ namespace ecommerce_freshydeli.Controllers
             return Ok(productDTO);
         }
 
+        [HttpGet("getProductByIvaId/{id}")]
+        public async Task<IActionResult> GetProductByIvaId(int id)
+        {
+            try { 
+            List<Product> products = await Context.Product.Where(i => i.IvaId == id).ToListAsync();
+            return Ok(products);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("getProductByCategoryId/{id}")]
+        public async Task<IActionResult> GetProductByCategoryId(int id)
+        {
+            try
+            {
+                List<Product> products = await Context.Product.Where(i => i.CategoryId == id).ToListAsync();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+ 
     }
 }

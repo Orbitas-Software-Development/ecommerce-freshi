@@ -3,6 +3,7 @@ using ecommerce_freshydeli.DTOs;
 using ecommerce_freshydeli.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ecommerce_freshydeli.Controllers
 {
@@ -55,6 +56,24 @@ namespace ecommerce_freshydeli.Controllers
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
+
+
+        [HttpGet("getPriceListProductByProductId/{id}")]
+        public async Task<IActionResult> GetPriceListProductByProductId(int id)
+        {
+            try
+            {
+                List<PriceListProduct> priceListProduct = await Context.PriceListProduct.Where(i => i.ProductId == id).ToListAsync();
+
+                return Ok(priceListProduct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpDelete("deletePriceListProductByPriceListId/{id}")]
         public async Task<ActionResult> DeletePriceListProductByPriceListId(int id)
         {
