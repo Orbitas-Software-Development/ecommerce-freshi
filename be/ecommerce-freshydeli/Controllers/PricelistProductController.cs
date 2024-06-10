@@ -18,22 +18,21 @@ namespace ecommerce_freshydeli.Controllers
             this.mapper = mapper;
         }
 
-        [HttpPost("createPricelistProduct")]
-        public async Task<ActionResult> CreatePricelistProduct([FromBody] List<PriceListProductDTO> priceListProductDTOs,int PriceListId)
+        [HttpPost("createPricelistProduct/{priceListId}")]
+        public async Task<ActionResult> CreatePricelistProduct([FromBody] List<PriceListProductDTO> priceListProductDTOs,int priceListId)
         {
             try {
 
 
-            List<PriceListProduct> RegisteredPriceListProduct = await ctx.PriceListProduct.Where(plp=>plp.PriceListId== PriceListId).ToListAsync();
+            List<PriceListProduct> RegisteredPriceListProduct = await ctx.PriceListProduct.Where(plp=>plp.PriceListId== priceListId).ToListAsync();
             List<PriceListProduct> priceListProducts = mapper.Map<List<PriceListProduct>>(priceListProductDTOs);
 
-
+                //si la lista viene vacía borre todos los productos de la lista de precios
                 if (priceListProductDTOs.Count == 0)
                 {
-
                     ctx.PriceListProduct.RemoveRange(RegisteredPriceListProduct);
                     await ctx.SaveChangesAsync();
-                    return Ok();
+                    return Ok(priceListProducts);
                 }
 
                 if (RegisteredPriceListProduct.Count == 0) {
