@@ -63,7 +63,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<PriceListProduct> priceListProduct = await Context.PriceListProduct.Where(i => i.ProductId == id).ToListAsync();
+                List<PriceListProduct> priceListProduct = await ctx.PriceListProduct.Where(i => i.ProductId == id).ToListAsync();
 
                 return Ok(priceListProduct);
             }
