@@ -74,13 +74,13 @@ export default function Home() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/api/PricelistProduct/geProductListByClientId/${userInfo.branch.clientId}`
+        `${process.env.REACT_APP_PROD}/api/PricelistProduct/geProductListByClientId/${userInfo.branch.clientId}`
       )
       .then((res) => {
         productDTOlist(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/api/ClientPriceList/getClientPriceListByClientId/${userInfo.branch.clientId}`
+            `${process.env.REACT_APP_PROD}/api/ClientPriceList/getClientPriceListByClientId/${userInfo.branch.clientId}`
           )
           .then((res) => {
             setClientPriceList(res.data);

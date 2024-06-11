@@ -29,7 +29,7 @@ export default function BranchesDashboard() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/getBranchByClient/${
+        `${process.env.REACT_APP_PROD}/getBranchByClient/${
           getUserInfo().companyId
         }`
       )
@@ -109,14 +109,14 @@ export default function BranchesDashboard() {
       icon: "loading",
     });
     axios
-      .delete(`${process.env.REACT_APP_DEV}/deleteBranchById/${branchId}`)
+      .delete(`${process.env.REACT_APP_PROD}/deleteBranchById/${branchId}`)
       .then((res) => {
         setModalData({
           loading: false,
         });
         axios
           .get(
-            `${process.env.REACT_APP_DEV}/getBranchByClient/${
+            `${process.env.REACT_APP_PROD}/getBranchByClient/${
               getUserInfo().companyId
             }`
           )

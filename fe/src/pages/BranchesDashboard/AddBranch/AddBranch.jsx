@@ -39,7 +39,7 @@ export default function AddBranch() {
 
     branch?.id
       ? axios
-          .put(`${process.env.REACT_APP_DEV}/api/branch/updateBranch`, branch)
+          .put(`${process.env.REACT_APP_PROD}/api/branch/updateBranch`, branch)
           .then((res) => {
             okResponseModalHandle({
               setModalData,

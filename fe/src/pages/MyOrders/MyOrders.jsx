@@ -55,7 +55,7 @@ export default function MyOrders() {
     setUserInfo(getUserInfo());
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/getOrderByBranchId/${
+        `${process.env.REACT_APP_PROD}/getOrderByBranchId/${
           JSON.parse(localStorage.getItem("user")).branchId
         }`
       )

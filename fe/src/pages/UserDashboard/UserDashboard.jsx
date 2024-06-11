@@ -33,7 +33,7 @@ export default function UserDashboard() {
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_DEV}/getUserByCompanyId/${user.companyId}`)
+      .get(`${process.env.REACT_APP_PROD}/getUserByCompanyId/${user.companyId}`)
       .then((res) => {
         setClients(res.data);
         setModalData({

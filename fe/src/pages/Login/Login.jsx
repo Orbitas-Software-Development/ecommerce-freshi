@@ -56,7 +56,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_DEV}/login`, userCredentials)
+      .post(`${process.env.REACT_APP_PROD}/login`, userCredentials)
       .then(async (res) => {
         setLoading(false);
         saveUserInfo(res.data);
