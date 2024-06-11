@@ -1,5 +1,4 @@
 export const orderDetailsDto = (productsSelected) => {
-  console.log(productsSelected);
   var porcentageConverter = (porcentage) => {
     if (porcentage < 10) {
       return parseFloat("0.0" + porcentage.toString());

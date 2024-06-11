@@ -17,7 +17,7 @@ namespace ecommerce_freshydeli.Controllers
         }
 
         [HttpGet("/getListPriceByCompanyId/{companyId}")]
-        public async Task<ActionResult> getListPriceByCompanyId(int companyId) {
+        public async Task<ActionResult>GetListPriceByCompanyId(int companyId) {
 
             try { 
             List<PriceList> priceList =await ctx.PriceList.Where(pl=>pl.CompanyId==companyId).ToListAsync();
@@ -27,10 +27,9 @@ namespace ecommerce_freshydeli.Controllers
             
                 return BadRequest(ex.Message);  
             }
-
-
-
         }
+
+
 
         [HttpPut("updatePriceList")]
         public async Task<ActionResult> UpdatePriceList(PriceList priceList)

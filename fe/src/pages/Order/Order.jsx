@@ -12,6 +12,7 @@ import SimpleModal from "../../components/Modals/SimpleModal";
 import { orderDetailsDto } from "../../utils/DTOs/orderDetailsDto";
 import orderDetailStore from "../../stores/orderDetailStore";
 import Signature from "../../components/Signature/Signature";
+import clientPriceListStore from "../../stores/clientPriceList";
 export default function Order() {
   //Signature
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,10 @@ export default function Order() {
   const [userInfo, setUserInfo] = useState({});
   const [orderBase64PDF, setOrderBase64PDF] = useState("");
   const [info, setInfo] = useState({});
+  //global
+  const clientPriceList = clientPriceListStore(
+    (state) => state.clientPriceList
+  );
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -51,27 +56,27 @@ export default function Order() {
     };
     setTimeout(function () {
       axios
-        .post(`${process.env.REACT_APP_PROD}/createOrder`, {
+        .post(`${process.env.REACT_APP_DEV}/createOrder`, {
           UserName: getUserInfo().userName,
           branchId: userInfo.branchId,
-          pdfReport: generatePDF(productsList, info.information, signature)
-            .base64,
           userId: userInfo.id,
           orderDetails: orderDetailsDto(productsList),
           SignatureBase64: signature,
           total: getTotal(),
           totalIva: getTotalIva(),
+          currencyId: clientPriceList?.priceList?.currencyId,
         })
         .then((res) => {
           axios
-            .post(`${process.env.REACT_APP_PROD}/sendOrderReport`, {
+            .post(`${process.env.REACT_APP_DEV}/sendOrderReport`, {
               OrderId: res.data.id,
-              ReportBase64: generatePDF(
-                productsList,
-                info.information,
-                signature,
-                res.data.id
-              ).base64,
+              ReportBase64: generatePDF({
+                productsSelected: productsList,
+                companyInfo: info.information,
+                signature: signature,
+                currencyId: clientPriceList?.priceList?.currencyId,
+                orderId: res.data.id,
+              }).base64,
             })
             .then((res) => {
               cancelProducts();
@@ -92,7 +97,7 @@ export default function Order() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/api/companyInformation/getInfo/${user.branch.client.companyId}`
+        `${process.env.REACT_APP_DEV}/api/companyInformation/getInfo/${user.branch.client.companyId}`
       )
       .then((res) => {
         setModalData({ loading: false });
@@ -106,7 +111,14 @@ export default function Order() {
   //Se genera el reporte nuevamente
   useEffect(() => {
     setUserInfo(getUserInfo());
-    setOrderBase64PDF(generatePDF(productsList, info.information, signature));
+    setOrderBase64PDF(
+      generatePDF({
+        productsSelected: productsList,
+        companyInfo: info.information,
+        signature: signature,
+        currencyId: clientPriceList?.priceList?.currencyId,
+      })
+    );
   }, [info]);
 
   return (

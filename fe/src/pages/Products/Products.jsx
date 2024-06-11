@@ -2,71 +2,86 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
-import MicroModal from "react-micro-modal";
+
 import Layout from "../../components/Layout/Layout";
 import productStore from "../../stores/productStore";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
 import Table from "../../components/Tables/Table/Table";
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function Products() {
   //global
   const products = productStore((state) => state.products);
   const setProducts = productStore((state) => state.setProducts);
-  //local
-  const [priceList, setPriceList] = useState([]);
+
   //localSotrage
   const user = getUserInfo();
   //Route
   const navigate = useNavigate();
-
-  const getProductsByListId = (e) => {
-    if (e.target.value) {
-      return axios
-        .get(
-          `${process.env.REACT_APP_PROD}/api/product/getProductsByCompanyId/${user.companyId}`
-        )
-        .then((res) => {
-          setProducts(res.data);
-        });
-    }
-    axios
-      .get(
-        `${process.env.REACT_APP_PROD}/api/product/getProductsByListId/${e.target.value}`
-      )
-      .then((res) => {
-        setProducts(res.data);
-      });
-  };
+  //modal
+  const [modalData, setModalData] = useState(false);
 
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
         `${process.env.REACT_APP_PROD}/api/product/getProductsByCompanyId/${user.companyId}`
       )
       .then((res) => {
         setProducts(res.data);
-        axios
-          .get(
-            `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
-          )
-          .then((res) => {
-            setPriceList(res.data);
-          });
+        setModalData({
+          loading: false,
+        });
       });
   }, []);
-  const deleteProductId = (id) => {
-    axios
-      .delete(`${process.env.REACT_APP_PROD}/api/product/deleteProductBy/${id}`)
+  const deleteProductId = async (productId) => {
+    setModalData({
+      loading: true,
+      text: <>Eliminando</>,
+      icon: "loading",
+    });
+    let res = await axios.get(
+      `${process.env.REACT_APP_PROD}/api/PricelistProduct/getPriceListProductByProductId/${productId}`
+    );
+    if (res.data.length > 0)
+      return errorResponseModalHandle({
+        message: "No se puede borrar, se encuentra en una o varias listas",
+        setModalData,
+        modalIcon: "info",
+      });
+    await axios
+      .delete(
+        `${process.env.REACT_APP_PROD}/api/product/deleteProductBy/${productId}`
+      )
       .then((res) => {
         setProducts(res.data);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+          message: "Eliminado",
+        });
+      })
+      .catch((err) => {
+        errorResponseModalHandle({
+          message: "Error al eliminar",
+          setModalData,
+        });
       });
   };
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.id,
+      name: "Nombre",
+      selector: (row) => row.name,
     },
     {
-      name: "Nombre",
+      name: "Descripción",
       selector: (row) => row.description,
     },
     {
@@ -96,11 +111,11 @@ export default function Products() {
     },
     {
       name: "Editar",
-      cell: (row) => (
+      cell: (product) => (
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
-          onClick={(e) => navigate("/productform", { state: row })}
+          onClick={(e) => navigate("/productform", { state: product })}
         >
           Editar
         </button>
@@ -121,6 +136,7 @@ export default function Products() {
   ];
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"
@@ -146,24 +162,6 @@ export default function Products() {
               >
                 Agregar Producto <i class="fa-solid fa-plus"></i>
               </button>
-              {/*
-              <select
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 m-2 mx-6"
-                name="priceListId"
-                onChange={(e) => {
-                  e.target.value !== "" && getProductsByListId(e);
-                }}
-              >
-                <option value="">Seleccione Lista de precios</option>{" "}
-                <option value="all" selected>
-                  Todas
-                </option>
-                {priceList.map((value, index) => (
-                  <option key={index} value={value.priceListId}>
-                    {value.name}
-                  </option>
-                ))} */}
             </div>
             <div className="border rounded-md w-full">
               <Table columns={columns} data={products} />

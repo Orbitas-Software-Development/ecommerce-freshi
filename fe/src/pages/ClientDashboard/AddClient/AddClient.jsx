@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import Layout from "../../../components/Layout/Layout";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,13 +13,17 @@ export default function AddClient() {
   //local
   const [client, setClient] = useState({});
   const [persons, setPersons] = useState([]);
+  const [clientPriceList, setClientPriceList] = useState([]);
   const [priceList, setPriceList] = useState([]);
   //localhost
   const user = getUserInfo();
   //modal
   const [modalData, setModalData] = useState(false);
   //route
-  const navigate = new useNavigate();
+  //Route
+  const navigate = useNavigate();
+  const location = useLocation();
+  const data = location.state;
   async function handleData(e) {
     setClient({
       ...client,
@@ -35,47 +39,74 @@ export default function AddClient() {
       text: <>Guardando</>,
       icon: "loading",
     });
-    axios
-      .post(`${process.env.REACT_APP_PROD}/createClient`, {
-        ...client,
-        ["companyId"]: user.companyId,
-      })
-      .then(async (res) => {
-        okResponseModalHandle({
-          setModalData,
-          route: "/clientdashboard",
-          navigate: navigate,
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-        errorResponseModalHandle({
-          setModalData,
-          route: "/clientdashboard",
-          navigate: navigate,
-        });
-      });
+    client?.id
+      ? axios
+          .put(`${process.env.REACT_APP_DEV}/api/client/updateClient`, {
+            ...client,
+            ["companyId"]: user.companyId,
+          })
+          .then(async (res) => {
+            okResponseModalHandle({
+              setModalData,
+              route: "/clientdashboard",
+              navigate: navigate,
+            });
+          })
+          .catch((e) => {
+            errorResponseModalHandle({
+              setModalData,
+              route: "/clientdashboard",
+              navigate: navigate,
+            });
+          })
+      : axios
+          .post(`${process.env.REACT_APP_DEV}/createClient`, {
+            ...client,
+            ["companyId"]: user.companyId,
+          })
+          .then(async (res) => {
+            okResponseModalHandle({
+              setModalData,
+              route: "/clientdashboard",
+              navigate: navigate,
+            });
+          })
+          .catch((e) => {
+            errorResponseModalHandle({
+              setModalData,
+              route: "/clientdashboard",
+              navigate: navigate,
+            });
+          });
   }
 
   useEffect(() => {
+    data && setClient(data);
     setModalData({
       loading: true,
       text: <>Cargando</>,
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_PROD}/api/cuentas/getPersons`)
+      .get(`${process.env.REACT_APP_DEV}/api/cuentas/getPersons`)
       .then((res) => {
         setPersons(res.data);
         axios
           .get(
-            `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
+            `${process.env.REACT_APP_DEV}/api/ClientPriceList/getClientPriceListByClientId/${data.id}`
           )
           .then((res) => {
-            setPriceList(res.data);
-            setModalData({
-              loading: false,
-            });
+            setClientPriceList(res.data);
+            axios
+              .get(
+                `${process.env.REACT_APP_DEV}/getListPriceByCompanyId/${user.company.id}`
+              )
+              .then((res) => {
+                setPriceList(res.data);
+                setModalData({
+                  loading: false,
+                });
+              });
           });
       })
       .catch((e) => {
@@ -120,11 +151,17 @@ export default function AddClient() {
               }}
             >
               <option value="">Seleccione Lista de precios</option>
-              {priceList.map((value, index) => (
-                <option key={index} value={value.priceListId}>
-                  {value.name}
-                </option>
-              ))}
+              {priceList.map((value, index) =>
+                value.id === clientPriceList?.priceListId ? (
+                  <option key={index} value={value.id} selected>
+                    {value.name}
+                  </option>
+                ) : (
+                  <option key={index} value={value.id}>
+                    {value.name}
+                  </option>
+                )
+              )}
             </select>
           </div>
           <div className="mb-5">
@@ -144,6 +181,7 @@ export default function AddClient() {
               minLength={4}
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={client?.name || ""}
             />
           </div>{" "}
           <div class="mb-5">
@@ -164,13 +202,13 @@ export default function AddClient() {
             >
               <option value="">Tipo identificación</option>
               {persons.map((value, index) =>
-                value.id === person.id ? (
+                value.id === client?.personId ? (
                   <option key={index} value={value.id} selected>
-                    {value.name.upperCase()}
+                    {value.name === "legal" ? "Juídica" : "Física"}
                   </option>
                 ) : (
                   <option key={index} value={value.id}>
-                    {value.name === "legal" ? "Juídica" : "Física"}
+                    {value.name === "legal" ? "Jurídica" : "Física"}
                   </option>
                 )
               )}
@@ -193,6 +231,7 @@ export default function AddClient() {
               placeholder="Dígite identificación"
               min={10000000}
               autoComplete="off"
+              value={client?.identifier || ""}
             />
           </div>
           <div className="mb-5">
@@ -212,6 +251,7 @@ export default function AddClient() {
               placeholder="Dígite correo electrónico"
               minLength={4}
               autoComplete="off"
+              value={client?.email || ""}
             />
           </div>{" "}
           <div className="mb-5">
@@ -230,6 +270,7 @@ export default function AddClient() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite dirección"
               autoComplete="off"
+              value={client?.direction || ""}
             />
           </div>{" "}
           <div className="mb-5">
@@ -249,6 +290,7 @@ export default function AddClient() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite teléfono"
               autoComplete="off"
+              value={client?.phone || ""}
             />
           </div>
           <button

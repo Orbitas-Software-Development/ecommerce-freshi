@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   getUserInfo,
   getValueLocalStorage,
@@ -9,12 +10,13 @@ import {
   getCurrencySimbol,
   numberWithCommas,
 } from "../../utils/Currency/currencyFunctions";
-export const generatePDF = (
+export const generatePDF = ({
   productsSelected,
   companyInfo,
   signature,
-  orderId = "Por definir"
-) => {
+  orderId = "Por definir",
+  currencyId,
+}) => {
   var logo = new Image(30, "auto");
   logo.src = getValueLocalStorage("companyLogo");
 
@@ -31,11 +33,11 @@ export const generatePDF = (
       value["description"],
       value["quantity"],
       value["unitsPerBox"],
-      getCurrencySimbol(value["currency"].id) +
+      getCurrencySimbol(currencyId) +
         numberWithCommas(value["price"].toFixed(2)),
 
       value["iva"] + " %",
-      getCurrencySimbol(value["currency"].id) +
+      getCurrencySimbol(currencyId) +
         numberWithCommas(
           value["quantity"] * value["unitsPerBox"] * value["price"] +
             value["quantity"] *
@@ -77,8 +79,7 @@ export const generatePDF = (
             porcentageConverter(product.iva);
       });
       return (
-        getCurrencySimbol(productsSelected[0].currency.id) +
-        numberWithCommas(totalPrice.toFixed(2))
+        getCurrencySimbol(currencyId) + numberWithCommas(totalPrice.toFixed(2))
       );
     } catch (e) {
       console.log(e);

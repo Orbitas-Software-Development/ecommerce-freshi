@@ -98,5 +98,27 @@ namespace ecommerce_freshydeli.Controllers
             }
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
+
+        [HttpGet("geProductListByClientId/{clientId}")]
+        public async Task<ActionResult> ClientPriceList(int clientId)
+        {
+
+            try
+            {
+
+                ClientPriceList clientPriceList = await ctx.ClientPriceList.Where(b => b.ClientId == clientId).SingleOrDefaultAsync();
+
+                List<PriceListProduct> listPriceProduct = await ctx.PriceListProduct.Where(l => l.PriceListId == clientPriceList.PriceListId).Include(lp => lp.Product).Include(lp => lp.Product.Iva).Include(lp => lp.Product.Currency).ToListAsync();
+
+                return Ok(listPriceProduct);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+
+        }
     }
 }

@@ -25,5 +25,7 @@ namespace ecommerce_freshydeli.Entities
 
         public Boolean Active { get; set; } = true;
 
+        public Boolean isClient { get; set; } = true;
+
     }
 }

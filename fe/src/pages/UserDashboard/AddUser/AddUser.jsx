@@ -3,14 +3,26 @@ import Layout from "../../../components/Layout/Layout";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserInfo } from "../../../utils/localStorage/functions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectButton";
+import SimpleModal from "../../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../../utils/http/functions";
 export default function AddUser() {
+  //local
   const [branches, setBranches] = useState([]);
-  const [client, setClient] = useState([]);
+  const [clients, setClient] = useState([]);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
-  const navigate = new useNavigate();
+  //route
+  const navigate = useNavigate();
+  const location = useLocation();
+  const data = location.state;
+  //modal
+  const [modalData, setModalData] = useState(false);
   async function handleData(e) {
     setUser({
       ...user,
@@ -20,28 +32,62 @@ export default function AddUser() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    createBranch();
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
+    user?.id
+      ? axios
+          .put(`${process.env.REACT_APP_DEV}/api/cuentas/updateUser`, {
+            ...user,
+          })
+          .then((res) => {
+            okResponseModalHandle({
+              setModalData,
+              route: "/userdashboard",
+              navigate: navigate,
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/userdashboard",
+              navigate: navigate,
+            });
+          })
+      : createBranch();
   }
   const createBranch = () => {
-    setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_PROD}/register`, {
+      .post(`${process.env.REACT_APP_DEV}/api/cuentas/register`, {
         ...user,
         ["password"]: user.userName,
       })
       .then((res) => {
-        toast("Guardado correctamente");
-        setLoading(false);
-        navigate("/admindashboard");
+        okResponseModalHandle({
+          setModalData,
+          route: "/userdashboard",
+          navigate: navigate,
+        });
       })
       .catch((e) => {
         console.log(e);
-        toast(e.response.data.message[0].description);
-        setLoading(false);
+        errorResponseModalHandle({
+          setModalData,
+          route: "/userdashboard",
+          navigate: navigate,
+        });
       });
   };
   useEffect(() => {
+    data && setUser(data);
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
     axios
       .get(
         `${process.env.REACT_APP_PROD}/getBranchByClient/${
@@ -57,22 +103,31 @@ export default function AddUser() {
             }`
           )
           .then((res) => {
+            setModalData({
+              loading: false,
+            });
             setClient(res.data);
           })
           .catch((e) => {
-            toast("Error al comunicarse con el servidor");
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/userdashboard",
+              navigate: navigate,
+            });
           });
       });
   }, []);
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
         <button
           type="submit"
           class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={(e) => {
-            navigate("/admindashboard");
+            navigate("/userdashboard");
           }}
         >
           Atras
@@ -103,12 +158,31 @@ export default function AddUser() {
               required
             >
               <option value="">Seleccione Cliente</option>
-              {client.map((value, index) => (
-                <option key={index} value={value.id}>
-                  {value.name}
-                </option>
-              ))}
+              {clients.map((value, index) =>
+                value.id === user?.branch?.clientId ? (
+                  <option key={index} value={value.id} selected>
+                    {value.name}
+                  </option>
+                ) : (
+                  clients.map((value, index) => (
+                    <option key={index} value={value.id}>
+                      {value.name}
+                    </option>
+                  ))
+                )
+              )}
             </select>
+            {clients.length === 0 && (
+              <>
+                <div className="w-full">
+                  <RedirectButton
+                    message={"No hay clientes Registrados"}
+                    redirect={"/clientForm"}
+                    actionMessage={"Registar cliente"}
+                  />
+                </div>
+              </>
+            )}
             <label
               for="name"
               class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
@@ -124,21 +198,48 @@ export default function AddUser() {
               required
             >
               <option value="">Seleccione Sucursal</option>
-              {user.clientId &&
-                branches.map((value, index) => (
-                  <>
-                    {value.clientId === parseInt(user.clientId) ? (
-                      <>
-                        <option key={index} value={value.id}>
-                          {value.name}
-                        </option>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ))}
+              {user?.branch?.clientId
+                ? branches.map((value, index) => (
+                    <>
+                      {value.clientId === parseInt(user?.branch?.clientId) ? (
+                        <>
+                          {user?.branchId == value.id ? (
+                            <option key={index} value={value.id} selected>
+                              {value.name}
+                            </option>
+                          ) : (
+                            <option key={index} value={value.id}>
+                              {value.name}
+                            </option>
+                          )}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  ))
+                : user.clientId &&
+                  branches.map((value, index) => (
+                    <>
+                      value.clientId === user.clientId && (
+                      <option key={index} value={value.id}>
+                        {value.name}
+                      </option>
+                      )
+                    </>
+                  ))}
             </select>
+            {branches.length === 0 && (
+              <>
+                <div className="w-full">
+                  <RedirectButton
+                    message={"No hay sucursales Registradas"}
+                    redirect={"/branchForm"}
+                    actionMessage={"Registar Sucursal"}
+                  />
+                </div>
+              </>
+            )}
             <label
               for="name"
               class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
@@ -154,6 +255,7 @@ export default function AddUser() {
               name="email"
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={user?.email || ""}
             />
             <label
               for="userName"
@@ -170,6 +272,8 @@ export default function AddUser() {
               name="userName"
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={user?.userName || ""}
+              minLength={5}
             />{" "}
             <label
               for="fullName"
@@ -186,6 +290,7 @@ export default function AddUser() {
               name="fullName"
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={user?.fullName || ""}
             />
             <label
               for="personalIdentification"
@@ -202,6 +307,7 @@ export default function AddUser() {
               name="personalIdentification"
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={user?.personalIdentification || ""}
             />
             <label
               for="jobtTitle"
@@ -218,6 +324,7 @@ export default function AddUser() {
               name="jobtTitle"
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={user?.jobtTitle || ""}
             />
             <label
               for="direction"
@@ -234,6 +341,7 @@ export default function AddUser() {
               name="direction"
               onChange={(e) => handleData(e)}
               autoComplete="off"
+              value={user?.direction || ""}
             />
             <button
               type="submit"

@@ -134,7 +134,7 @@ namespace ecommerce_freshydeli.Controllers
                 await ctx.SaveChangesAsync();
 
                 ClientPriceListDTO clientPriceListDTO = new ClientPriceListDTO();
-                clientPriceListDTO.PriceListId = Int32.Parse(clientDTO.PriceListId);
+                clientPriceListDTO.PriceListId = (int)clientDTO.PriceListId;
               
                 clientPriceListDTO.ClientId = client.Id;
                 ClientPriceList clientPriceList = mapper.Map<ClientPriceList>(
@@ -164,6 +164,32 @@ namespace ecommerce_freshydeli.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPut("updateClient")]
+        public async Task<ActionResult> UpdateClient([FromBody] ClientDTO clientDTO)
+        {
+            try
+            {
+                Client client = mapper.Map<Client>(clientDTO);
+                
+                ClientPriceList clientPriceList = await ctx.ClientPriceList.Where(cp => cp.ClientId == clientDTO.Id).FirstOrDefaultAsync();
+
+                clientPriceList.PriceListId = clientDTO.PriceListId;
+
+
+                ctx.Update(client);
+                ctx.Update(clientPriceList);
+
+                await ctx.SaveChangesAsync();
+                
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+
         }
     }
 }

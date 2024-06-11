@@ -65,7 +65,12 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
                 Order order = await applicationDbContext.Order.Where(o=>o.Id== SendOrderReportDTO.OrderId).Include(o=>o.Branch).ThenInclude(b=>b.Client).FirstOrDefaultAsync();
+                //salvar reporte en orden de compra
 
+                order.PdfReport = SendOrderReportDTO.ReportBase64;
+
+                applicationDbContext.Update(order);
+                await applicationDbContext.SaveChangesAsync();
                 Branch branch = order.Branch;
 
                 ApplicationUser user = await userManager.FindByIdAsync(order.UserId);

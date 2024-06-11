@@ -5,8 +5,6 @@ import Table from "../../components/Tables/Table/Table";
 import clientStore from "../../stores/clientStore";
 import axios from "axios";
 import { getUserInfo } from "../../utils/localStorage/functions";
-
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
 import SimpleModal from "../../components/Modals/SimpleModal";
@@ -136,6 +134,18 @@ export default function ClientDashboard() {
     },
     {
       name: "Acción",
+      cell: (client) => (
+        <button
+          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          type="button"
+          onClick={(e) => navigate("/clientform", { state: client })}
+        >
+          Editar
+        </button>
+      ),
+    },
+    {
+      name: "Acción",
       cell: (row) => (
         <button
           className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
@@ -167,7 +177,7 @@ export default function ClientDashboard() {
               Clientes
             </h1>
           </div>
-          <ToastContainer position="bottom-center" />
+
           <>
             {clients.length > 0 ? (
               <>

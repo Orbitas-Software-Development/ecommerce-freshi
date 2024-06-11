@@ -8,7 +8,11 @@ import { getUserInfo } from "../../utils/localStorage/functions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
-
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function UserDashboard() {
   //global
   const user = getUserInfo();
@@ -17,24 +21,35 @@ export default function UserDashboard() {
   //local
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [getLoading, setGetLoading] = useState(true);
 
+  //modal
+  const [modalData, setModalData] = useState(false);
   const navigate = new useNavigate();
   //GetUsers
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
-      .get(`${process.env.REACT_APP_PROD}/getUserByCompanyId/${user.companyId}`)
+      .get(`${process.env.REACT_APP_DEV}/getUserByCompanyId/${user.companyId}`)
       .then((res) => {
-        setGetLoading(false);
         setClients(res.data);
+        setModalData({
+          loading: false,
+        });
       })
       .catch((e) => {
-        setGetLoading(false);
-        toast("Error al comunicarse con el servidor");
+        errorResponseModalHandle({
+          route: "/admindashboard",
+          navigate: navigate,
+          setModalData,
+        });
       });
   }, []);
 
-  const deleteClient = (clientId, companyId) => {
+  const deleteUser = (clientId, companyId) => {
     setDeleteLoading(true);
     axios
       .delete(
@@ -85,11 +100,11 @@ export default function UserDashboard() {
     },
     {
       name: "Sucursal",
-      selector: (row) => row.branch.name,
+      selector: (row) => row.branch?.name,
     },
     {
       name: "Cliente",
-      selector: (row) => row.branch.client.name,
+      selector: (row) => row.branch?.client?.name,
     },
     {
       name: "Veficación",
@@ -107,12 +122,24 @@ export default function UserDashboard() {
         ),
     },
     {
+      name: "Acción",
+      cell: (user) => (
+        <button
+          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          type="button"
+          onClick={(e) => navigate("/userForm", { state: user })}
+        >
+          Editar
+        </button>
+      ),
+    },
+    {
       name: "Action",
       cell: (row) => (
         <button
           className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md "
           type="button"
-          onClick={(e) => deleteClient(row.id, user.companyId)}
+          onClick={(e) => deleteUser(row.id, user.companyId)}
         >
           {!deleteLoading ? (
             "Eliminar"
@@ -126,6 +153,8 @@ export default function UserDashboard() {
 
   return (
     <Layout>
+      {" "}
+      <SimpleModal data={modalData} />
       {
         <div className="w-full flex flex-col justify-start items-start p-5">
           <button
@@ -142,62 +171,43 @@ export default function UserDashboard() {
               Usuarios
             </h1>
           </div>
-          <ToastContainer position="bottom-center" />
-          {getLoading ? (
-            <>
-              <div className="text-center w-full p-4 font-bold  text-lg">
-                Cargando
-                <i className="fa-solid fa-hourglass-half fa-bounce"></i>
-              </div>
-            </>
-          ) : (
-            <>
-              {clients.length > 0 ? (
-                <>
-                  <div>
-                    <button
-                      className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
-                      type="button"
-                      onClick={(e) => {
-                        navigate("/userForm");
-                      }}
-                    >
-                      Agregar Usuario <i className="fa-solid fa-plus"></i>
-                    </button>
-                  </div>
-                  <div className="border rounded-md w-full">
-                    <Table columns={columns} data={clients} />
-                  </div>
-                  <div className="text-center w-full">
-                    <button
-                      className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
-                      type="button"
-                      onClick={(e) => {
-                        updateClient();
-                      }}
-                    >
-                      {!updateLoading ? (
-                        <>
-                          Guardar <i className="fa-solid fa-floppy-disk"></i>
-                        </>
-                      ) : (
-                        <>
-                          Actualizando
-                          <i className="fa-solid fa-hourglass-half fa-bounce"></i>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <EmptyResponse
-                  message={"No hay Usuarios registrados"}
-                  redirectRoute={"userForm"}
-                  addMessage={"Agregar Usuario"}
-                />
-              )}
-            </>
-          )}
+          <>
+            {clients.length > 0 ? (
+              <>
+                <div>
+                  <button
+                    className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+                    type="button"
+                    onClick={(e) => {
+                      navigate("/userForm");
+                    }}
+                  >
+                    Agregar Usuario <i className="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                <div className="border rounded-md w-full">
+                  <Table columns={columns} data={clients} />
+                </div>
+                <div className="text-center w-full">
+                  <button
+                    className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+                    type="button"
+                    onClick={(e) => {
+                      updateClient();
+                    }}
+                  >
+                    Guardar <i className="fa-solid fa-floppy-disk"></i>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <EmptyResponse
+                message={"No hay Usuarios registrados"}
+                redirectRoute={"userForm"}
+                addMessage={"Agregar Usuario"}
+              />
+            )}
+          </>
         </div>
       }
     </Layout>

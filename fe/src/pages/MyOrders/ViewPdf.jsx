@@ -1,7 +1,4 @@
 import { React, useState, useEffect } from "react";
-import { generatePDF } from "../../utils/reports/generateOrderClient";
-import autoTable from "jspdf-autotable";
-import { jsPDF } from "jspdf";
 import axios from "axios";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import { useLocation, Link } from "react-router-dom";
@@ -31,10 +28,8 @@ export default function ViewPdf() {
   }, []);
 
   useEffect(() => {
-    setOrderBase64PDF(generatePDF(data, info.information));
+    setOrderBase64PDF(location.state.pdfReport);
   }, [info]);
-
-  let pdf = generatePDF(data, info);
 
   return (
     <Layout>
@@ -48,7 +43,11 @@ export default function ViewPdf() {
           </button>
         </Link>
         <iframe
-          src={orderBase64PDF.format + "," + orderBase64PDF.base64}
+          src={
+            "data:application/pdf;filename=generated.pdf;base64" +
+            "," +
+            orderBase64PDF
+          }
           frameborder="0"
           width="100%"
           height="90%"

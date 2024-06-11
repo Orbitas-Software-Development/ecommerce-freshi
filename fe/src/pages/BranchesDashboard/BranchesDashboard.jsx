@@ -29,7 +29,7 @@ export default function BranchesDashboard() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/getBranchByClient/${
+        `${process.env.REACT_APP_DEV}/getBranchByClient/${
           getUserInfo().companyId
         }`
       )
@@ -49,10 +49,6 @@ export default function BranchesDashboard() {
       });
   }, []);
   const columns = [
-    {
-      name: "Id",
-      selector: (row) => row.id,
-    },
     {
       name: "Creado",
       selector: (row) => new Date(row.createdDate).toLocaleDateString(),
@@ -81,10 +77,18 @@ export default function BranchesDashboard() {
       name: "Cliente",
       selector: (row) => row.client.name,
     },
-    /* {
-      name: "Lista de Precios",
-      selector: (row) => row.pricelist.name,
-    },*/
+    {
+      name: "Acción",
+      cell: (branch) => (
+        <button
+          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          type="button"
+          onClick={(e) => navigate("/branchForm", { state: branch })}
+        >
+          Editar
+        </button>
+      ),
+    },
     {
       name: "Action",
       cell: (row) => (
@@ -105,14 +109,14 @@ export default function BranchesDashboard() {
       icon: "loading",
     });
     axios
-      .delete(`${process.env.REACT_APP_PROD}/deleteBranchById/${branchId}`)
+      .delete(`${process.env.REACT_APP_DEV}/deleteBranchById/${branchId}`)
       .then((res) => {
         setModalData({
           loading: false,
         });
         axios
           .get(
-            `${process.env.REACT_APP_PROD}/getBranchByClient/${
+            `${process.env.REACT_APP_DEV}/getBranchByClient/${
               getUserInfo().companyId
             }`
           )

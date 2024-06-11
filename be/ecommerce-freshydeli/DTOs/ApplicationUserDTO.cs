@@ -15,7 +15,7 @@ namespace ecommerce_freshydeli.DTOs
         public string Email { get; set; }
         public string NormalizedEmail { get; set; }
         public Boolean EmailConfirmed { get; set; }
-
+        public Boolean isClient { get; set; } = true;
         public string Id { get; set; }
   
     }

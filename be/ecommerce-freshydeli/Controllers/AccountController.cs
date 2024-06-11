@@ -36,8 +36,8 @@ namespace ecommerce_freshydeli.Controllers
             this.ctx = ctx;
 
         }
-        [HttpPost("/register")]
-        public async Task<IActionResult> register(RegisterDTO registerDto)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterDTO registerDto)
         {
             var user = mapper.Map<ApplicationUser>(registerDto);
             var resultado = await userManager.CreateAsync(user, registerDto.Password);
@@ -45,7 +45,7 @@ namespace ecommerce_freshydeli.Controllers
             if (resultado.Succeeded)
             {
 
-                EmailServices.SendUserRegistered(new { fullName = user.FullName, user = user.UserName, password = user.UserName, Action = "create" });
+                EmailServices.SendUserRegistered(new { fullName = user.FullName, user = user.UserName, email=user.Email, password = user.UserName, Action = "create" });
 
                 return Ok(new { registered = true, user, token = "Por definir", expiratio = "Por definir" });
 
@@ -69,22 +69,38 @@ namespace ecommerce_freshydeli.Controllers
                 return Ok(new { auth = true, user, role = "admin" });
             }
 
+            //Usuarios desactivos
+            ApplicationUser userBranch = await userManager.FindByNameAsync(loginDTO.userName);
+            if (userBranch!=null && userBranch.Active == false )
+            {
+                return NotFound();
+            }
+        
+            //Login
             var resultado = await signInManager.PasswordSignInAsync(loginDTO.userName, loginDTO.password, isPersistent: false, lockoutOnFailure: false);
 
-            if (resultado.Succeeded)
+
+            if (resultado.Succeeded )
             {
 
                 var response = await buildToken(loginDTO);
 
+                if (response.User.Branch.Client.isClient ==false || response.User.Branch.isClient == false || response.User.isClient==false)
+                {
+                    return NotFound();
+                }
+          
+
                 return Ok(new { auth = true, token = response.Token, user = response.User, Expiration = response.Expiration, role = "client" });
             }
 
-            return BadRequest(new { auth = false, message = resultado });
+            return NotFound(new { auth = false, message = resultado });
         }
 
         private async Task<AuthenticationResponseDTO> buildToken(LoginDTO loginDTO)
         {
             ApplicationUser user = await userManager.FindByNameAsync(loginDTO.userName);
+
 
             ApplicationUserDTO userDTO = mapper.Map<ApplicationUserDTO>(user);
 
@@ -128,7 +144,7 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
 
-                List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == CompanyId).Include(u => u.Branch).Include(u => u.Branch.Client).ToListAsync();
+                List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == CompanyId).Where(u=>u.Active==true).Include(u => u.Branch).Include(u => u.Branch.Client).ToListAsync();
                 return Ok(users);
             }
             catch (Exception ex)
@@ -171,32 +187,34 @@ namespace ecommerce_freshydeli.Controllers
 
         }
 
-        /*  public void SendUserResgistered(string email, string username, string password)
-          {
 
-              MailMessage mailMessage = new MailMessage();
-              mailMessage.From = new MailAddress("soporte@orbitacr.net");
-              mailMessage.To.Add(new MailAddress(email));
-
-              mailMessage.CC.Add(new MailAddress("soporte@orbitacr.net"));
-
-              mailMessage.Subject = "Registro de usuario";
-              mailMessage.Body = "usuario:" + username + " clave:" + password;
-              // mailMessage.IsBodyHtml = true;
-              // mailMessage.Attachments.Add(archivoAdjunto);
-              SendHtmlEmail(mailMessage);
-
-          }*/
-        /*private async Task  SendHtmlEmail(MailMessage mailMessage)
+        [HttpPut("updateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO updateUserDTO)
         {
-            CancellationTokenSource source = new CancellationTokenSource();
-            using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
+            try
             {
-                client.Credentials = new System.Net.NetworkCredential("soporte@orbitacr.net", "5tqim3kTzAtkQSEkDnqQ858d");
-                client.EnableSsl = true;
-                client.Send(mailMessage);
+                ApplicationUser user = await userManager.FindByIdAsync(updateUserDTO.Id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                user.BranchId = (int)updateUserDTO.BranchId;
+                user.Email = updateUserDTO.Email;
+                user.UserName = updateUserDTO.UserName;
+                user.FullName = updateUserDTO.FullName;
+                user.PersonalIdentification = updateUserDTO.PersonalIdentification;
+                user.JobtTitle = updateUserDTO.JobtTitle;
+                user.Direction = updateUserDTO.Direction;
+                await userManager.UpdateAsync(user);
+                return Ok(user);
             }
-        }*/
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message, update = false });
+            }
+
+        }
+
 
         [HttpDelete("/deleteUser/{userId}/{companyId}")]
         public async Task<IActionResult> DeleteUser( string userId, string companyId)

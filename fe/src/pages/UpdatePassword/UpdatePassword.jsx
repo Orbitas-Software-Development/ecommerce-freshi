@@ -59,7 +59,6 @@ export default function UpdatePassword() {
           class="w-96 mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
-          {" "}
           <label
             for="password"
             class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"

@@ -19,5 +19,8 @@
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string SignatureBase64 { get; set; }
+
+        public int CurrencyId { get; set; }
+        public string? PdfReport { get; set; }
     }
 }

@@ -13,11 +13,12 @@ namespace ecommerce_freshydeli.DTOs
 
         public string BrokenId { get; set; } = null!;
 
-        public string pdfReport { get; set; }
+    
         public DateTime DateTime { get; set; } = DateTime.Now;
         public double Total { get; set; }
         public double TotalIva { get; set; }
         public List<OrderDetailsDTO> orderDetails { get; set; }
         public string SignatureBase64 { get; set; }
+        public int CurrencyId { get; set; }
     }
 }

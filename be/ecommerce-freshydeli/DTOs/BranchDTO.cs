@@ -2,6 +2,10 @@
 {
     public class BranchDTO
     {
+
+
+        public string? id { get; set; }
+
         public string Name { get; set; }
 
 

@@ -230,6 +230,9 @@ namespace ecommerce_freshydeli.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("isClient")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
@@ -281,6 +284,9 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isClient")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -556,6 +562,12 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CurrencyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PdfReport")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SignatureBase64")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -704,6 +716,9 @@ namespace ecommerce_freshydeli.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Base64Image")
                         .IsRequired()

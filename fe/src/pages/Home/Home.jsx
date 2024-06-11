@@ -1,10 +1,11 @@
 import { React, useState, useEffect } from "react";
 import Layout from "../..//components/Layout/Layout";
-import Loading from "../..//components/Loading/Loading";
+
 import ProductCard from "../../components/Cards/ProductCard/ProductCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import productStore from "../../stores/productStore";
+import clientPriceListStore from "../../stores/clientPriceList";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
 import { NumericFormat } from "react-number-format";
@@ -12,12 +13,19 @@ import SimpleModal from "../../components/Modals/SimpleModal";
 export default function Home() {
   //local
   const [products, setProducts] = useState([]);
-  const userInfo = getUserInfo();
-  const [getLoading, setGetLoading] = useState(true);
+
   const [modalData, setModalData] = useState(false);
+  //localStorate
+  const userInfo = getUserInfo();
   //global
   const productsList = productStore((state) => state.products);
   const cancelProducts = productStore((state) => state.cancelProducts);
+  const clientPriceList = clientPriceListStore(
+    (state) => state.clientPriceList
+  );
+  const setClientPriceList = clientPriceListStore(
+    (state) => state.setClientPriceList
+  );
   //Router
   let navigate = useNavigate();
   //ProductDTO
@@ -66,12 +74,18 @@ export default function Home() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/api/ClientPriceList/api/ClientPriceList/${userInfo.branch.clientId}`
+        `${process.env.REACT_APP_DEV}/api/PricelistProduct/geProductListByClientId/${userInfo.branch.clientId}`
       )
       .then((res) => {
         productDTOlist(res.data);
-
-        setModalData({ loading: false });
+        axios
+          .get(
+            `${process.env.REACT_APP_DEV}/api/ClientPriceList/getClientPriceListByClientId/${userInfo.branch.clientId}`
+          )
+          .then((res) => {
+            setClientPriceList(res.data);
+            setModalData({ loading: false });
+          });
       })
       .catch((e) => {
         setModalData({ loading: false });
@@ -148,7 +162,9 @@ export default function Home() {
                     value={getTotalPrizeNumber()}
                     thousandSeparator=","
                     decimalScale={2}
-                    prefix={getCurrencySimbol(products[0]?.currencyId)}
+                    prefix={getCurrencySimbol(
+                      clientPriceList?.priceList.currencyId
+                    )}
                     id="total"
                     disabled
                   />

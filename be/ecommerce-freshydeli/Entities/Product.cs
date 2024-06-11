@@ -34,7 +34,9 @@ namespace ecommerce_freshydeli.Entities
         public Currency? Currency { get; set; }
 
         public DateTime DateTime { get; set; }=DateTime.Now;
-  
+
+        public Boolean Active { get; set; } = true;
+
 
     }
 }

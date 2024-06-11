@@ -16,7 +16,7 @@ export default function SimpleModal({ data }) {
       trigger={(open) => <div onClick={open}></div>}
     >
       {(close) => (
-        <p className="text-xl">
+        <p className="text-xl text-center">
           {text} {icons[icon]}
         </p>
       )}

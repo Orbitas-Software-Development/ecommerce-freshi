@@ -21,7 +21,7 @@ namespace ecommerce_freshydeli.Controllers
         [HttpGet("getProductsByCompanyId/{companyId}")]
         public async Task<IActionResult> GetProduct(int companyId)
         {
-            List<Product> product=await Context.Product.Where(p=>p.CompanyId==companyId).Include(p=>p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
+            List<Product> product=await Context.Product.Where(p=>p.CompanyId==companyId).Where(p=>p.Active==true).Include(p=>p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
             return Ok(product);
         }
         [HttpGet("getProductsByListId/{listId}")]
@@ -45,21 +45,30 @@ namespace ecommerce_freshydeli.Controllers
 
             Product product=await Context.Product.Where(p=>p.Id==productId).FirstOrDefaultAsync();
 
+            if(product==null) { return NotFound(); }
+
             int companyId = product.CompanyId;
 
-            List<PriceListProduct> priceListProduct=await Context.PriceListProduct.Where(plp=>plp.ProductId==productId).ToListAsync();
-
-            Context.Remove(product);
-
-            await Context.SaveChangesAsync();
-
-            Context.RemoveRange(priceListProduct);
-
-            await Context.SaveChangesAsync();
+            List<OrderDetails> orderDetails = await Context.OrderDetails.Where(plp=>plp.ProductId==productId).ToListAsync();
 
             List<Product> products = await Context.Product.Where(p => p.CompanyId == companyId).Include(p => p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
 
+            if (orderDetails.Count == 0)
+            {
+
+                Context.Remove(product);
+
+                await Context.SaveChangesAsync();
+
+                return Ok(products);
+            }
+
+            product.Active = false;
+
+            await Context.SaveChangesAsync();
+
             return Ok(products);
+
         }
 
         /* [HttpPut("updateProduct")]

@@ -24,7 +24,9 @@ namespace ecommerce_freshydeli.DTOs
         [Required]
         public int BranchId { get; set; }
 
-    
+        public Boolean isClient { get; set; } = true;
+
+
 
     }
 }

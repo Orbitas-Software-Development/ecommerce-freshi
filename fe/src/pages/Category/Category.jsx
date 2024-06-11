@@ -5,6 +5,11 @@ import Layout from "../../components/Layout/Layout";
 import Table from "../../components/Tables/Table/Table";
 import { useNavigate } from "react-router-dom";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function Category() {
   //local
   const [category, setCategory] = useState([]);
@@ -12,15 +17,66 @@ export default function Category() {
   const user = getUserInfo();
   //Route
   const navigate = useNavigate();
+  //modal
+  const [modalData, setModalData] = useState(false);
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
         `${process.env.REACT_APP_PROD}/api/category/getCategoryByCompany/${user.company.id}`
       )
       .then((res) => {
         setCategory(res.data);
+        setModalData({
+          loading: false,
+        }).cacth((res) => {
+          errorResponseModalHandle({
+            route: "/admindashboard",
+            navigate: navigate,
+            setModalData,
+          });
+        });
       });
   }, []);
+  let deleteCategory = async (categoryId) => {
+    setModalData({
+      loading: true,
+      text: <>Eliminando</>,
+      icon: "loading",
+    });
+    let res = await axios.get(
+      `${process.env.REACT_APP_PROD}/api/product/getProductByCategoryId/${categoryId}`
+    );
+    if (res.data > 0)
+      return errorResponseModalHandle({
+        message: "No se puede borrar, tiene varios productos asociados",
+        setModalData,
+        modalIcon: "info",
+      });
+    axios
+      .delete(
+        `${process.env.REACT_APP_PROD}/api/category/deleteCategory/${categoryId}`
+      )
+      .then((res) => {
+        setCategory(res.data);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+          message: "Eliminado",
+        });
+      })
+      .cacth((err) => {
+        errorResponseModalHandle({
+          message: "Error al eliminar",
+          setModalData,
+        });
+      });
+  };
+
   const columns = [
     {
       name: "Id",
@@ -49,15 +105,7 @@ export default function Category() {
         <button
           className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
-          onClick={(e) =>
-            axios
-              .delete(
-                `${process.env.REACT_APP_PROD}/api/category/deleteCategory/${row.id}`
-              )
-              .then((res) => {
-                setCategory(res.data);
-              })
-          }
+          onClick={(e) => deleteCategory(row.id)}
         >
           Eliminar
         </button>
@@ -66,6 +114,7 @@ export default function Category() {
   ];
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"

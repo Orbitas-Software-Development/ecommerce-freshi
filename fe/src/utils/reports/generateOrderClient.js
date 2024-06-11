@@ -4,7 +4,6 @@ import {
   getValueLocalStorage,
 } from "../../utils/localStorage/functions";
 import { font } from "../../utils/reports/FontBase64";
-import { freshiLogo } from "../../utils/logosBase64/logos";
 import {
   getCurrencySimbol,
   numberWithCommas,
@@ -27,10 +26,10 @@ export const generatePDF = (orders, companyInfo) => {
       value.product.description,
       value["boxes"],
       value["units"],
-      getCurrencySimbol(orders.ordersDetails[0].product.currencyId) +
+      getCurrencySimbol(orders.currencyId) +
         numberWithCommas(value["unitPrice"].toFixed(2)),
       value["iva"] + " %",
-      getCurrencySimbol(orders.ordersDetails[0].product.currencyId) +
+      getCurrencySimbol(orders.currencyId) +
         numberWithCommas(value["totalIva"].toFixed(2)),
     ];
   });
@@ -63,8 +62,7 @@ export const generatePDF = (orders, companyInfo) => {
           product.units * product.price * porcentageConverter(product.iva);
       });
       return (
-        getCurrencySimbol(orders.ordersDetails[0].product.currencyId) +
-        numberWithCommas(orders.totalIVA)
+        getCurrencySimbol(orders.currencyId) + numberWithCommas(orders.totalIVA)
       );
     } catch (e) {
       console.log(e);

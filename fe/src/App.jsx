@@ -29,6 +29,7 @@ import CompanyOrders from "./pages/CompanyOrders/CompanyOrders";
 import Emails from "./pages/Emails/Emails";
 import EditEmail from "./pages/Emails/EditEmail.jsx/EditEmail";
 import AssignProduct from "./pages/AssignProducts/AssignProduct";
+import CropImage from "./components/CropImage/CropImage";
 function App() {
   let location = useLocation().pathname;
 
@@ -65,7 +66,8 @@ function App() {
         <Route path="/CompanyOrders" element={<CompanyOrders />}></Route>{" "}
         <Route path="/emails" element={<Emails />}></Route>{" "}
         <Route path="/editEmail" element={<EditEmail />}></Route>{" "}
-        <Route path="/assignProduct" element={<AssignProduct />}></Route>
+        <Route path="/assignProduct" element={<AssignProduct />}></Route>{" "}
+        <Route path="/cropImage" element={<CropImage />}></Route>
         <Route path="*" element={<Navigate to="/login" />}></Route>
       </Routes>
       <Footer />

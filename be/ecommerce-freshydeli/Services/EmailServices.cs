@@ -16,7 +16,7 @@ namespace ecommerce_freshydeli.Services
 
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("soporte@orbitacr.net");
-            mailMessage.To.Add(new MailAddress("jose@orbitacr.net"));
+            mailMessage.To.Add(new MailAddress(parameters.email));
 
             // mailMessage.CC.Add(new MailAddress("soporte@orbitacr.net"));
 

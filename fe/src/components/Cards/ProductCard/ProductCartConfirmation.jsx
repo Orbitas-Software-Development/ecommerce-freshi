@@ -3,12 +3,16 @@ import productStore from "../../../stores/productStore";
 import { NumericFormat } from "react-number-format";
 import "react-toastify/dist/ReactToastify.css";
 import { getCurrencySimbol } from "../../../utils/Currency/currencyFunctions";
+import clientPriceListStore from "../../../stores/clientPriceList";
 export default function ProductCartConfirmation({ product }) {
   //global
   const deleteProduct = productStore((state) => state.deleteProduct);
   const addedProducts = productStore((state) => state.addedProducts);
   const setProducts = productStore((state) => state.setProducts);
   const productListGlobalState = productStore((state) => state.products);
+  const clientPriceList = clientPriceListStore(
+    (state) => state.clientPriceList
+  );
   //local
   const [productSum, setProductSum] = useState(product.quantity);
 
@@ -59,7 +63,7 @@ export default function ProductCartConfirmation({ product }) {
             value={product.price}
             thousandSeparator=","
             decimalScale={2}
-            prefix={getCurrencySimbol(product.currencyId)}
+            prefix={getCurrencySimbol(clientPriceList?.priceList?.currencyId)}
             id="productPrice"
             disabled
           />
@@ -111,7 +115,7 @@ export default function ProductCartConfirmation({ product }) {
             value={product.price * product.unitsPerBox * product.quantity}
             thousandSeparator=","
             decimalScale={2}
-            prefix={getCurrencySimbol(product.currencyId)}
+            prefix={getCurrencySimbol(clientPriceList?.priceList?.currencyId)}
             id="total"
           />
 

@@ -17,6 +17,7 @@ namespace ecommerce_freshydeli
         public int BranchId { get; set; }
         public Branch Branch { get; set; }
         public Boolean Active { get; set; } = true;
+        public Boolean isClient { get; set; } = true;
 
     }
 }

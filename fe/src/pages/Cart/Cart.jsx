@@ -5,7 +5,7 @@ import ProductCartConfirmation from "../../components/Cards/ProductCard/ProductC
 import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
 import { Link, useNavigate } from "react-router-dom";
 import { NumericFormat } from "react-number-format";
-
+import clientPriceListStore from "../../stores/clientPriceList";
 export default function Cart() {
   //Route
   //Router
@@ -31,12 +31,16 @@ export default function Cart() {
 
   const getTotalPrizeNumber = () => {
     let totalPrize = 0;
-    console.log(products);
+
     products.map((product) => {
       totalPrize += product.price * product.unitsPerBox * product.quantity;
     });
     return totalPrize;
   };
+  //state
+  const clientPriceList = clientPriceListStore(
+    (state) => state.clientPriceList
+  );
   return (
     <Layout>
       <div className="w-[83vw] ">
@@ -127,7 +131,9 @@ export default function Cart() {
                     value={getTotalPrizeNumber()}
                     thousandSeparator=","
                     decimalScale={2}
-                    prefix={getCurrencySimbol(products[0].currencyId)}
+                    prefix={getCurrencySimbol(
+                      clientPriceList?.priceList?.currencyId
+                    )}
                     id="total"
                     disabled
                   />

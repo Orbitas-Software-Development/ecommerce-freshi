@@ -5,6 +5,11 @@ import Layout from "../../components/Layout/Layout";
 import Table from "../../components/Tables/Table/Table";
 import { useNavigate } from "react-router-dom";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function Iva() {
   //local
   const [iva, setIva] = useState([]);
@@ -12,15 +17,65 @@ export default function Iva() {
   const user = getUserInfo();
   //Route
   const navigate = useNavigate();
+  //modal
+  const [modalData, setModalData] = useState(false);
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
         `${process.env.REACT_APP_PROD}/api/iva/getIvaByCompanyId/${user.company.id}`
       )
       .then((res) => {
         setIva(res.data);
+        setModalData({
+          loading: false,
+        });
+      })
+      .catch((res) => {
+        errorResponseModalHandle({
+          route: "/admindashboard",
+          navigate: navigate,
+          setModalData,
+        });
       });
   }, []);
+  let deleteIva = async (ivaId) => {
+    setModalData({
+      loading: true,
+      text: <>Eliminando</>,
+      icon: "loading",
+    });
+
+    let res = await axios.get(
+      `${process.env.REACT_APP_PROD}/api/product/getProductByIvaId/${ivaId}`
+    );
+    if (res.data > 0)
+      return errorResponseModalHandle({
+        message: "No se puede borrar, tiene varios productos asociados",
+        setModalData,
+        modalIcon: "info",
+      });
+    await axios
+      .delete(`${process.env.REACT_APP_PROD}/api/iva/deleteIva/${ivaId}`)
+      .then((res) => {
+        setIva(res.data);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+          message: "Eliminado",
+        });
+      })
+      .catch((err) => {
+        errorResponseModalHandle({
+          message: "Error al eliminar",
+          setModalData,
+        });
+      });
+  };
   const columns = [
     {
       name: "Id",
@@ -56,15 +111,7 @@ export default function Iva() {
         <button
           className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
-          onClick={(e) =>
-            axios
-              .delete(
-                `${process.env.REACT_APP_PROD}/api/iva/deleteIva/${row.id}`
-              )
-              .then((res) => {
-                setIva(res.data);
-              })
-          }
+          onClick={(e) => deleteIva(row.id)}
         >
           Eliminar
         </button>
@@ -73,6 +120,7 @@ export default function Iva() {
   ];
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"

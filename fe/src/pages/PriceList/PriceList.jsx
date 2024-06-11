@@ -5,6 +5,11 @@ import Layout from "../../components/Layout/Layout";
 import Table from "../../components/Tables/Table/Table";
 import { useNavigate } from "react-router-dom";
 import EmptyResponse from "../../components/EmptyResponse/EmptyResponse";
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function PriceList() {
   //local
   const [priceList, setPriceList] = useState([]);
@@ -12,19 +17,70 @@ export default function PriceList() {
   const user = getUserInfo();
   //Route
   const navigate = useNavigate();
+  //modal
+  const [modalData, setModalData] = useState(false);
   useEffect(() => {
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
         `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
       )
       .then((res) => {
         setPriceList(res.data);
+        setModalData({
+          loading: false,
+        });
+      })
+      .catch((res) => {
+        setModalData({
+          loading: false,
+        });
       });
   }, []);
+
+  const deletePriceList = async (PriceListId) => {
+    setModalData({
+      loading: true,
+      text: <>Eliminando</>,
+      icon: "loading",
+    });
+    let res = await axios.get(
+      `${process.env.REACT_APP_PROD}/api/PricelistProduct/getPricelistProductByPriceListId/${PriceListId}`
+    );
+    if (res.data.length > 0)
+      return errorResponseModalHandle({
+        message: "No se puede borrar, Tiene varios productos asociados",
+        setModalData,
+        modalIcon: "info",
+      });
+    await axios
+      .delete(
+        `${process.env.REACT_APP_PROD}/api/priceList/deletePriceList/${PriceListId}`
+      )
+      .then((res) => {
+        setPriceList(res.data);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+          message: "Eliminado",
+        });
+      })
+      .catch((e) => {
+        errorResponseModalHandle({
+          message: "Error al eliminar",
+          setModalData,
+        });
+      });
+  };
+
   const columns = [
     {
       name: "Id",
-      selector: (row) => row.priceListId,
+      selector: (row) => row.id,
     },
     {
       name: "Nombre",
@@ -36,19 +92,32 @@ export default function PriceList() {
     },
     {
       name: "Editar",
-      cell: (row) => (
+      cell: (product) => (
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
-          onClick={(e) => navigate("/assignProduct", { state: row })}
+          onClick={(e) => navigate("/assignProduct", { state: product })}
         >
           Editar
+        </button>
+      ),
+    },
+    {
+      name: "Eliminar",
+      cell: (product) => (
+        <button
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          type="button"
+          onClick={() => deletePriceList(product.id)}
+        >
+          Eliminar
         </button>
       ),
     },
   ];
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start p-5">
         <button
           type="submit"

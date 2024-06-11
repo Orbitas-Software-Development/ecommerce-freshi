@@ -2,12 +2,15 @@ import { React, useEffect, useState } from "react";
 import productStore from "../../../stores/productStore";
 import { getCurrencySimbol } from "../../../utils/Currency/currencyFunctions";
 import { NumericFormat } from "react-number-format";
-
+import clientPriceListStore from "../../../stores/clientPriceList";
 export default function ProductCard({ product }) {
   //global
   const deleteProduct = productStore((state) => state.deleteProduct);
   const addedProducts = productStore((state) => state.addedProducts);
   const productsList = productStore((state) => state.products);
+  const clientPriceList = clientPriceListStore(
+    (state) => state.clientPriceList
+  );
   //local
   const [productSum, setProductSum] = useState(0);
 
@@ -32,7 +35,7 @@ export default function ProductCard({ product }) {
 
   return (
     <div className=" rounded-md w-[302px] m-4 bg-gray-50 border pb-2">
-      <div className="w-[300px] rounded-md">
+      <div className="w-[300px]  h-[300px] rounded-md">
         <img
           src={`data:image/jpeg;base64,${product.base64Image}`}
           alt=""
@@ -55,7 +58,7 @@ export default function ProductCard({ product }) {
             value={product.price}
             thousandSeparator=","
             decimalScale={2}
-            prefix={getCurrencySimbol(product.currencyId)}
+            prefix={getCurrencySimbol(clientPriceList?.priceList?.currencyId)}
             id="productPrice"
             disabled
           />
@@ -100,7 +103,7 @@ export default function ProductCard({ product }) {
             value={product.price * product.unitsPerBox * productSum}
             thousandSeparator=","
             decimalScale={2}
-            prefix={getCurrencySimbol(product.currencyId)}
+            prefix={getCurrencySimbol(clientPriceList?.priceList?.currencyId)}
             id="total"
           />
 

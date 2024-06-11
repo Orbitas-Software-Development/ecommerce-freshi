@@ -3,11 +3,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
-import MicroModal from "react-micro-modal";
+import SimpleModal from "../../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../../utils/http/functions";
+
 export default function AddPriceList() {
+  const [listInDolar, setListInDolar] = useState(false);
+  //modal
+  const [modalData, setModalData] = useState(false);
   //local
   const [priceList, setPriceList] = useState([]);
-  const [action, setAction] = useState([]);
   //localStorage
   const user = getUserInfo();
   //Route
@@ -21,11 +28,14 @@ export default function AddPriceList() {
     });
   }
   async function handleSubmit(e) {
-    setAction(true);
     e.preventDefault();
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
 
     priceList.companyId = user.companyId;
-
     priceList?.priceListId
       ? axios
           .put(
@@ -33,37 +43,51 @@ export default function AddPriceList() {
             priceList
           )
           .then((res) => {
-            navigate("/priceList");
-            setAction(false);
+            okResponseModalHandle({
+              setModalData,
+              route: "/priceList",
+              navigate: navigate,
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/priceList",
+              navigate: navigate,
+            });
           })
       : axios
-          .post(
-            `${process.env.REACT_APP_PROD}/api/priceList/createPriceList`,
-            priceList
-          )
+          .post(`${process.env.REACT_APP_PROD}/api/priceList/createPriceList`, {
+            ...priceList,
+            currencyId: listInDolar ? 2 : 1,
+          })
           .then((res) => {
-            navigate("/assignProduct");
-            setAction(false);
+            okResponseModalHandle({
+              setModalData,
+              route: "/assignProduct",
+              navigate: navigate,
+              routeState: {
+                state: res.data,
+              },
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/priceList",
+              navigate: navigate,
+            });
           });
   }
+
   useEffect(() => {
     data && setPriceList(data);
   }, []);
   return (
     <Layout>
-      <MicroModal
-        openInitially={false}
-        open={action}
-        trigger={(open) => <div onClick={open}></div>}
-      >
-        {(close) => (
-          <button onClick={close}>
-            <p className="text-xl">
-              Cargando <i class="fa-solid fa-circle-notch fa-spin fa-lg"></i>{" "}
-            </p>
-          </button>
-        )}
-      </MicroModal>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
         <button
           class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -82,6 +106,19 @@ export default function AddPriceList() {
           class="w-96 mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
+          <label class="inline-flex items-center cursor-pointer ">
+            <input
+              type="checkbox"
+              class="sr-only peer ml-1"
+              onChange={(e) => {
+                setListInDolar(!listInDolar);
+              }}
+            />
+            <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <span class="ms-3 text-lg font-medium text-gray-900 dark:text-gray-300">
+              Lista en Dólares
+            </span>
+          </label>
           <div class="mb-5">
             <label
               for="name"

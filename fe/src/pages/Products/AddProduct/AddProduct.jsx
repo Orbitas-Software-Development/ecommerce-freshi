@@ -3,6 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
+
+import SimpleModal from "../../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../../utils/http/functions";
+import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectButton";
 export default function AddProduct() {
   //localStorage
   const user = getUserInfo();
@@ -13,24 +20,42 @@ export default function AddProduct() {
   //local
   const [product, setProduct] = useState({});
   const [iva, setIva] = useState([]);
-  const [category, setCategory] = useState([]);
-  const [currencies, setCurrencies] = useState([]);
-  const [priceList, setPriceList] = useState([]);
+  const [categories, setCategory] = useState([]);
+  const [imageError, setImageError] = useState(false);
+  //close modal
+  const [modalData, setModalData] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setModalData({
+      loading: true,
+      text: <>Procesando</>,
+      icon: "loading",
+    });
     let productDTO = product;
     productDTO.companyId = user.companyId;
     productDTO.currencyId = 1;
     productDTO?.id
       ? axios
-          .post(
+          .put(
             `${process.env.REACT_APP_PROD}/api/product/UpdateProduct`,
             productDTO
           )
           .then((res) => {
-            navigate("/products");
+            okResponseModalHandle({
+              setModalData,
+              route: "/products",
+              navigate: navigate,
+              message: "Actualizado",
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/products",
+              navigate: navigate,
+            });
           })
       : axios
           .post(
@@ -38,23 +63,45 @@ export default function AddProduct() {
             productDTO
           )
           .then((res) => {
-            navigate("/products");
+            okResponseModalHandle({
+              setModalData,
+              route: "/products",
+              navigate: navigate,
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/products",
+              navigate: navigate,
+            });
           });
   };
   const handleData = (e) => {
     e.preventDefault();
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
-
   const handleImage = (e) => {
     var file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
+      setImageError(false);
       let encoded = reader.result.toString().replace(/^data:(.*,)?/, "");
       if (encoded.length % 4 > 0) {
         encoded += "=".repeat(4 - (encoded.length % 4));
       }
+      let image = new Image();
+      image.src = reader.result.toString();
+      image.onload = function () {
+        this.height;
+        this.width;
+        if (this.height > this.width) {
+          setImageError(true);
+          document.getElementById("base64Image").value = "";
+        }
+      };
 
       setProduct({
         ...product,
@@ -77,26 +124,13 @@ export default function AddProduct() {
           )
           .then((res) => {
             setIva(res.data);
-            axios
-              .get(
-                `${process.env.REACT_APP_PROD}/api/currency/getCompanyCurrency`
-              )
-              .then((res) => {
-                setCurrencies(res.data);
-                axios
-                  .get(
-                    `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
-                  )
-                  .then((res) => {
-                    setPriceList(res.data);
-                  });
-              });
           });
       });
   }, []);
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="flex flex-row justify-start items-start">
         <button
           className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -114,15 +148,33 @@ export default function AddProduct() {
               Producto
             </h1>
           </div>
-          <form className="mt-4 border rounded-md p-4 " onSubmit={handleSubmit}>
+          <form className="my-4 border rounded-md p-4 " onSubmit={handleSubmit}>
             <div className="mb-5 W-F">
+              {" "}
+              <label
+                for="name"
+                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              >
+                Nombre
+              </label>
+              <input
+                type="text"
+                id="name"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Digíte nombre"
+                required
+                name="name"
+                value={product?.name || ""}
+                onChange={(e) => handleData(e)}
+                autoComplete="off"
+              />
               <label
                 for="description"
                 className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Descripción
               </label>
-              <input
+              <textarea
                 type="text"
                 id="description"
                 className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -155,20 +207,58 @@ export default function AddProduct() {
                 className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
                 Imagen
-              </label>
+              </label>{" "}
               <input
                 type="file"
                 accept="image/png, image/jpeg"
                 id="base64Image"
-                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
                 placeholder="Imagen"
-                required
+                required={product?.base64Image ? false : true}
                 name="base64Image"
                 onChange={(e) => handleImage(e)}
                 autoComplete="off"
-                height="450px"
-                width="450px"
               />
+              {product?.base64Image && !imageError ? (
+                <div className={`flex justify-center items-center my-4 ml-2 `}>
+                  <div
+                    className={`flex justify-center items-center ${
+                      imageError ? "border-red-400" : "border-green-400"
+                    } border-4 rounded border-solid  min-w-[300px] min-h-[300px] max-h-[300px]  max-w-[300px]`}
+                  >
+                    <img
+                      className="object-cover bg-center rounded-sm"
+                      src={
+                        !imageError &&
+                        `data:image/png;base64,${product.base64Image}`
+                      }
+                      alt="product photo"
+                      width={"300px"}
+                      height={"300px"}
+                      onChange={(e) => {
+                        console.log(e);
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center  flex-col my-4 ml-2 ">
+                  <div
+                    className={`flex justify-center items-center ${
+                      imageError ? "border-red-400" : "border-green-400"
+                    } border-4 rounded border-solid  min-w-[300px] min-h-[300px] max-h-[300px]  max-w-[300px] `}
+                  >
+                    Imagen
+                  </div>
+                  {imageError && (
+                    <label className="mb-1  text-red-400">
+                      La imagen debe ser proporcionalmente igual en sus
+                      dimenciones o ser el ancho mayor que el largo. Ejemplo:
+                      300x300, 800x800, 400x300, 800x500
+                    </label>
+                  )}
+                </div>
+              )}
               <label
                 for="unitsPerBox"
                 className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
@@ -220,7 +310,7 @@ export default function AddProduct() {
                 }}
               >
                 <option value="">Seleccione Categoria</option>
-                {category.map((value, index) =>
+                {categories.map((value, index) =>
                   value.id == product.categoryId ? (
                     <option key={index} value={value.id} selected>
                       {value.name}
@@ -232,6 +322,17 @@ export default function AddProduct() {
                   )
                 )}
               </select>{" "}
+              {categories.length === 0 && (
+                <>
+                  <div className="w-full">
+                    <RedirectButton
+                      message={"No hay categorias Registrados"}
+                      redirect={"/categoryForm"}
+                      actionMessage={"Registar categoria"}
+                    />
+                  </div>
+                </>
+              )}
               <label
                 for="iva"
                 className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
@@ -259,74 +360,17 @@ export default function AddProduct() {
                   )
                 )}
               </select>
-              {/*   <label
-                for="currency"
-                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
-              >
-                Moneda
-              </label>
-              <select
-                id="currency"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                name="currencyId"
-                onChange={(e) => {
-                  e.target.value !== "" && handleData(e);
-                }}
-              >
-                <option value="">Seleccione Moneda</option>
-                {currencies.map((value, index) =>
-                  value.id == product.currencyId ? (
-                    <option key={index} value={value.id} selected>
-                      {value.name}
-                    </option>
-                  ) : (
-                    <option key={index} value={value.id}>
-                      {value.name}
-                    </option>
-                  )
-                )}
-              </select>
-           }  <label
-                for="currency"
-                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
-              >
-                Lista
-              </label>
-              <select
-                id="priceList"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                name="priceListId"
-                onChange={(e) => {
-                  e.target.value !== "" && handleData(e);
-                }}
-              >
-                <option value="">Seleccione Lista de precios</option>
-                {priceList.map((value, index) => (
-                  <option key={index} value={value.priceListId}>
-                    {value.name}
-                  </option>
-                ))}
-              </select>
-              <label
-                for="price"
-                className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
-              >
-                Precio
-              </label>
-              <input
-                type="price"
-                id="price"
-                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Digíte precio"
-                required
-                name="price"
-                value={product?.price || ""}
-                onChange={(e) => handleData(e)}
-                autoComplete="off"
-              />
-              */}
+              {iva.length === 0 && (
+                <>
+                  <div className="w-full">
+                    <RedirectButton
+                      message={"No hay IVA Registrado"}
+                      redirect={"/addIva"}
+                      actionMessage={"Registar IVA"}
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <button
               type="submit"
@@ -335,17 +379,6 @@ export default function AddProduct() {
               Guardar
             </button>
           </form>
-        </div>
-        <div className="">
-          <h1 className="mt-4 font-semibold text-3xl text-center">Imagen</h1>
-          <div className="h-full flex justify-center items-start mt-4 ml-2">
-            <img
-              className="object-contain rounded border border-solid p-2"
-              src={`data:image/png;base64,${product.base64Image}`}
-              alt="product photo"
-              width={"200px"}
-            />
-          </div>
         </div>
       </div>
     </Layout>

@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import Layout from "../../../components/Layout/Layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,15 +9,17 @@ import {
   okResponseModalHandle,
   errorResponseModalHandle,
 } from "../../../utils/http/functions";
+import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectButton";
 export default function AddBranch() {
   const user = getUserInfo();
   //local
   const [branch, setBranch] = useState({});
   const [clients, setClients] = useState([]);
-
   const [loading, setLoading] = useState(false);
   //route
-  const navigate = new useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const data = location.state;
   //modal
   const [modalData, setModalData] = useState(false);
   async function handleData(e) {
@@ -34,26 +36,38 @@ export default function AddBranch() {
       text: <>Guardando</>,
       icon: "loading",
     });
-    axios
-      .post(`${process.env.REACT_APP_PROD}/createBranch`, branch)
-      .then((res) => {
-        okResponseModalHandle({
-          setModalData,
-          route: "/branchdashboard",
-          navigate: navigate,
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-        errorResponseModalHandle({
-          setModalData,
-          route: "/branchdashboard",
-          navigate: navigate,
-        });
-      });
+
+    branch?.id
+      ? axios
+          .put(`${process.env.REACT_APP_DEV}/api/branch/updateBranch`, branch)
+          .then((res) => {
+            okResponseModalHandle({
+              setModalData,
+              route: "/branchdashboard",
+              navigate: navigate,
+            });
+          })
+      : axios
+          .post(`${process.env.REACT_APP_PROD}/api/branch/createBranch`, branch)
+          .then((res) => {
+            okResponseModalHandle({
+              setModalData,
+              route: "/branchdashboard",
+              navigate: navigate,
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+            errorResponseModalHandle({
+              setModalData,
+              route: "/branchdashboard",
+              navigate: navigate,
+            });
+          });
   }
 
   useEffect(() => {
+    data && setBranch(data);
     setModalData({
       loading: true,
       text: <>Cargando</>,
@@ -106,7 +120,7 @@ export default function AddBranch() {
           </h1>
         </div>
         <form
-          class="w-1/3  mx-auto mt-4 border rounded-md p-8"
+          class="w-1/3  mx-auto my-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">
@@ -125,33 +139,31 @@ export default function AddBranch() {
               }}
             >
               <option value="">Seleccione Cliente</option>
-              {clients.map((value, index) => (
-                <option key={index} value={value.id}>
-                  {value.name}
-                </option>
-              ))}
+              {clients.map((value, index) =>
+                value.id === branch?.clientId ? (
+                  <option key={index} value={value.id} selected>
+                    {value.name}
+                  </option>
+                ) : (
+                  <option key={index} value={value.id}>
+                    {value.name}
+                  </option>
+                )
+              )}
             </select>
-            <label
-              for="priceListId"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
-            >
-              Lista de precios
-            </label>
-            {/*<select
-              required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              name="priceListId"
-              onChange={(e) => {
-                e.target.value !== "" && handleData(e);
-              }}
-            >
-              <option value="">Seleccione Lista de precios</option>
-              {priceList.map((value, index) => (
-                <option key={index} value={value.priceListId}>
-                  {value.name}
-                </option>
-              ))}
-            </select>*/}
+            {clients.length === 0 && (
+              <>
+                <div className="w-full">
+                  <RedirectButton
+                    message={"No hay clientes Registrados"}
+                    redirect={"/clientForm"}
+                    actionMessage={"Registar cliente"}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+          <div class="mb-5">
             <label
               for="name"
               class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
@@ -166,8 +178,10 @@ export default function AddBranch() {
               required
               name="name"
               onChange={(e) => handleData(e)}
+              value={branch?.name || ""}
             />
           </div>
+
           <div class="mb-5">
             <label
               for="phoneNumber"
@@ -183,6 +197,7 @@ export default function AddBranch() {
               required
               onChange={(e) => handleData(e)}
               placeholder="Dígite Teléfono"
+              value={branch?.phoneNumber || ""}
             />
             <label
               for="direction"
@@ -199,6 +214,7 @@ export default function AddBranch() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite Dirección"
               autoComplete="off"
+              value={branch?.direction || ""}
             />
             <label
               for="latitude"
@@ -215,6 +231,7 @@ export default function AddBranch() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite Latitud"
               autoComplete="off"
+              value={branch?.latitude || ""}
             />
             <label
               for="longitud"
@@ -231,9 +248,9 @@ export default function AddBranch() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite longitude"
               autoComplete="off"
+              value={branch?.longitude || ""}
             />
           </div>
-
           <button
             type="submit"
             class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
