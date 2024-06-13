@@ -176,7 +176,7 @@ namespace ecommerce_freshydeli.Controllers
                 }
                 user.PasswordHash = userManager.PasswordHasher.HashPassword(user, updateUserDTO.Password);
                 user.EmailConfirmed = true;
-                EmailServices.SendUserRegistered(new { fullName = user.FullName, user = user.UserName, password = user.UserName, Action = "update" });
+                EmailServices.SendUserRegistered(new { email=user.Email,fullName = user.FullName, user = user.UserName, password = user.UserName, Action = "update" });
                 await userManager.UpdateAsync(user);
                 return Ok(new { update = true });
             }
