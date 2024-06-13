@@ -56,7 +56,7 @@ namespace ecommerce_freshydeli.Services
                 }
 
                 //subject
-                mailMessage.Subject = $"{report.Subject}_{parameters.OrderId}";
+                mailMessage.Subject = $"{report.Subject}-{parameters.OrderId}";
 
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Body = GetHtml("ORDER_FRESHI", parameters);
