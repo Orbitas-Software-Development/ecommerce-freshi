@@ -40,8 +40,9 @@ namespace ecommerce_freshydeli.Controllers
                 await ctx.PriceListProduct.AddRangeAsync(priceListProducts);
 
                 await ctx.SaveChangesAsync();
+                    List<PriceListProduct> updatedPriceListProduct = mapper.Map<List<PriceListProduct>>(priceListProductDTOs);
 
-                return Ok();
+                    return Ok(updatedPriceListProduct);
                 }
 
                ctx.PriceListProduct.RemoveRange(RegisteredPriceListProduct);

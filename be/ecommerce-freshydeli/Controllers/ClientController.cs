@@ -29,7 +29,21 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
                 List<Client> clients = await ctx.Client.Where(c => c.CompanyId == Id).Where(c => c.Active == true).Include(c => c.Company).Include(c=>c.Person).ToListAsync();
-                return Ok(clients);
+                List<ClientDTO> clientsDTOs= mapper.Map<List<ClientDTO>>(clients);
+
+
+                List<ClientPriceList> clientPriceLists = await ctx.ClientPriceList.Include(cp=>cp.PriceList).ToListAsync();
+
+                foreach (var clientsDTO in clientsDTOs)
+                {
+                    ClientPriceList foundList =  clientPriceLists.Find(PriceList => PriceList.ClientId == clientsDTO.Id);
+                    clientsDTO.PriceListId = foundList.PriceListId;
+                    clientsDTO.PriceListName = foundList.PriceList.Name;
+
+                }
+
+
+                return Ok(clientsDTOs);
             }
             catch (Exception ex)
             {
