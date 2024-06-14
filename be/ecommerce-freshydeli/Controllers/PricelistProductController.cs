@@ -99,7 +99,7 @@ namespace ecommerce_freshydeli.Controllers
             catch (Exception ex) { return BadRequest(ex.Message); }
         }
 
-        [HttpGet("geProductListByClientId/{clientId}")]
+        [HttpGet("getProductListByClientId/{clientId}")]
         public async Task<ActionResult> ClientPriceList(int clientId)
         {
 
