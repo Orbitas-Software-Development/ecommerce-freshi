@@ -39,6 +39,14 @@ export default function Products() {
         setModalData({
           loading: false,
         });
+      })
+      .catch((res) => {
+        errorResponseModalHandle({
+          message: "Error al cargar los datos",
+          route: "/admindashboard",
+          setModalData,
+          navigate,
+        });
       });
   }, []);
   const deleteProductId = async (productId) => {
@@ -71,46 +79,71 @@ export default function Products() {
       .catch((err) => {
         errorResponseModalHandle({
           message: "Error al eliminar",
-          setModalData,
+          route: "/admindashboard",
+          navigate: navigate,
         });
       });
   };
   const columns = [
     {
+      name: "#",
+      center: true,
+      sortable: true,
+      selector: (row, index) => index + 1,
+    },
+    {
       name: "Nombre",
+      center: true,
+      sortable: true,
       selector: (row) => row.name,
     },
     {
       name: "Descripción",
+      center: true,
+      sortable: true,
+      wrap: true,
       selector: (row) => row.description,
     },
     {
       name: "Código",
+      center: true,
+      sortable: true,
       selector: (row) => row.code,
     },
 
     {
       name: "Unidades por caja",
+      center: true,
+      sortable: true,
       selector: (row) => row.unitsPerBox,
     },
     {
       name: "Peso",
+      center: true,
+      sortable: true,
       selector: (row) => row.unitWeight,
     },
     {
       name: "Categoría",
+      center: true,
+      sortable: true,
       selector: (row) => row.category.name,
     },
     {
       name: "IVA",
+      center: true,
+      sortable: true,
       selector: (row) => row.iva.name,
     },
     {
       name: "Moneda",
+      center: true,
+      sortable: true,
       selector: (row) => row.currency.name,
     },
     {
       name: "Editar",
+      center: true,
       cell: (product) => (
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
@@ -123,9 +156,10 @@ export default function Products() {
     },
     {
       name: "Eliminar",
+      center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md text-lg"
           type="button"
           onClick={(e) => deleteProductId(row.id)}
         >

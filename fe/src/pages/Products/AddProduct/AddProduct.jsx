@@ -214,7 +214,7 @@ export default function AddProduct() {
                 id="base64Image"
                 className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
                 placeholder="Imagen"
-                required={product?.base64Image ? false : true}
+                required
                 name="base64Image"
                 onChange={(e) => handleImage(e)}
                 autoComplete="off"
@@ -280,7 +280,7 @@ export default function AddProduct() {
                 for="unitWeight"
                 className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
               >
-                Peso
+                Peso Unitario
               </label>
               <input
                 type="text"

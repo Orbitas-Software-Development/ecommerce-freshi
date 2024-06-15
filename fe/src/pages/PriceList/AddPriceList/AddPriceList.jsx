@@ -27,8 +27,10 @@ export default function AddPriceList() {
       [e.target.name]: e.target.value,
     });
   }
+
   async function handleSubmit(e) {
     e.preventDefault();
+
     setModalData({
       loading: true,
       text: <>Guardando</>,
@@ -36,7 +38,7 @@ export default function AddPriceList() {
     });
 
     priceList.companyId = user.companyId;
-    priceList?.priceListId
+    priceList?.id
       ? axios
           .put(
             `${process.env.REACT_APP_PROD}/api/priceList/updatePriceList`,
@@ -110,6 +112,7 @@ export default function AddPriceList() {
             <input
               type="checkbox"
               class="sr-only peer ml-1"
+              checked={priceList?.currencyId === 2 ? true : false}
               onChange={(e) => {
                 setListInDolar(!listInDolar);
               }}

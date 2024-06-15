@@ -5,6 +5,7 @@ import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
 import "react-toastify/dist/ReactToastify.css";
 import SimpleModal from "../../../components/Modals/SimpleModal";
+import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectButton";
 import {
   okResponseModalHandle,
   errorResponseModalHandle,
@@ -15,6 +16,7 @@ export default function AddClient() {
   const [persons, setPersons] = useState([]);
   const [clientPriceList, setClientPriceList] = useState([]);
   const [priceList, setPriceList] = useState([]);
+  const [priceListNoRecords, setPriceListNoRecords] = useState("");
   //localhost
   const user = getUserInfo();
   //modal
@@ -89,25 +91,26 @@ export default function AddClient() {
     });
     axios
       .get(`${process.env.REACT_APP_PROD}/api/cuentas/getPersons`)
-      .then((res) => {
+      .then(async (res) => {
         setPersons(res.data);
-        axios
+        await axios
           .get(
-            `${process.env.REACT_APP_PROD}/api/ClientPriceList/getClientPriceListByClientId/${data.id}`
+            `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
-            setClientPriceList(res.data);
-            axios
-              .get(
-                `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
-              )
-              .then((res) => {
-                setPriceList(res.data);
-                setModalData({
-                  loading: false,
-                });
-              });
+            setPriceList(res.data);
           });
+        data?.id &&
+          (await axios
+            .get(
+              `${process.env.REACT_APP_PROD}/api/ClientPriceList/getClientPriceListByClientId/${data?.id}`
+            )
+            .then((res) => {
+              setClientPriceList(res.data);
+            }));
+        setModalData({
+          loading: false,
+        });
       })
       .catch((e) => {
         console.log(e);
@@ -118,7 +121,17 @@ export default function AddClient() {
         });
       });
   }, []);
-
+  const validatePriceList = async (e) => {
+    let res = await axios.get(
+      `${process.env.REACT_APP_PROD}/api/PricelistProduct/getPricelistProductByPriceListId/${e.target.value}`
+    );
+    if (res.data.length > 0) {
+      setPriceListNoRecords("");
+      return handleData(e);
+    } else {
+      setPriceListNoRecords("No tiene producto asignados");
+    }
+  };
   return (
     <Layout>
       <SimpleModal data={modalData} />
@@ -138,7 +151,7 @@ export default function AddClient() {
           </h1>
         </div>
         <form
-          className="w-1/3 mx-auto mt-4 border rounded-md p-8"
+          className="w-1/3 mx-auto my-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div className="mb-5">
@@ -147,7 +160,7 @@ export default function AddClient() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="priceListId"
               onChange={(e) => {
-                e.target.value !== "" && handleData(e);
+                e.target.value !== "" && validatePriceList(e);
               }}
             >
               <option value="">Seleccione Lista de precios</option>
@@ -162,7 +175,16 @@ export default function AddClient() {
                   </option>
                 )
               )}
-            </select>
+            </select>{" "}
+            {priceListNoRecords && (
+              <div className="w-full">
+                <RedirectButton
+                  message={"No hay productos asignados para esta lista"}
+                  redirect={"/priceList"}
+                  actionMessage={"Editar Lista"}
+                />
+              </div>
+            )}
           </div>
           <div className="mb-5">
             <label
@@ -204,7 +226,7 @@ export default function AddClient() {
               {persons.map((value, index) =>
                 value.id === client?.personId ? (
                   <option key={index} value={value.id} selected>
-                    {value.name === "legal" ? "Juídica" : "Física"}
+                    {value.name === "legal" ? "Jurídica" : "Física"}
                   </option>
                 ) : (
                   <option key={index} value={value.id}>

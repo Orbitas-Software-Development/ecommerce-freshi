@@ -4,6 +4,11 @@ import { getUserInfo } from "../../utils/localStorage/functions";
 import MicroModal from "react-micro-modal";
 import Layout from "../../components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
+import SimpleModal from "../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../utils/http/functions";
 export default function CompanyInformation() {
   //localStorage
   const user = getUserInfo();
@@ -12,47 +17,72 @@ export default function CompanyInformation() {
   const [action, setAction] = useState(false);
   //Route
   const navigate = new useNavigate();
+  //modal
+  const [modalData, setModalData] = useState(false);
   const handleData = (e) => {
     setInformation({ ...information, [e.target.name]: e.target.value });
   };
+
   //Guarda los datos
   async function handleSubmit(e) {
     e.preventDefault();
-    setAction(true);
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
     axios
       .post(`${process.env.REACT_APP_PROD}/api/companyInformation/saveInfo`, {
         ...information,
         ["companyId"]: user.companyId,
       })
       .then((res) => {
+        setModalData({
+          loading: false,
+        });
         res.data.information && setInformation(res.data.information);
-        setAction(false);
       })
       .catch((e) => {
+        errorResponseModalHandle({
+          message: "Error al Guardar",
+          route: "/admindashboard",
+          navigate: navigate,
+        });
         console.log(e);
-        setAction(false);
       });
   }
 
   //obtiene la info
   useEffect(() => {
-    setAction(true);
+    setModalData({
+      loading: true,
+      text: <>Cargando</>,
+      icon: "loading",
+    });
     axios
       .get(
         `${process.env.REACT_APP_PROD}/api/companyInformation/getInfo/${user.companyId}`
       )
       .then((res) => {
+        setModalData({
+          loading: false,
+        });
         res.data.information && setInformation(res.data.information);
-        setAction(false);
       })
       .catch((e) => {
+        errorResponseModalHandle({
+          message: "Cargar los datos",
+          route: "/admindashboard",
+          setModalData,
+          navigate: navigate,
+        });
         console.log(e);
-        setAction(false);
       });
   }, []);
 
   return (
     <Layout>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
         <button
           type="submit"

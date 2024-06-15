@@ -78,23 +78,33 @@ export default function Iva() {
   };
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.id,
+      name: "#",
+      sortable: true,
+      center: true,
+      selector: (row, index) => index + 1,
     },
     {
       name: "name",
+      sortable: true,
+      center: true,
       selector: (row) => row.name,
     },
     {
       name: "Description",
+      sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.description,
     },
     {
       name: "Porcentage",
+      sortable: true,
+      center: true,
       selector: (row) => row.porcentage,
     },
     {
       name: "Editar",
+      center: true,
       cell: (row) => (
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
@@ -107,6 +117,7 @@ export default function Iva() {
     },
     {
       name: "Eliminar",
+      center: true,
       cell: (row) => (
         <button
           className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"

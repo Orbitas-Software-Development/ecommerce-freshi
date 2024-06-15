@@ -33,12 +33,14 @@ export default function Category() {
         setCategory(res.data);
         setModalData({
           loading: false,
-        }).cacth((res) => {
-          errorResponseModalHandle({
-            route: "/admindashboard",
-            navigate: navigate,
-            setModalData,
-          });
+        });
+      })
+      .catch((res) => {
+        errorResponseModalHandle({
+          message: "Error al cargar los datos",
+          route: "/admindashboard",
+          setModalData,
+          navigate,
         });
       });
   }, []);
@@ -79,19 +81,24 @@ export default function Category() {
 
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.id,
+      name: "#",
+      sortable: true,
+      center: true,
+      selector: (row, index) => index + 1,
     },
     {
       name: "name",
+      sortable: true,
+      center: true,
       selector: (row) => row.name,
     },
 
     {
       name: "Editar",
+      center: true,
       cell: (row) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 my-2 rounded-md  text-lg"
           type="button"
           onClick={(e) => navigate("/categoryForm", { state: row })}
         >
@@ -101,9 +108,10 @@ export default function Category() {
     },
     {
       name: "Eliminar",
+      center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 my-2 rounded-md  text-lg"
           type="button"
           onClick={(e) => deleteCategory(row.id)}
         >

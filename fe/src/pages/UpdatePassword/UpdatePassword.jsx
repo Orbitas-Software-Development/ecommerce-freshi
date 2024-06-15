@@ -22,7 +22,7 @@ export default function UpdatePassword() {
   const updatePasword = () => {
     setLoading(true);
     axios
-      .post(`https://localhost:7065/updateuser`, {
+      .post(`${process.env.REACT_APP_PROD}/updateuser`, {
         ...password,
         ["id"]: getUserInfo().id,
       })

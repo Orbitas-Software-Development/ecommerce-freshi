@@ -50,38 +50,54 @@ export default function BranchesDashboard() {
   }, []);
   const columns = [
     {
-      name: "Creado",
-      selector: (row) => new Date(row.createdDate).toLocaleDateString(),
+      name: "#",
+      sortable: true,
+      center: true,
+      selector: (row, index) => index + 1,
     },
+
     {
       name: "Nombre",
+      sortable: true,
+      center: true,
       selector: (row) => row.name,
     },
     {
       name: "Télefono",
+      sortable: true,
+      center: true,
       selector: (row) => row.phoneNumber,
     },
     {
       name: "Dirección",
+      sortable: true,
+      center: true,
       selector: (row) => row.direction,
     },
     {
       name: "Latitud",
+      sortable: true,
+      center: true,
       selector: (row) => row.latitude,
     },
     {
       name: "Longitud",
+      sortable: true,
+      center: true,
       selector: (row) => row.longitude,
     },
     {
       name: "Cliente",
+      sortable: true,
+      center: true,
       selector: (row) => row.client.name,
     },
     {
       name: "Acción",
+      center: true,
       cell: (branch) => (
         <button
-          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 my-4 rounded-md "
           type="button"
           onClick={(e) => navigate("/branchForm", { state: branch })}
         >
@@ -91,9 +107,10 @@ export default function BranchesDashboard() {
     },
     {
       name: "Action",
+      center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 my-4 rounded-md  text-lg"
           type="button"
           onClick={(e) => deleteBranch(row.id)}
         >

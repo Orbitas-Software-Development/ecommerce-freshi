@@ -83,49 +83,64 @@ export default function UserDashboard() {
 
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.id,
+      name: "#",
+      sortable: true,
+      center: true,
+      selector: (row, index) => index + 1,
     },
+
     {
       name: "Usuario",
+      sortable: true,
+      center: true,
       selector: (row) => row.userName,
     },
     {
       name: "Nombre",
+      sortable: true,
+      center: true,
       selector: (row) => row.fullName,
     },
     {
       name: "Identificación",
+      sortable: true,
+      center: true,
       selector: (row) => row.personalIdentification,
     },
     {
       name: "Sucursal",
+      sortable: true,
+      center: true,
       selector: (row) => row.branch?.name,
     },
     {
       name: "Cliente",
+      sortable: true,
+      center: true,
       selector: (row) => row.branch?.client?.name,
     },
     {
-      name: "Veficación",
+      name: "Verificación",
+      center: true,
       selector: (row) =>
         row.emailConfirmed ? (
           <i
-            className="fa-solid fa-square-check  fa-2xl  m-4"
+            className="fa-solid fa-square-check  fa-2xl  my-4"
             style={{ color: "#63E6BE " }}
           ></i>
         ) : (
           <i
-            className="fa-solid fa-circle-xmark fa-2xl m-4"
+            className="fa-solid fa-circle-xmark fa-2xl my-4"
             style={{ color: "#e66565" }}
           ></i>
         ),
     },
     {
       name: "Acción",
+      center: true,
       cell: (user) => (
         <button
-          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 my-4 rounded-md "
           type="button"
           onClick={(e) => navigate("/userForm", { state: user })}
         >
@@ -135,9 +150,10 @@ export default function UserDashboard() {
     },
     {
       name: "Action",
+      center: true,
       cell: (row) => (
         <button
-          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md "
+          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 my-4 rounded-md "
           type="button"
           onClick={(e) => deleteUser(row.id, user.companyId)}
         >
@@ -153,7 +169,6 @@ export default function UserDashboard() {
 
   return (
     <Layout>
-      {" "}
       <SimpleModal data={modalData} />
       {
         <div className="w-full flex flex-col justify-start items-start p-5">
@@ -188,17 +203,7 @@ export default function UserDashboard() {
                 <div className="border rounded-md w-full">
                   <Table columns={columns} data={clients} />
                 </div>
-                <div className="text-center w-full">
-                  <button
-                    className=" text-lg text-center bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
-                    type="button"
-                    onClick={(e) => {
-                      updateClient();
-                    }}
-                  >
-                    Guardar <i className="fa-solid fa-floppy-disk"></i>
-                  </button>
-                </div>
+                <div className="text-center w-full"></div>
               </>
             ) : (
               <EmptyResponse

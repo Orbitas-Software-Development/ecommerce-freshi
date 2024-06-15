@@ -82,10 +82,10 @@ export default function AddUser() {
       });
   };
   useEffect(() => {
-    data && setUser(data);
+    data && setUser({ ...data, clientId: data.branch.clientId });
     setModalData({
       loading: true,
-      text: <>Guardando</>,
+      text: <>Cargando</>,
       icon: "loading",
     });
     axios
@@ -103,6 +103,7 @@ export default function AddUser() {
             }`
           )
           .then((res) => {
+            console.log(res.data);
             setModalData({
               loading: false,
             });
@@ -131,13 +132,13 @@ export default function AddUser() {
           }}
         >
           Atras
-        </button>{" "}
+        </button>
         <div className="w-full">
           <h1 className="mt-4 font-semibold text-3xl text-center">
             Registro de usuarios
           </h1>
         </div>
-        <ToastContainer position="bottom-center" />{" "}
+        <ToastContainer position="bottom-center" />
         <form
           class="w-[50%] mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
@@ -159,16 +160,14 @@ export default function AddUser() {
             >
               <option value="">Seleccione Cliente</option>
               {clients.map((value, index) =>
-                value.id === user?.branch?.clientId ? (
+                value.id === user?.clientId ? (
                   <option key={index} value={value.id} selected>
                     {value.name}
                   </option>
                 ) : (
-                  clients.map((value, index) => (
-                    <option key={index} value={value.id}>
-                      {value.name}
-                    </option>
-                  ))
+                  <option key={index} value={value.id}>
+                    {value.name}
+                  </option>
                 )
               )}
             </select>
@@ -198,10 +197,10 @@ export default function AddUser() {
               required
             >
               <option value="">Seleccione Sucursal</option>
-              {user?.branch?.clientId
+              {user?.clientId
                 ? branches.map((value, index) => (
                     <>
-                      {value.clientId === parseInt(user?.branch?.clientId) ? (
+                      {value.clientId === parseInt(user?.clientId) ? (
                         <>
                           {user?.branchId == value.id ? (
                             <option key={index} value={value.id} selected>

@@ -97,23 +97,39 @@ export default function ClientDashboard() {
 
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.id,
+      name: "#",
+      sortable: true,
+      center: true,
+      selector: (row, index) => index + 1,
+    },
+    {
+      name: "Creado",
+      sortable: true,
+      center: true,
+      selector: (row) => new Date(row.createdDate).toLocaleDateString(),
     },
     {
       name: "Nombre",
+      sortable: true,
+      center: true,
       selector: (row) => row.name,
     },
     {
       name: "Cédula Jurídica",
+      sortable: true,
+      center: true,
       selector: (row) => row.identifier,
     },
+
     {
-      name: "Creado",
-      selector: (row) => new Date(row.createdDate).toLocaleDateString(),
+      name: "Lista asignada",
+      sortable: true,
+      center: true,
+      selector: (row) => row.priceListName,
     },
     {
       name: "Moroso",
+      center: true,
       cell: (row) => (
         <input
           type="checkbox"
@@ -124,6 +140,7 @@ export default function ClientDashboard() {
     },
     {
       name: "Activo",
+      center: true,
       cell: (row) => (
         <input
           type="checkbox"
@@ -132,11 +149,13 @@ export default function ClientDashboard() {
         />
       ),
     },
+
     {
       name: "Acción",
+      center: true,
       cell: (client) => (
         <button
-          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4  my-4 rounded-md "
           type="button"
           onClick={(e) => navigate("/clientform", { state: client })}
         >
@@ -146,9 +165,10 @@ export default function ClientDashboard() {
     },
     {
       name: "Acción",
+      center: true,
       cell: (row) => (
         <button
-          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6"
+          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4  my-4 rounded-md "
           type="button"
           onClick={(e) => deleteClient(row.id)}
         >

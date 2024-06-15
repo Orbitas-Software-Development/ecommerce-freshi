@@ -74,7 +74,7 @@ export default function Home() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/api/PricelistProduct/geProductListByClientId/${userInfo.branch.clientId}`
+        `${process.env.REACT_APP_PROD}/api/PricelistProduct/getProductListByClientId/${userInfo.branch.clientId}`
       )
       .then((res) => {
         productDTOlist(res.data);
