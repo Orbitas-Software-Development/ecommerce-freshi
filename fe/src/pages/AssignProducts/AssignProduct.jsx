@@ -5,7 +5,10 @@ import { getUserInfo } from "../../utils/localStorage/functions";
 import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
 import { NumericFormat } from "react-number-format";
 import { priceListDto } from "../../utils/DTOs/priceListProcuct";
-import { updateAssignedProduct } from "../../utils/Functions/pages/assignProductFunctions";
+import {
+  updateAssignedProduct,
+  validateEmptyFields,
+} from "../../utils/Functions/pages/assignProductFunctions";
 import axios from "axios";
 import SimpleModal from "../../components/Modals/SimpleModal";
 import Table from "../../components/Tables/Table/Table";
@@ -27,7 +30,7 @@ export default function AssignProduct() {
   const active = (id) => {
     let newProduct = products.map((product) => {
       if (product.id == id) {
-        product.active = !product?.active;
+        product.added = !product?.added;
         product.price = "";
       }
       return product;
@@ -44,7 +47,15 @@ export default function AssignProduct() {
     });
     setProduct(newProductList);
   };
+
   const handleSubmit = async () => {
+    if (validateEmptyFields(products))
+      return errorResponseModalHandle({
+        message: "Asigne precio a los productos agregados",
+        time: 3000,
+        modalIcon: "info",
+        setModalData,
+      });
     setModalData({
       loading: true,
       text: <>Guardando</>,
@@ -107,8 +118,14 @@ export default function AssignProduct() {
       });
   }, []);
   const columns = [
-    { center: true, name: "Nombre", selector: (row) => row.name },
     {
+      sortable: true,
+      center: true,
+      name: "Nombre",
+      selector: (row) => row.name,
+    },
+    {
+      sortable: true,
       center: true,
       name: "Unidades por caja",
       selector: (row) => row.unitsPerBox,
@@ -116,6 +133,7 @@ export default function AssignProduct() {
     {
       name: "Descripción",
       center: true,
+      sortable: true,
       wrap: true,
       selector: (row) => row.description,
     },
@@ -132,14 +150,20 @@ export default function AssignProduct() {
       ),
     },
     {
-      name: "Agregar",
+      name: "Agregado",
+      center: true,
+      sortable: true,
+      selector: (product) => (product?.added ? "Agregado" : "No Agregado"),
+    },
+    {
+      name: "Acción",
       center: true,
       cell: (product) => (
         <label class="inline-flex items-center cursor-pointer ">
           <input
             name={product.name}
             type="checkbox"
-            checked={product?.active ? true : false}
+            checked={product?.added ? true : false}
             class="sr-only peer ml-1"
             onChange={(e) => {
               active(product.id);
@@ -153,14 +177,14 @@ export default function AssignProduct() {
       ),
     },
     {
-      name: "Precio",
+      name: "Precio unitario",
       center: true,
       cell: (product) => (
         <NumericFormat
           required
           id={product.id}
-          disabled={product?.active ? false : true}
-          autofocus={product?.active ? false : true}
+          disabled={product?.added ? false : true}
+          autofocus={product?.added ? false : true}
           className="w-[300px]  m-1 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:enabled:bg-gray-200"
           placeholder="Ingrese el precio"
           onChange={(e) => {

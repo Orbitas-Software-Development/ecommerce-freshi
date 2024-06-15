@@ -79,31 +79,52 @@ export default function PriceList() {
 
   const columns = [
     {
-      name: "Id",
-      selector: (row) => row.id,
+      name: "#",
+      sortable: true,
+      center: true,
+      selector: (row, index) => index + 1,
     },
     {
       name: "Nombre",
+      sortable: true,
+      center: true,
       selector: (row) => row.name,
     },
     {
       name: "Descripción",
+      sortable: true,
+      center: true,
       selector: (row) => row.description,
     },
     {
-      name: "Editar",
-      cell: (product) => (
+      name: "Acción",
+      center: true,
+      cell: (priceList) => (
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
-          onClick={(e) => navigate("/assignProduct", { state: product })}
+          onClick={(e) => navigate("/priceListform", { state: priceList })}
         >
           Editar
         </button>
       ),
     },
     {
-      name: "Eliminar",
+      name: "Acción",
+      center: true,
+      cell: (product) => (
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          type="button"
+          onClick={(e) => navigate("/assignProduct", { state: product })}
+        >
+          Asignar Producto
+        </button>
+      ),
+    },
+    {
+      name: "Acción",
+      center: true,
       cell: (product) => (
         <button
           className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
