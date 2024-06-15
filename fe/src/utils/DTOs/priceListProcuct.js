@@ -5,15 +5,20 @@ export const priceListDto = (priceList, products) => {
 
   products.map((product) => {
     try {
-      product.price = parseFloat(
-        product?.price
-          .replace(priceList.currencyId === 2 ? "$" : "₡", "")
-          .replace(",", "")
-      );
+      if (product?.price) {
+        console.log(product?.price);
+        product.price = parseFloat(
+          product.price
+            .toString()
+            .replace(",", "")
+            .replace(priceList.currencyId === 1 ? "₡" : "$", "")
+        );
+        console.log(product?.price);
+      }
     } catch (e) {
       console.log(e);
     }
-    if (product?.active && product?.price > 0) {
+    if (product?.added && product?.price > 0) {
       newProductList.push({
         priceListId: priceList.id,
         productId: product.id,
