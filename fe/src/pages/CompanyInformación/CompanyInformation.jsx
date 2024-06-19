@@ -43,12 +43,12 @@ export default function CompanyInformation() {
         res.data.information && setInformation(res.data.information);
       })
       .catch((e) => {
+        console.log(e);
         errorResponseModalHandle({
           message: "Error al Guardar",
           route: "/admindashboard",
           navigate: navigate,
         });
-        console.log(e);
       });
   }
 

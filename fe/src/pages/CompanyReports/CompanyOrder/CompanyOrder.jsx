@@ -1,15 +1,15 @@
 import { React, useEffect, useState } from "react";
-import { getCurrencySimbol } from "../../utils/Currency/currencyFunctions";
+import { getCurrencySimbol } from "../../../utils/Currency/currencyFunctions";
 import axios from "axios";
-import Layout from "../../components/Layout/Layout";
-import { getUserInfo } from "../../utils/localStorage/functions";
+import Layout from "../../../components/Layout/Layout";
+import { getUserInfo } from "../../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
 import MicroModal from "react-micro-modal";
-
-import Table from "../../components/Tables/Table/Table";
-import SimpleModal from "../../components/Modals/SimpleModal";
-import clientPriceListStore from "../../stores/clientPriceList";
-export default function MyOrders() {
+import Table from "../../../components/Tables/Table/Table";
+import SimpleModal from "../../../components/Modals/SimpleModal";
+import clientPriceListStore from "../../../stores/clientPriceList";
+import { wrap } from "framer-motion";
+export default function CompanyOrder() {
   //navigate
   const navigate = new useNavigate();
   const [userInfo, setUserInfo] = useState({});
@@ -55,8 +55,8 @@ export default function MyOrders() {
     setUserInfo(getUserInfo());
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/getOrderByBranchId/${
-          JSON.parse(localStorage.getItem("user")).branchId
+        `${process.env.REACT_APP_DEV}/getOrderByCompanyId/${
+          JSON.parse(localStorage.getItem("user")).companyId
         }`
       )
       .then((res) => {
@@ -82,11 +82,18 @@ export default function MyOrders() {
     },
     {
       name: "FECHA",
-      selector: (row) => new Date(row.createdDate).toLocaleDateString(),
+      wrap: true,
+      selector: (row) => `${new Date(row.createdDate).toLocaleString()} `,
     },
     {
-      name: "ESTATUS",
-      selector: (row) => row.status,
+      name: "CLIENTE",
+      wrap: true,
+      selector: (row) => row.branch.client.name,
+    },
+    {
+      name: "SUCURSALES",
+      wrap: true,
+      selector: (row) => row.branch.name,
     },
     {
       name: "CAJAS TOTALES",
@@ -226,10 +233,10 @@ export default function MyOrders() {
           className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
           type="button"
           onClick={() => {
-            navigate("/home");
+            navigate("/companyReports");
           }}
         >
-          <i class="fa-solid fa-arrow-left text-lg"></i> Inicio
+          <i class="fa-solid fa-arrow-left text-lg"></i> Atras
         </button>
         <div className="w-full flex justify-center border rounded-md">
           <Table columns={columns} data={orders} />

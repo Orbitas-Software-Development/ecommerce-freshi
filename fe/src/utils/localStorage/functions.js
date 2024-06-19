@@ -31,3 +31,6 @@ export const getName = (key) => {
   }
   return user?.fullName;
 };
+export const getRole = (key) => {
+  return JSON.parse(localStorage.getItem("role"));
+};

@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
-import axios from "axios";
-import { getUserInfo } from "../../utils/localStorage/functions";
+
+import { getRole } from "../../utils/localStorage/functions";
 import { useLocation, Link } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 export default function ViewPdf() {
@@ -9,24 +9,8 @@ export default function ViewPdf() {
   const [orderBase64PDF, setOrderBase64PDF] = useState("");
   //route
   const location = useLocation();
-  const data = location.state;
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_PROD}/api/companyInformation/getInfo/${
-          getUserInfo().branch.client.companyId
-        }`
-      )
-      .then((res) => {
-        setInfo(res.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
-    // orderDetailsDTO();
-  }, []);
-
+  //localstorage
+  let role = getRole();
   useEffect(() => {
     setOrderBase64PDF(location.state.pdfReport);
   }, [info]);
@@ -34,7 +18,7 @@ export default function ViewPdf() {
   return (
     <Layout>
       <div className="w-[100vw] ">
-        <Link to="/myorders">
+        <Link to={`${role === "admin" ? "/companyOrder" : "/myorders"}`}>
           <button
             className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
             type="button"

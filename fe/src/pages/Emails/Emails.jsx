@@ -1,6 +1,6 @@
 import React from "react";
 import SimpleCard from "../../components/Cards/SimpleCard/SimpleCard";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Layout from "../../components/Layout/Layout";
 
 export default function Emails() {
@@ -10,7 +10,6 @@ export default function Emails() {
       <div className="flex flex-col">
         <div>
           <button
-            type="submit"
             class="text-white w-[100px] text-lg mx-2 my-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={(e) => {
               navigate("/admindashboard");

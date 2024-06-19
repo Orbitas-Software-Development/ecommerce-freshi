@@ -61,7 +61,7 @@ export default function AddUser() {
   }
   const createBranch = () => {
     axios
-      .post(`${process.env.REACT_APP_PROD}/api/cuentas/register`, {
+      .post(`${process.env.REACT_APP_DEV}/api/cuentas/register`, {
         ...user,
         ["password"]: user.userName,
       })
@@ -73,12 +73,25 @@ export default function AddUser() {
         });
       })
       .catch((e) => {
-        console.log(e);
-        errorResponseModalHandle({
-          setModalData,
-          route: "/userdashboard",
-          navigate: navigate,
-        });
+        e.response.status === 400
+          ? errorResponseModalHandle({
+              message: `El usuario o correo ya existe: ${
+                e.response.data.email !== null ? e.response.data.email : ""
+              } ${
+                e.response.data.userName !== null
+                  ? e.response.data.userName
+                  : ""
+              }`,
+              setModalData,
+              route: "/userdashboard",
+              navigate: navigate,
+              time: 3000,
+            })
+          : errorResponseModalHandle({
+              setModalData,
+              route: "/userdashboard",
+              navigate: navigate,
+            });
       });
   };
   useEffect(() => {

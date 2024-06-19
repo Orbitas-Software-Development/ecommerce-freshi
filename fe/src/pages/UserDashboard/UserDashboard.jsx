@@ -50,19 +50,29 @@ export default function UserDashboard() {
   }, []);
 
   const deleteUser = (clientId, companyId) => {
-    setDeleteLoading(true);
+    setModalData({
+      loading: true,
+      text: <>Eliminando</>,
+      icon: "loading",
+    });
     axios
       .delete(
         `${process.env.REACT_APP_PROD}/deleteUser/${clientId}/${companyId}`
       )
       .then((res) => {
         setClients(res.data);
-        toast("Eliminado correctamente");
-        setDeleteLoading(false);
+        okResponseModalHandle({
+          setModalData,
+          time: 1000,
+          message: "Eliminado",
+        });
       })
       .catch((e) => {
-        toast("No se ha eliminado");
-        setDeleteLoading(false);
+        console.log(e);
+        errorResponseModalHandle({
+          setModalData,
+          time: 3000,
+        });
       });
   };
 
