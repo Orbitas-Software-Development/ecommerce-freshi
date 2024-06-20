@@ -39,6 +39,16 @@ namespace ecommerce_freshydeli.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO registerDto)
         {
+
+            try { 
+            var registeredEmail = await userManager.FindByEmailAsync( registerDto.Email);
+            var registeredUser = await userManager.FindByNameAsync(registerDto.UserName);
+           
+            if(registeredUser != null || registeredEmail != null)
+            {
+                 return BadRequest(new { registeredEmail?.Email, registeredUser?.UserName });
+            }
+
             var user = mapper.Map<ApplicationUser>(registerDto);
             var resultado = await userManager.CreateAsync(user, registerDto.Password);
 
@@ -50,10 +60,12 @@ namespace ecommerce_freshydeli.Controllers
                 return Ok(new { registered = true, user, token = "Por definir", expiratio = "Por definir" });
 
             }
-
-
-
             return BadRequest(new { registered = false, message = resultado.Errors });
+
+            }catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
 
         }
         [HttpPost("/login")]

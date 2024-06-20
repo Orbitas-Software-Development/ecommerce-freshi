@@ -118,8 +118,24 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Order> orders = await applicationDbContext.Order.Where(o => o.Branch.Client.Company.Id == companyId).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ToListAsync();
+                List<Order> orders = await applicationDbContext.Order.Where(o => o.Branch.Client.Company.Id == companyId).Include(ctx=>ctx.Branch).ThenInclude(ctx=>ctx.Client).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ToListAsync();
                 return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpGet("getProduct/{companyId}")]
+        public async Task<IActionResult> getProduct(int companyId)
+        {
+            try
+            {
+                var orders =await  applicationDbContext.Order.Include(o => o.OrdersDetails).Include(o=>o.Branch).ThenInclude(o=>o.Client).ToListAsync();
+
+                return Ok(orders);
+
+
             }
             catch (Exception ex)
             {

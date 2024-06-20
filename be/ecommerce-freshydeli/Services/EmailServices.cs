@@ -20,7 +20,7 @@ namespace ecommerce_freshydeli.Services
 
             // mailMessage.CC.Add(new MailAddress("soporte@orbitacr.net"));
 
-            mailMessage.Subject = "FRESHI - Registro de usuario";
+            mailMessage.Subject = "Registro de usuario";
 
             mailMessage.IsBodyHtml = true;
             if (parameters.Action == "update")

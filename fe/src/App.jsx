@@ -25,11 +25,13 @@ import Category from "./pages/Category/Category";
 import AddCategory from "./pages/Category/AddCategory/AddCategory";
 import Iva from "./pages/Iva/Iva";
 import AddIva from "./pages/Iva/AddIva/AddIva";
-import CompanyOrders from "./pages/CompanyOrders/CompanyOrders";
+
 import Emails from "./pages/Emails/Emails";
 import EditEmail from "./pages/Emails/EditEmail.jsx/EditEmail";
 import AssignProduct from "./pages/AssignProducts/AssignProduct";
-import CropImage from "./components/CropImage/CropImage";
+import CompanyReportDashboard from "./pages/CompanyReportDashboard/CompanyReportDashboard";
+import CompanyOrder from "./pages/CompanyReports/CompanyOrder/CompanyOrder";
+
 function App() {
   let location = useLocation().pathname;
 
@@ -50,7 +52,7 @@ function App() {
         <Route path="/userdashboard" element={<UserDashboard />}></Route>
         <Route path="/userform" element={<AddUser />}></Route>
         <Route path="/updatepassword" element={<UpdatePassword />}></Route>
-        <Route path="/vieworder" element={<ViewPdf />}></Route>
+        <Route path="/viewpdf" element={<ViewPdf />}></Route>
         <Route
           path="/CompanyInformation"
           element={<CompanyInformation />}
@@ -63,11 +65,14 @@ function App() {
         <Route path="/categoryForm" element={<AddCategory />}></Route>
         <Route path="/iva" element={<Iva />}></Route>
         <Route path="/addIva" element={<AddIva />}></Route>
-        <Route path="/CompanyOrders" element={<CompanyOrders />}></Route>{" "}
-        <Route path="/emails" element={<Emails />}></Route>{" "}
-        <Route path="/editEmail" element={<EditEmail />}></Route>{" "}
-        <Route path="/assignProduct" element={<AssignProduct />}></Route>{" "}
-        <Route path="/cropImage" element={<CropImage />}></Route>
+        <Route path="/emails" element={<Emails />}></Route>
+        <Route path="/editEmail" element={<EditEmail />}></Route>
+        <Route path="/assignProduct" element={<AssignProduct />}></Route>
+        <Route
+          path="/companyReports"
+          element={<CompanyReportDashboard />}
+        ></Route>
+        <Route path="/companyOrder" element={<CompanyOrder />}></Route>
         <Route path="*" element={<Navigate to="/login" />}></Route>
       </Routes>
       <Footer />

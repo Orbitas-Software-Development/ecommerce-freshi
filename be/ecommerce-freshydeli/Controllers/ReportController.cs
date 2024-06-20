@@ -26,7 +26,9 @@ namespace ecommerce_freshydeli.Controllers
         {
             try {
                Report report = await  ctx.Report.Where(r=>r.CompanyId==idCompany).Where(r=>r.Name==reportName).FirstOrDefaultAsync();
-               List<EmailReport> emails = await ctx.EmailReport.Where(e => e.ReportId == report.Id).ToListAsync();
+
+               List<EmailReport> emails = await ctx.EmailReport.Where(e => e.ReportId == (report==null?0: report.Id)).ToListAsync();
+                
                 return Ok(new { report,emails });
             }
             catch (Exception ex) { 
