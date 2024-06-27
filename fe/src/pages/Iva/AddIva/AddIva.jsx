@@ -4,10 +4,21 @@ import Layout from "../../../components/Layout/Layout";
 import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
 import MicroModal from "react-micro-modal";
+import ivaStore from "../../../stores/ivaStore";
+import { validateExistedValue } from "../../../utils/utils";
+import SimpleModal from "../../../components/Modals/SimpleModal";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../../utils/http/functions";
 export default function AddIva() {
+  //global
+  const ivaList = ivaStore((state) => state.iva);
   //local
   const [iva, setIva] = useState([]);
   const [action, setAction] = useState([]);
+  //modal
+  const [modalData, setModalData] = useState(false);
   //localStorage
   const user = getUserInfo();
   //Route
@@ -21,9 +32,20 @@ export default function AddIva() {
     });
   }
   async function handleSubmit(e) {
-    setAction(true);
     e.preventDefault();
-
+    if (!iva?.id && validateExistedValue(ivaList, iva.name, "name")) {
+      return errorResponseModalHandle({
+        loading: true,
+        message: <>{`${iva.name} ya existe`}</>,
+        modalIcon: "info",
+        setModalData: setModalData,
+      });
+    }
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
     iva.companyId = user.companyId;
 
     iva?.id
@@ -31,13 +53,15 @@ export default function AddIva() {
           .put(`${process.env.REACT_APP_PROD}/api/iva/updateIva`, iva)
           .then((res) => {
             navigate("/iva");
-            setAction(false);
           })
       : axios
           .post(`${process.env.REACT_APP_PROD}/api/iva/createIva`, iva)
           .then((res) => {
-            navigate("/iva");
-            setAction(false);
+            okResponseModalHandle({
+              setModalData,
+              route: "/iva",
+              navigate: navigate,
+            });
           });
   }
   useEffect(() => {
@@ -46,22 +70,10 @@ export default function AddIva() {
 
   return (
     <Layout>
-      <MicroModal
-        openInitially={false}
-        open={action}
-        trigger={(open) => <div onClick={open}></div>}
-      >
-        {(close) => (
-          <button onClick={close}>
-            <p className="text-xl">
-              Cargando <i class="fa-solid fa-circle-notch fa-spin fa-lg"></i>{" "}
-            </p>
-          </button>
-        )}
-      </MicroModal>
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
         <button
-          class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={(e) => {
             navigate("/iva");
           }}
@@ -72,41 +84,43 @@ export default function AddIva() {
           <h1 className="mt-4 font-semibold text-3xl text-center">IVA</h1>
         </div>
         <form
-          class="w-96 mx-auto mt-4 border rounded-md p-8"
+          className="pc:w-[50%] movil:w-[100%] mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
             >
               Nombre
             </label>
             <input
               type="text"
               id="name"
-              class="mb-4 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="mb-4 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Dígite nombre"
               required
               name="name"
               onChange={(e) => handleData(e)}
               value={iva?.name || ""}
+              autocomplete="off"
             />
             <label
               for="description"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
             >
               Descripción
             </label>
             <input
               type="text"
               id="description"
-              class="mb-4 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="mb-4 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Dígite nombre"
               required
               name="description"
               onChange={(e) => handleData(e)}
               value={iva?.description || ""}
+              autocomplete="off"
             />{" "}
             <label
               for="porcentage"
@@ -117,19 +131,22 @@ export default function AddIva() {
             <input
               type="number"
               id="porcentage"
-              class="mb-4 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="mb-4 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Dígite porcentage IVA"
               required
               name="porcentage"
               onChange={(e) => handleData(e)}
               value={iva?.porcentage || ""}
+              autocomplete="off"
             />
-            <button
-              type="submit"
-              class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Guardar
-            </button>
+            <div className="text-center">
+              <button
+                type="submit"
+                className="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Guardar
+              </button>
+            </div>
           </div>
         </form>
       </div>

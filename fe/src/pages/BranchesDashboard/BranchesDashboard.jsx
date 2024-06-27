@@ -60,36 +60,42 @@ export default function BranchesDashboard() {
       name: "Nombre",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.name,
     },
     {
       name: "Télefono",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.phoneNumber,
     },
     {
       name: "Dirección",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.direction,
     },
     {
       name: "Latitud",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.latitude,
     },
     {
       name: "Longitud",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.longitude,
     },
     {
       name: "Cliente",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.client.name,
     },
     {
@@ -97,7 +103,7 @@ export default function BranchesDashboard() {
       center: true,
       cell: (branch) => (
         <button
-          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 my-4 rounded-md "
+          className="min-w-[100px] py-2 px-4 m-2 text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md "
           type="button"
           onClick={(e) => navigate("/branchForm", { state: branch })}
         >
@@ -106,11 +112,11 @@ export default function BranchesDashboard() {
       ),
     },
     {
-      name: "Action",
+      name: "Acción",
       center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 my-4 rounded-md  text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md  text-lg"
           type="button"
           onClick={(e) => deleteBranch(row.id)}
         >

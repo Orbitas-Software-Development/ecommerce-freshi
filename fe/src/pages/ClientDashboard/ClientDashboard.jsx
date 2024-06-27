@@ -106,18 +106,21 @@ export default function ClientDashboard() {
       name: "Creado",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => new Date(row.createdDate).toLocaleDateString(),
     },
     {
       name: "Nombre",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.name,
     },
     {
       name: "Cédula Jurídica",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.identifier,
     },
 
@@ -125,11 +128,13 @@ export default function ClientDashboard() {
       name: "Lista asignada",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.priceListName,
     },
     {
       name: "Moroso",
       center: true,
+      wrap: true,
       cell: (row) => (
         <input
           type="checkbox"
@@ -141,6 +146,7 @@ export default function ClientDashboard() {
     {
       name: "Activo",
       center: true,
+      wrap: true,
       cell: (row) => (
         <input
           type="checkbox"
@@ -155,7 +161,7 @@ export default function ClientDashboard() {
       center: true,
       cell: (client) => (
         <button
-          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4  my-4 rounded-md "
+          className="min-w-[100px] py-2 px-4 m-2  text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md "
           type="button"
           onClick={(e) => navigate("/clientform", { state: client })}
         >
@@ -168,7 +174,7 @@ export default function ClientDashboard() {
       center: true,
       cell: (row) => (
         <button
-          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4  my-4 rounded-md "
+          className="min-w-[100px] py-2 px-4 m-2  text-lg bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md "
           type="button"
           onClick={(e) => deleteClient(row.id)}
         >

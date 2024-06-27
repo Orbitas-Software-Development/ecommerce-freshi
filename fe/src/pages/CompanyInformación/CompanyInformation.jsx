@@ -113,7 +113,7 @@ export default function CompanyInformation() {
           )}
         </MicroModal>
         <form
-          class="w-3/6 mx-auto mt-4 border rounded-md p-8 mb-5"
+          class="pc:w-[50%] movil:w-[100%]  mx-auto mt-4 border rounded-md p-8 mb-5"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">
@@ -132,6 +132,7 @@ export default function CompanyInformation() {
               name="provider"
               value={information?.provider || ""}
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
           </div>
           <div class="mb-5">
@@ -150,6 +151,7 @@ export default function CompanyInformation() {
               name="identifier"
               value={information?.identifier || ""}
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
           </div>
           <div class="mb-5">
@@ -168,6 +170,7 @@ export default function CompanyInformation() {
               name="phone"
               value={information?.phone || ""}
               onChange={(e) => handleData(e)}
+              autoComplete="off"
             />
           </div>
           <div class="mb-5">
@@ -186,6 +189,7 @@ export default function CompanyInformation() {
               onChange={(e) => handleData(e)}
               value={information?.email || ""}
               placeholder="Dígite correo"
+              autoComplete="off"
             />
           </div>
           <div class="mb-5">
@@ -204,6 +208,7 @@ export default function CompanyInformation() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite dirección"
               value={information?.direction || ""}
+              autoComplete="off"
             />
           </div>
           <div class="mb-5">
@@ -222,6 +227,7 @@ export default function CompanyInformation() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite el Texto"
               value={information?.parameterizableText || ""}
+              autoComplete="off"
             />
           </div>{" "}
           <div class="mb-5">
@@ -240,14 +246,17 @@ export default function CompanyInformation() {
               onChange={(e) => handleData(e)}
               placeholder="Dígite el Texto"
               value={information?.latePaymentMessage || ""}
+              autoComplete="off"
             />
           </div>
-          <button
-            type="submit"
-            class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Guardar
-          </button>
+          <div className="text-center">
+            <button
+              type="submit"
+              class="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Guardar
+            </button>
+          </div>
         </form>
       </div>
     </Layout>

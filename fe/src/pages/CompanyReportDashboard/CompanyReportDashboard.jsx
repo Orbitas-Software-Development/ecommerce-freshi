@@ -1,5 +1,6 @@
 import React from "react";
 import Layout from "../../components/Layout/Layout";
+
 import SimpleCard from "../../components/Cards/SimpleCard/SimpleCard";
 import { useNavigate } from "react-router-dom";
 export default function CompanyReportDashboard() {
@@ -24,6 +25,12 @@ export default function CompanyReportDashboard() {
             titulo={"Ordenes de compra"}
             icono={"fa-solid fa-file fa-2xl"}
             route={"companyOrder"}
+          />
+
+          <SimpleCard
+            titulo={"Venta por articulo"}
+            icono={"fa-solid fa-hand-holding-dollar fa-2xl"}
+            route={"companyProductSales"}
           />
         </div>
       </div>

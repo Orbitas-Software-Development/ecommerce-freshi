@@ -6,11 +6,15 @@ import { getUserInfo } from "../../../utils/localStorage/functions";
 import "react-toastify/dist/ReactToastify.css";
 import SimpleModal from "../../../components/Modals/SimpleModal";
 import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectButton";
+import { validateExistedValue } from "../../../utils/utils";
+import clientStore from "../../../stores/clientStore";
 import {
   okResponseModalHandle,
   errorResponseModalHandle,
 } from "../../../utils/http/functions";
 export default function AddClient() {
+  //global
+  const clients = clientStore((state) => state.clients);
   //local
   const [client, setClient] = useState({});
   const [persons, setPersons] = useState([]);
@@ -21,7 +25,6 @@ export default function AddClient() {
   const user = getUserInfo();
   //modal
   const [modalData, setModalData] = useState(false);
-  //route
   //Route
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,9 +36,18 @@ export default function AddClient() {
     });
   }
   //ok response
+  //validate existedName
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!client?.id && validateExistedValue(clients, client.name, "name")) {
+      return errorResponseModalHandle({
+        loading: true,
+        message: <>{`El cliente: ${client.name}, ya existe`}</>,
+        modalIcon: "info",
+        setModalData: setModalData,
+      });
+    }
     setModalData({
       loading: true,
       text: <>Guardando</>,
@@ -151,7 +163,7 @@ export default function AddClient() {
           </h1>
         </div>
         <form
-          className="w-1/3 mx-auto my-4 border rounded-md p-8"
+          className="pc:w-[50%] movil:w-[100%]  mx-auto my-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div className="mb-5">
@@ -201,7 +213,9 @@ export default function AddClient() {
               required
               name="name"
               minLength={4}
-              onChange={(e) => handleData(e)}
+              onChange={(e) => {
+                handleData(e);
+              }}
               autoComplete="off"
               value={client?.name || ""}
             />
@@ -315,12 +329,14 @@ export default function AddClient() {
               value={client?.phone || ""}
             />
           </div>
-          <button
-            type="submit"
-            className="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Guardar
-          </button>
+          <div className="text-center">
+            <button
+              type="submit"
+              className="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg   sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Guardar
+            </button>
+          </div>
         </form>
       </div>
     </Layout>

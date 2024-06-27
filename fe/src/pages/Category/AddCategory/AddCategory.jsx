@@ -3,18 +3,26 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import axios from "axios";
 import { getUserInfo } from "../../../utils/localStorage/functions";
-import MicroModal from "react-micro-modal";
+import categoryStore from "../../../stores/categoryStore";
+import { validateExistedValue } from "../../../utils/utils";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../../utils/http/functions";
+import SimpleModal from "../../../components/Modals/SimpleModal";
 export default function AddCategory() {
+  //global
+  const categories = categoryStore((state) => state.categories);
   //local
   const [category, setCategory] = useState([]);
-  const [action, setAction] = useState([]);
   //localStorage
-
   const user = getUserInfo();
   //Route
   const location = useLocation();
   const navigate = useNavigate();
   const data = location.state;
+  //modal
+  const [modalData, setModalData] = useState(false);
   async function handleData(e) {
     setCategory({
       ...category,
@@ -22,11 +30,25 @@ export default function AddCategory() {
     });
   }
   async function handleSubmit(e) {
-    setAction(true);
     e.preventDefault();
+    if (
+      !category?.id &&
+      validateExistedValue(categories, category.name, "name")
+    ) {
+      return errorResponseModalHandle({
+        loading: true,
+        message: <>{`La categoria: ${category.name}, ya existe`}</>,
+        modalIcon: "info",
+        setModalData: setModalData,
+      });
+    }
+    setModalData({
+      loading: true,
+      text: <>Guardando</>,
+      icon: "loading",
+    });
 
     category.companyId = user.companyId;
-
     category?.id
       ? axios
           .put(
@@ -34,8 +56,11 @@ export default function AddCategory() {
             category
           )
           .then((res) => {
-            navigate("/category");
-            setAction(false);
+            okResponseModalHandle({
+              setModalData,
+              route: "/category",
+              navigate: navigate,
+            });
           })
       : axios
           .post(
@@ -43,8 +68,11 @@ export default function AddCategory() {
             category
           )
           .then((res) => {
-            navigate("/category");
-            setAction(false);
+            okResponseModalHandle({
+              setModalData,
+              route: "/category",
+              navigate: navigate,
+            });
           });
   }
   useEffect(() => {
@@ -52,19 +80,7 @@ export default function AddCategory() {
   }, []);
   return (
     <Layout>
-      <MicroModal
-        openInitially={false}
-        open={action}
-        trigger={(open) => <div onClick={open}></div>}
-      >
-        {(close) => (
-          <button onClick={close}>
-            <p className="text-xl">
-              Cargando <i class="fa-solid fa-circle-notch fa-spin fa-lg"></i>{" "}
-            </p>
-          </button>
-        )}
-      </MicroModal>{" "}
+      <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
         <button
           class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -99,10 +115,11 @@ export default function AddCategory() {
               name="name"
               onChange={(e) => handleData(e)}
               value={category?.name || ""}
+              autocomplete="off"
             />
             <button
               type="submit"
-              class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Guardar
             </button>

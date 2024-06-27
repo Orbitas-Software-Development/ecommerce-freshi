@@ -119,14 +119,16 @@ export default function AssignProduct() {
   }, []);
   const columns = [
     {
-      sortable: true,
       center: true,
+      sortable: true,
+      wrap: true,
       name: "Nombre",
       selector: (row) => row.name,
     },
     {
-      sortable: true,
       center: true,
+      sortable: true,
+      wrap: true,
       name: "Unidades por caja",
       selector: (row) => row.unitsPerBox,
     },

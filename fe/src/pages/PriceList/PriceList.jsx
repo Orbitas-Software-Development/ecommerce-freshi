@@ -82,18 +82,21 @@ export default function PriceList() {
       name: "#",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row, index) => index + 1,
     },
     {
       name: "Nombre",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.name,
     },
     {
       name: "Descripción",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.description,
     },
     {
@@ -101,7 +104,7 @@ export default function PriceList() {
       center: true,
       cell: (priceList) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md  text-lg"
           type="button"
           onClick={(e) => navigate("/priceListform", { state: priceList })}
         >
@@ -114,7 +117,7 @@ export default function PriceList() {
       center: true,
       cell: (product) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[120px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
           type="button"
           onClick={(e) => navigate("/assignProduct", { state: product })}
         >
@@ -127,7 +130,7 @@ export default function PriceList() {
       center: true,
       cell: (product) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md text-lg"
           type="button"
           onClick={() => deletePriceList(product.id)}
         >

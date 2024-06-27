@@ -90,13 +90,16 @@ export default function EditEmail() {
   const columns = [
     {
       name: "E-mail",
+      center: true,
+      sortable: true,
+      wrap: true,
       selector: (row) => row.email,
     },
     {
       name: "Editar",
       cell: (row) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md mx-6 text-lg"
           type="button"
           onClick={(e) => {
             setOpenForm(true);
@@ -112,7 +115,7 @@ export default function EditEmail() {
       name: "Eliminar",
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md mx-6 text-lg"
           type="button"
           onClick={(e) => deleteEmail(row.id)}
         >
@@ -142,7 +145,7 @@ export default function EditEmail() {
         trigger={(open) => <div onClick={open}></div>}
       >
         {(close) => (
-          <div className="w-full">
+          <div className="w-full ">
             {emailExistedError && (
               <p className="text-red-400 text-lg">Este correo ya existe</p>
             )}
@@ -197,7 +200,7 @@ export default function EditEmail() {
           </div>
         )}
       </MicroModal>
-      <div className="flex w-full">
+      <div className="flex pc:flex-row movil:flex-col w-full">
         <div className="flex-1 p-10">
           <div className="flex justify-center text-2xl font-semibold">
             <p>Información del correo</p>
@@ -261,7 +264,7 @@ export default function EditEmail() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="w-52 text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Guardar
               </button>
@@ -287,7 +290,7 @@ export default function EditEmail() {
               <div className="flex justify-center border-t p-5">
                 <button
                   type="submit"
-                  className="w-52 text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="min-w-[200px]  text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   onClick={saveReportInfo}
                 >
                   Guardar

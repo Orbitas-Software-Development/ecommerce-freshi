@@ -31,6 +31,7 @@ import EditEmail from "./pages/Emails/EditEmail.jsx/EditEmail";
 import AssignProduct from "./pages/AssignProducts/AssignProduct";
 import CompanyReportDashboard from "./pages/CompanyReportDashboard/CompanyReportDashboard";
 import CompanyOrder from "./pages/CompanyReports/CompanyOrder/CompanyOrder";
+import CompanyProductSales from "./pages/CompanyReports/CompanyProductSales/CompanyProductSales";
 
 function App() {
   let location = useLocation().pathname;
@@ -73,6 +74,10 @@ function App() {
           element={<CompanyReportDashboard />}
         ></Route>
         <Route path="/companyOrder" element={<CompanyOrder />}></Route>
+        <Route
+          path="/companyProductSales"
+          element={<CompanyProductSales />}
+        ></Route>
         <Route path="*" element={<Navigate to="/login" />}></Route>
       </Routes>
       <Footer />

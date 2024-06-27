@@ -10,7 +10,11 @@ import {
   okResponseModalHandle,
   errorResponseModalHandle,
 } from "../../utils/http/functions";
+import categoryStore from "../../stores/categoryStore";
 export default function Category() {
+  //global
+  const categories = categoryStore((state) => state.categories);
+  const setCategories = categoryStore((state) => state.setCategories);
   //local
   const [category, setCategory] = useState([]);
   //localStorage
@@ -30,7 +34,8 @@ export default function Category() {
         `${process.env.REACT_APP_PROD}/api/category/getCategoryByCompany/${user.company.id}`
       )
       .then((res) => {
-        setCategory(res.data);
+        // setCategory(res.data);
+        setCategories(res.data);
         setModalData({
           loading: false,
         });
@@ -64,7 +69,7 @@ export default function Category() {
         `${process.env.REACT_APP_PROD}/api/category/deleteCategory/${categoryId}`
       )
       .then((res) => {
-        setCategory(res.data);
+        setCategories(res.data);
         okResponseModalHandle({
           setModalData,
           time: 1000,
@@ -84,21 +89,23 @@ export default function Category() {
       name: "#",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row, index) => index + 1,
     },
     {
-      name: "name",
+      name: "Nombre",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.name,
     },
 
     {
-      name: "Editar",
+      name: "Acción",
       center: true,
       cell: (row) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 my-2 rounded-md  text-lg"
+          className="min-w-[100px] py-2 px-4 m-2  bg-blue-500 hover:bg-blue-600 text-white font-bol rounded-md  text-lg"
           type="button"
           onClick={(e) => navigate("/categoryForm", { state: row })}
         >
@@ -107,11 +114,11 @@ export default function Category() {
       ),
     },
     {
-      name: "Eliminar",
+      name: "Acción",
       center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 my-2 rounded-md  text-lg"
+          className=" min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-md  text-lg"
           type="button"
           onClick={(e) => deleteCategory(row.id)}
         >
@@ -138,7 +145,7 @@ export default function Category() {
             Categorias
           </h1>
         </div>
-        {category.length > 0 ? (
+        {categories.length > 0 ? (
           <>
             <div>
               <button
@@ -151,8 +158,8 @@ export default function Category() {
                 Agregar Categoria <i class="fa-solid fa-plus"></i>
               </button>
             </div>
-            <div className="border rounded-md w-full">
-              <Table columns={columns} data={category} />
+            <div className="border rounded-md w-full p-2">
+              <Table columns={columns} data={categories} />
             </div>
           </>
         ) : (

@@ -79,42 +79,64 @@ export default function CompanyOrder() {
     {
       name: "ID",
       cell: (row) => row.id,
+      center: true,
+      sortable: true,
+      wrap: true,
     },
     {
-      name: "FECHA",
+      name: "Fecha",
+      center: true,
+      sortable: true,
       wrap: true,
       selector: (row) => `${new Date(row.createdDate).toLocaleString()} `,
     },
     {
-      name: "CLIENTE",
+      name: "Cliente",
+      center: true,
+      sortable: true,
       wrap: true,
       selector: (row) => row.branch.client.name,
     },
     {
-      name: "SUCURSALES",
+      name: "Sucursales",
+      center: true,
+      sortable: true,
       wrap: true,
       selector: (row) => row.branch.name,
     },
     {
-      name: "CAJAS TOTALES",
+      name: "Cajas totales",
+      center: true,
+      sortable: true,
+      wrap: true,
       selector: (row) => boxesNumber(row.ordersDetails),
     },
     {
-      name: "UNIDADES TOTALES",
+      name: "Unidades totales",
+      center: true,
+      sortable: true,
+      wrap: true,
       selector: (row) => unitsNumber(row.ordersDetails),
     },
     {
-      name: "TOTAL",
+      name: "total",
+      center: true,
+      sortable: true,
+      wrap: true,
       selector: (row) =>
         getCurrencySimbol(row.currencyId) + row.total.toFixed(2),
     },
     {
-      name: "TOTAL + IVA",
+      name: "Total + IVA",
+      center: true,
+      sortable: true,
+      wrap: true,
       selector: (row) =>
         getCurrencySimbol(row.currencyId) + row.totalIVA.toFixed(2),
     },
     {
-      name: "DETALLES",
+      name: "Acción",
+
       cell: (row) => (
         <MicroModal
           trigger={(open) => (
@@ -206,7 +228,7 @@ export default function CompanyOrder() {
       ),
     },
     {
-      name: "ÓRDEN DE COMPRA",
+      name: "Acción",
       cell: (row) => (
         <button
           className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
@@ -238,7 +260,7 @@ export default function CompanyOrder() {
         >
           <i class="fa-solid fa-arrow-left text-lg"></i> Atras
         </button>
-        <div className="w-full flex justify-center border rounded-md">
+        <div className="w-full border rounded-md">
           <Table columns={columns} data={orders} />
         </div>
       </div>

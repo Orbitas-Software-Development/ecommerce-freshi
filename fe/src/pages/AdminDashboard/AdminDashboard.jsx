@@ -14,6 +14,7 @@ import {
 export default function AdminDashboard() {
   //localStorage
   const user = getUserInfo();
+  const [basicInfo, setBasicInfo] = useState(false);
   //global
   const companyInformation = companyInformationStore(
     (state) => state.companyInformation
@@ -50,6 +51,7 @@ export default function AdminDashboard() {
             setModalData({
               loading: false,
             });
+            setBasicInfo(true);
           });
       })
       .catch((e) => {
@@ -68,39 +70,44 @@ export default function AdminDashboard() {
         <div className="w-full">
           <h1 className="mt-4 font-semibold text-3xl text-center">Admin</h1>
         </div>
-        {!companyInformation || !companyOrder ? (
-          <div className="w-full p-4">
-            <h1 className="mt-4 font-semibold text-lg text-start">
-              {`Hola, ${getName()} tienes las siguientes acciones pendientes:`}
-            </h1>
-            {!companyInformation && (
-              <h1 className="mt-4 font-semibold text text-start">
-                - Completar la información de la empresa.
-                <button
-                  onClick={() => {
-                    navigate("/CompanyInformation");
-                  }}
-                  className="text-white w-[150px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Completar
-                </button>
-              </h1>
-            )}
-            {!companyOrder && (
-              <h1 className="mt-4 font-semibold text text-start">
-                - Asignar correos para la orden de compra.
-                <button
-                  onClick={() => {
-                    navigate("/emails");
-                  }}
-                  className="text-white w-[150px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Asignar
-                </button>
-              </h1>
-            )}
-          </div>
-        ) : null}
+        {basicInfo && (
+          <>
+            {!companyInformation || !companyOrder ? (
+              <div className="w-full p-4">
+                <h1 className="mt-4 font-semibold text-lg text-start">
+                  {`Hola, ${getName()} tienes las siguientes acciones pendientes:`}
+                </h1>
+                {!companyInformation && (
+                  <h1 className="mt-4 font-semibold text text-start">
+                    - Completar la información de la empresa.
+                    <button
+                      onClick={() => {
+                        navigate("/CompanyInformation");
+                      }}
+                      className="text-white w-[150px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Completar
+                    </button>
+                  </h1>
+                )}
+                {!companyOrder && (
+                  <h1 className="mt-4 font-semibold text text-start">
+                    - Asignar correos para la orden de compra.
+                    <button
+                      onClick={() => {
+                        navigate("/emails");
+                      }}
+                      className="text-white w-[150px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Asignar
+                    </button>
+                  </h1>
+                )}
+              </div>
+            ) : null}
+          </>
+        )}
+
         <div className="mt-4 flex flex-wrap  w-full justify-center">
           <SimpleCard
             disabled={!companyInformation && !companyOrder}

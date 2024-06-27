@@ -14,8 +14,8 @@ export default function SimpleCard({
         !disabled && navigate(`/${route}`, params);
       }}
       className={`${
-        disabled ? "" : "cursor-pointer shadow"
-      }  w-[150px] h-[150px] flex flex-col justify-center items-center p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 m-4`}
+        disabled ? "" : "cursor-pointer border"
+      }  w-[150px] h-[150px] flex flex-col justify-center items-center p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 m-4 hover:shadow-md  `}
     >
       <div className="text-center">
         <p className="text-xl font-semibold">{titulo}</p>

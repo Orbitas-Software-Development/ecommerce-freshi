@@ -10,9 +10,12 @@ import {
   okResponseModalHandle,
   errorResponseModalHandle,
 } from "../../utils/http/functions";
+import ivaStore from "../../stores/ivaStore";
 export default function Iva() {
-  //local
-  const [iva, setIva] = useState([]);
+  //global
+  const iva = ivaStore((state) => state.iva);
+  const setIva = ivaStore((state) => state.setIva);
+
   //localStorage
   const user = getUserInfo();
   //Route
@@ -84,13 +87,14 @@ export default function Iva() {
       selector: (row, index) => index + 1,
     },
     {
-      name: "name",
+      name: "Nombre",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.name,
     },
     {
-      name: "Description",
+      name: "Descripción",
       sortable: true,
       center: true,
       wrap: true,
@@ -100,6 +104,7 @@ export default function Iva() {
       name: "Porcentage",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.porcentage,
     },
     {
@@ -107,7 +112,7 @@ export default function Iva() {
       center: true,
       cell: (row) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md mx-6 text-lg"
           type="button"
           onClick={(e) => navigate("/addIva", { state: row })}
         >
@@ -120,7 +125,7 @@ export default function Iva() {
       center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md  mx-6 text-lg"
           type="button"
           onClick={(e) => deleteIva(row.id)}
         >

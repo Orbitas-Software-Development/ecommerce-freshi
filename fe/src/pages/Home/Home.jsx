@@ -95,163 +95,185 @@ export default function Home() {
   return (
     <Layout>
       <SimpleModal data={modalData} />
-      <div className="w-[85vw] ">
-        <h2 className="text-center text-4xl mt-6">{userInfo?.branch?.name}</h2>
-        <div className="flex justify-center items-center py-11 ">
-          <input
-            type="text"
-            className="py-5 px-3 rounded-md h-10 bg-slate-200 w-96 min-w-24"
-            placeholder="buscar producto"
-          />
+      <div className="flex pc:flex-row movil:flex-col w-full">
+        <div className="pc:w-[85vw] movil:w-[100vw]">
+          <h2 className="text-center pc:text-4xl movil:text-xl mt-6">
+            {userInfo?.branch?.name}
+          </h2>
+          <div className="flex justify-center items-center py-5 ">
+            <input
+              type="text"
+              className="py-5 px-3 rounded-md h-10 bg-slate-200 w-96 min-w-24"
+              placeholder="buscar producto"
+            />
+          </div>
+          <p className="ml-5  pc:text-xl">
+            Productos:
+            <span className="font-medium text-xl"> {products.length}</span>
+          </p>
+          <>
+            <div className="flex flex-wrap justify-center ">
+              {products.length > 0 ? (
+                <>
+                  {products.map((product) => (
+                    <ProductCard product={product} />
+                  ))}
+                </>
+              ) : (
+                <div className="text-center w-full">
+                  <p className="text-xl font-semibold">
+                    No hay productos asignados a está sucursal
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
         </div>
-        <p className="ml-5  text-xl">
-          Productos:
-          <span className="font-medium text-xl"> {products.length}</span>
-        </p>
-        <>
-          <div className="flex flex-wrap  ">
-            {products.length > 0 ? (
+        <div
+          className={`pc:w-[15vw] movil:w-full pc:border movil:border-t-2 movil:rounded-tl-xl movil:rounded-tr-xl pc:bg-white pc:bg-gradient-to-r  pc:from-gray-50 pc:via-gray-50  pc:to-gray-50   movil:bg-gradient-to-r  movil:from-gray-100 movil:via-gray-300 movil:to-gray-400 flex pc:flex-col movil:flex-row pc:relative ${
+            productsList.length > 0 ? "movil:sticky" : "movil:fixed"
+          } movil:bottom-0`}
+        >
+          <>
+            {productsList.length > 0 ? (
               <>
-                {products.map((product) => (
-                  <ProductCard product={product} />
-                ))}
+                <div className="flex pc:flex-col movil:flex-col w-full">
+                  <div className="flex pc:flex-col movil:flex-row movil:justify-between w-full px-4">
+                    <div className="pc:border-b flex p-2">
+                      <div>
+                        <p className=" pc:text-xl">Productos:</p>
+                      </div>
+                      <div>
+                        <div className="ml-2 bg-gray-300 rounded-full px-2  font-bold pc:text-xl">
+                          {productsList.length}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="pc:border-b flex p-2 ">
+                      <div>
+                        <p className="ml-2 pc:text-xl ">Cajas: </p>
+                      </div>
+                      <div className="ml-2">
+                        <p className="pc:text-xl font-medium">
+                          {getBoxesNumber()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="pc:border-b flex p-2 ">
+                      <div>
+                        <p className="ml-2 pc:text-xl ">Unidades: </p>
+                      </div>
+                      <div className="ml-2">
+                        <p className="pc:text-xl font-medium">
+                          {getUnitsNumber()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pc:border-b flex p-2 justify-center items-center  px-6">
+                    <p className="pc:text-xl ">Precio Total: </p>
+                    <NumericFormat
+                      className="text-start pc:w-[100%] movil:w-auto font-semibold  rounded-md px-2 bg-white flex-1 pc:text-xl "
+                      value={getTotalPrizeNumber()}
+                      thousandSeparator=","
+                      decimalScale={2}
+                      prefix={getCurrencySimbol(
+                        clientPriceList?.priceList.currencyId
+                      )}
+                      id="total"
+                      disabled
+                    />
+                  </div>
+                  <div className="pc:border-b flex flex-col">
+                    <div>
+                      <div className="flex flex-col">
+                        <button
+                          className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-6 pc:text-xl"
+                          type="button"
+                          onClick={() => {
+                            navigate("/cart");
+                          }}
+                        >
+                          Ver carrito{" "}
+                          <i class="fa-solid fa-cart-shopping pc:text-xl"></i>
+                        </button>
+
+                        <button
+                          className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-6 pc:text-xl"
+                          onClick={() => {
+                            navigate("/order");
+                          }}
+                        >
+                          Confirmar pedido{" "}
+                          <i className="fa-solid fa-check pc:text-xl"></i>
+                        </button>
+
+                        <button
+                          className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-6 pc:text-xl border border-black"
+                          onClick={(e) => {
+                            cancelProducts();
+                            window.location.reload();
+                          }}
+                        >
+                          Cancelar pedido{" "}
+                          <i className="fa-solid fa-xmark pc:text-xl"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col movil:mt-0 pc:mt-2">
+                    <button
+                      className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-6 pc:text-xl border border-black"
+                      onClick={() => {
+                        navigate("/myorders");
+                      }}
+                    >
+                      Mis ordenes
+                      <i className="fa-solid fa-file-invoice  pc:text-xl ml-2"></i>
+                    </button>
+                  </div>
+                </div>
               </>
             ) : (
-              <div className="text-center w-full">
-                <p className="text-xl font-semibold">
-                  No hay productos asignados a está sucursal
-                </p>
-              </div>
-            )}
-          </div>
-        </>
-      </div>
-      <div className="w-[15vw] border flex flex-col">
-        <>
-          {productsList.length > 0 ? (
-            <>
-              <div className="border-b flex p-2">
-                <p className="ml-2 text-xl">Productos:</p>
-                <div>
-                  <div className="ml-2 bg-gray-300 rounded-full px-2  font-bold text-xl">
-                    {productsList.length}
-                  </div>
-                </div>
-              </div>
-              <div className="border-b flex p-2">
-                <div>
-                  <p className="ml-2 text-xl ">Cajas: </p>
-                </div>
-                <div className="ml-2">
-                  <p className="text-xl font-medium">{getBoxesNumber()}</p>
-                </div>
-              </div>
-              <div className="border-b flex p-2">
-                <div>
-                  <p className="ml-2 text-xl ">Unidades: </p>
-                </div>
-                <div className="ml-2">
-                  <p className="text-xl font-medium">{getUnitsNumber()}</p>
-                </div>
-              </div>
-              <div className="border-b flex p-2 justify-center items-center">
-                <p className="ml-2 text-xl ">Precio Total: </p>
-                <div className="flex-1 ">
-                  <NumericFormat
-                    className="text-start w-[100%] font-semibold  rounded-md px-2 bg-white flex-1 text-xl "
-                    value={getTotalPrizeNumber()}
-                    thousandSeparator=","
-                    decimalScale={2}
-                    prefix={getCurrencySimbol(
-                      clientPriceList?.priceList.currencyId
-                    )}
-                    id="total"
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="border-b flex flex-col">
-                <div>
+              <>
+                <div className="flex">
+                  <p className="text-center font-semibold  pc:text-xl">
+                    Agregue productos al carrito
+                  </p>
+                  <p className="text-center font-semibold  pc:text-xl">
+                    0 <i className="fa-solid fa-cart-shopping  pc:text-xl"></i>
+                  </p>
                   <div className="flex flex-col">
                     <button
-                      className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+                      className="bg-gray-300  text-gray-500 font-bold py-2 px-4 rounded-md movil:mb-1 pc:mb-2 mx-2  pc:text-xl"
                       type="button"
-                      onClick={() => {
-                        navigate("/cart");
-                      }}
                     >
-                      Ver carrito{" "}
-                      <i class="fa-solid fa-cart-shopping text-lg"></i>
+                      Ver carrito
                     </button>
-
                     <button
-                      className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded-md mb-4 mx-6 text-lg"
-                      onClick={() => {
-                        navigate("/order");
-                      }}
+                      className="bg-gray-300  text-gray-500  font-bold py-2 px-4 rounded-md  mx-2  pc:text-xl"
+                      disabled
                     >
-                      Confirmar pedido <i class="fa-solid fa-check text-lg"></i>
+                      Confirmar pedido{" "}
+                      <i className="fa-solid fa-check  pc:text-xl"></i>
                     </button>
-
-                    <button
-                      className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md mb-4 mx-6 text-lg"
-                      onClick={(e) => {
-                        cancelProducts();
-                        window.location.reload();
-                      }}
-                    >
-                      Cancelar pedido <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
+                    <div className="border flex flex-col mt-4">
+                      <button
+                        className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-2  pc:text-xl"
+                        onClick={() => {
+                          navigate("/myorders");
+                        }}
+                      >
+                        Mis ordenes{" "}
+                        <i className="fa-solid fa-file-invoice pc:text-xl"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col mt-4">
-                <button
-                  className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md mb-4 mx-6 text-lg"
-                  onClick={() => {
-                    navigate("/myorders");
-                  }}
-                >
-                  Mis ordenes <i class="fa-solid fa-file-invoice text-lg"></i>
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="text-center font-semibold text-lg">
-                Agregue productos al carrito
-              </p>
-              <p className="text-center font-semibold text-lg">
-                0 <i class="fa-solid fa-cart-shopping text-lg"></i>
-              </p>
-
-              <div className="flex flex-col">
-                <button
-                  className="bg-gray-300  text-gray-500 font-bold py-2 px-4 rounded-md mb-2 mx-2 text-lg"
-                  type="button"
-                >
-                  Ver carrito
-                </button>
-                <button
-                  className="bg-gray-300  text-gray-500  font-bold py-2 px-4 rounded-md  mx-2 text-lg"
-                  disabled
-                >
-                  Confirmar pedido <i class="fa-solid fa-check text-lg"></i>
-                </button>
-                <div className="border flex flex-col mt-4">
-                  <button
-                    className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md my-2 mx-2 text-lg"
-                    onClick={() => {
-                      navigate("/myorders");
-                    }}
-                  >
-                    Mis ordenes <i class="fa-solid fa-file-invoice text-lg"></i>
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-        </>
+              </>
+            )}
+          </>
+        </div>
       </div>
     </Layout>
   );

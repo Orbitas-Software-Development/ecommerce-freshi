@@ -10,12 +10,16 @@ import {
   errorResponseModalHandle,
 } from "../../../utils/http/functions";
 import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectButton";
+import { validateExistedValue } from "../../../utils/utils";
+import branchStore from "../../../stores/branchesStore";
 export default function AddBranch() {
   const user = getUserInfo();
   //local
   const [branch, setBranch] = useState({});
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(false);
+  //global
+  const branches = branchStore((state) => state.branches);
   //route
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,6 +35,15 @@ export default function AddBranch() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!branch?.id && validateExistedValue(branches, branch.name, "name")) {
+      return errorResponseModalHandle({
+        loading: true,
+        message: <>{`La sucursal: ${branch.name}, ya existe`}</>,
+        icon: "info",
+        setModalData: setModalData,
+      });
+    }
+
     setModalData({
       loading: true,
       text: <>Guardando</>,
@@ -107,7 +120,7 @@ export default function AddBranch() {
       <div className="w-full flex flex-col justify-start items-start">
         <button
           type="submit"
-          class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={(e) => {
             navigate("/branchdashboard");
           }}
@@ -120,7 +133,7 @@ export default function AddBranch() {
           </h1>
         </div>
         <form
-          class="w-1/3  mx-auto my-4 border rounded-md p-8"
+          class="pc:w-[50%] movil:w-[100%]   mx-auto my-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">
@@ -173,7 +186,7 @@ export default function AddBranch() {
             <input
               type="text"
               id="name"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Dígite nombre"
               required
               name="name"
@@ -185,14 +198,14 @@ export default function AddBranch() {
           <div class="mb-5">
             <label
               for="phoneNumber"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
               Télefono
             </label>
             <input
               type="text"
               id="phoneNumber"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="phoneNumber"
               required
               onChange={(e) => handleData(e)}
@@ -208,7 +221,7 @@ export default function AddBranch() {
             <input
               type="text"
               id="direction"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="direction"
               required
               onChange={(e) => handleData(e)}
@@ -225,7 +238,7 @@ export default function AddBranch() {
             <input
               type="text"
               id="latitude"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="latitude"
               required
               onChange={(e) => handleData(e)}
@@ -242,7 +255,7 @@ export default function AddBranch() {
             <input
               type="text"
               id="longitude"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="longitude"
               required
               onChange={(e) => handleData(e)}
@@ -251,16 +264,14 @@ export default function AddBranch() {
               value={branch?.longitude || ""}
             />
           </div>
-          <button
-            type="submit"
-            class="text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            {loading ? (
-              <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-            ) : (
-              "Guardar"
-            )}
-          </button>
+          <div className="text-center">
+            <button
+              type="submit"
+              className="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Guardar
+            </button>
+          </div>
         </form>
       </div>
     </Layout>

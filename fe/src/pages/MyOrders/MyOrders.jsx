@@ -231,7 +231,7 @@ export default function MyOrders() {
         >
           <i class="fa-solid fa-arrow-left text-lg"></i> Inicio
         </button>
-        <div className="w-full flex justify-center border rounded-md">
+        <div className="w-full border rounded-md">
           <Table columns={columns} data={orders} />
         </div>
       </div>

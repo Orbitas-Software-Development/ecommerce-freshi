@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React } from "react";
 import { getUserInfo, getName } from "../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
 import TodayGreeting from "../TodayGreeting/TodayGreeting";
@@ -19,13 +19,10 @@ const Navbar = () => {
         {userLocalStorage && <img src={getNavImage()} width="100" alt="" />}
       </div>
       <div className="flex justify-center items-center">
-        <span className="text-primary-50 mr-2 text-lg  flex justify-center items-center">
-          Hola
+        <span className="text-primary-50 m-2 pc:text-lg  flex justify-center items-center">
+          <b className="w-full">{getName()}</b>
         </span>
-        <span className="text-primary-50 mr-2 text-lg  flex justify-center items-center">
-          <b>{getName()}</b>,
-        </span>
-        <span className="text-primary-50 mr-2 text-lg  flex justify-center items-center">
+        <span className="text-primary-50 mr-2 pc:text-lg  flex justify-center items-center">
           <TodayGreeting />
         </span>
         <div className="flex justify-center items-center">

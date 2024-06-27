@@ -42,8 +42,8 @@ export default function ProductCartConfirmation({ product }) {
     return totalPrize;
   };
   return (
-    <div className=" rounded-md w-[302px] m-4 bg-gray-50 border pb-2">
-      <div className="w-[300px] rounded-md">
+    <div className="rounded-md pc:w-[302px] movil:pc:w-[222px] m-4 bg-gray-50 border pb-2">
+      <div className="pc:w-[300px]  pc:h-[300px] movil:w-[220px]  movil:h-[220px] rounded-md">
         <img
           src={`data:image/jpeg;base64,${product.base64Image}`}
           alt=""
@@ -51,10 +51,10 @@ export default function ProductCartConfirmation({ product }) {
         />
       </div>
       <div className="p-2">
-        <div className="flex justify-center text-xl">
+        <div className="flex justify-center pc:text-xl">
           Unidades por caja: <b> {product.unitsPerBox}</b>
         </div>
-        <div className="flex justify-center text-xl">
+        <div className="flex justify-center pc:text-xl">
           <p htmlFor="productPrice" className="">
             Precio por Unidad:
           </p>
@@ -68,12 +68,12 @@ export default function ProductCartConfirmation({ product }) {
             disabled
           />
         </div>
-        <p className="text-center text-xl">
+        <p className="text-center pc:text-xl">
           Ingrese número de <b>Cajas:</b>
         </p>
         <div className="flex justify-center">
           <button
-            className=" bg-blue-200 hover:bg-blue-300 rounded-md  py-1 px-2 text-xl flex-1"
+            className=" bg-blue-200 hover:bg-blue-300 rounded-md  py-1 px-2 pc:text-xl flex-1"
             type="button"
             onClick={(e) => {
               if (product.quantity > 1) {
@@ -87,7 +87,7 @@ export default function ProductCartConfirmation({ product }) {
           <input
             type="text"
             value={product?.quantity}
-            className="w-[180px] text-center bg-slate-200 rounded-md text-xl font-semibold flex-1 mx-1"
+            className="w-[180px] text-center bg-slate-200 rounded-md pc:text-xl font-semibold flex-1 mx-1"
             onChange={(e) => {
               e.target.value > 0 &&
                 addProduct({
@@ -97,7 +97,7 @@ export default function ProductCartConfirmation({ product }) {
             }}
           />
           <button
-            className=" bg-blue-300 hover:bg-blue-400 rounded-md  py-1 px-2 text-xl flex-1"
+            className=" bg-blue-300 hover:bg-blue-400 rounded-md  py-1 px-2 pc:text-xl flex-1"
             type="button"
             onClick={(e) => {
               addProduct({ ...product, ["quantity"]: product.quantity + 1 });
@@ -106,7 +106,7 @@ export default function ProductCartConfirmation({ product }) {
             <i class="fa-solid fa-plus"></i>
           </button>
         </div>
-        <div className="text-xl my-1  flex justify-center">
+        <div className="pc:text-xl my-1  flex justify-center">
           <label htmlFor="total" className="flex-1">
             Total:
           </label>
@@ -123,7 +123,7 @@ export default function ProductCartConfirmation({ product }) {
         </div>
         <div className="flex flex-col px-4">
           <button
-            className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-md text-lg"
+            className="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-md pc:text-xl"
             onClick={(e) => {
               productSum > 0 && deleteProduct(product.id);
               setProductSum(0);
