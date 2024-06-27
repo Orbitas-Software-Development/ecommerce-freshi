@@ -55,7 +55,7 @@ export default function CompanyProductSales() {
     setUserInfo(getUserInfo());
     axios
       .get(
-        `${process.env.REACT_APP_DEV}/getOrderByCompanyId/${
+        `${process.env.REACT_APP_PROD}/getOrderByCompanyId/${
           JSON.parse(localStorage.getItem("user")).companyId
         }`
       )

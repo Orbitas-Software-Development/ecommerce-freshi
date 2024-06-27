@@ -61,7 +61,7 @@ export default function AddUser() {
   }
   const createBranch = () => {
     axios
-      .post(`${process.env.REACT_APP_DEV}/api/cuentas/register`, {
+      .post(`${process.env.REACT_APP_PROD}/api/cuentas/register`, {
         ...user,
         ["password"]: user.userName,
       })
