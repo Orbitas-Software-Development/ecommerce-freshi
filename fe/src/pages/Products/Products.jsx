@@ -87,58 +87,66 @@ export default function Products() {
   const columns = [
     {
       name: "#",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row, index) => index + 1,
     },
     {
       name: "Nombre",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.name,
     },
     {
       name: "Descripción",
-      center: true,
       sortable: true,
+      center: true,
       wrap: true,
       selector: (row) => row.description,
     },
     {
       name: "Código",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.code,
     },
 
     {
       name: "Unidades por caja",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.unitsPerBox,
     },
     {
       name: "Peso",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.unitWeight,
     },
     {
       name: "Categoría",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.category.name,
     },
     {
       name: "IVA",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.iva.name,
     },
     {
       name: "Moneda",
-      center: true,
       sortable: true,
+      center: true,
+      wrap: true,
       selector: (row) => row.currency.name,
     },
     {
@@ -146,7 +154,7 @@ export default function Products() {
       center: true,
       cell: (product) => (
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+          className="min-w-[100px] py-2 px-4 m-2  bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
           type="button"
           onClick={(e) => navigate("/productform", { state: product })}
         >
@@ -159,7 +167,7 @@ export default function Products() {
       center: true,
       cell: (row) => (
         <button
-          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md text-lg"
+          className="min-w-[100px] py-2 px-4 m-2  bg-red-500 hover:bg-red-600 text-white font-bold rounded-md text-lg"
           type="button"
           onClick={(e) => deleteProductId(row.id)}
         >

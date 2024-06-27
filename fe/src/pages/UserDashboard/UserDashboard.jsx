@@ -96,6 +96,7 @@ export default function UserDashboard() {
       name: "#",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row, index) => index + 1,
     },
 
@@ -103,30 +104,35 @@ export default function UserDashboard() {
       name: "Usuario",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.userName,
     },
     {
       name: "Nombre",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.fullName,
     },
     {
       name: "Identificación",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.personalIdentification,
     },
     {
       name: "Sucursal",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.branch?.name,
     },
     {
       name: "Cliente",
       sortable: true,
       center: true,
+      wrap: true,
       selector: (row) => row.branch?.client?.name,
     },
     {
@@ -150,7 +156,7 @@ export default function UserDashboard() {
       center: true,
       cell: (user) => (
         <button
-          className=" text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 my-4 rounded-md "
+          className="min-w-[100px] py-2 px-4 m-2 text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold   rounded-md "
           type="button"
           onClick={(e) => navigate("/userForm", { state: user })}
         >
@@ -163,7 +169,7 @@ export default function UserDashboard() {
       center: true,
       cell: (row) => (
         <button
-          className=" text-lg bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 my-4 rounded-md "
+          className="min-w-[100px] py-2 px-4 m-2 text-lg bg-red-500 hover:bg-red-600 text-white font-bold rounded-md "
           type="button"
           onClick={(e) => deleteUser(row.id, user.companyId)}
         >
