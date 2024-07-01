@@ -130,8 +130,8 @@ export default function Home() {
           </>
         </div>
         <div
-          className={`pc:w-[15vw] movil:w-full pc:border movil:border-t-2 movil:rounded-tl-xl movil:rounded-tr-xl pc:bg-white pc:bg-gradient-to-r  pc:from-gray-50 pc:via-gray-50  pc:to-gray-50   movil:bg-gradient-to-r  movil:from-gray-100 movil:via-gray-300 movil:to-gray-400 flex pc:flex-col movil:flex-row pc:relative ${
-            productsList.length > 0 ? "movil:sticky" : "movil:fixed"
+          className={`pc:w-[15vw] movil:w-full pc:border movil:border-t-2 movil:border-gray-200  movil:rounded-tl-xl movil:rounded-tr-xl pc:bg-white pc:bg-gradient-to-r  pc:from-gray-50 pc:via-gray-50  pc:to-gray-50   movil:bg-gradient-to-r  movil:from-gray-100 movil:via-gray-300 movil:to-gray-400 flex pc:flex-col movil:flex-row pc:relative ${
+            productDTOlist.length > 0 ? "movil:sticky" : "movil:fixed"
           } movil:bottom-0`}
         >
           <>
@@ -236,35 +236,38 @@ export default function Home() {
               </>
             ) : (
               <>
-                <div className="flex">
-                  <p className="text-center font-semibold  pc:text-xl">
-                    Agregue productos al carrito
-                  </p>
-                  <p className="text-center font-semibold  pc:text-xl">
-                    0 <i className="fa-solid fa-cart-shopping  pc:text-xl"></i>
-                  </p>
+                <div className="flex px-4 flex-col w-full">
+                  <div>
+                    <p className="text-center font-semibold  pc:text-xl">
+                      Agregue productos al carrito
+                    </p>
+                    <p className="text-center font-semibold  pc:text-xl">
+                      0{" "}
+                      <i className="fa-solid fa-cart-shopping  pc:text-xl"></i>
+                    </p>
+                  </div>
                   <div className="flex flex-col">
                     <button
-                      className="bg-gray-300  text-gray-500 font-bold py-2 px-4 rounded-md movil:mb-1 pc:mb-2 mx-2  pc:text-xl"
+                      className="bg-gray-300 border border-black text-gray-500 font-bold py-2 px-4 rounded-md movil:mb-1 pc:mb-2 mx-2  pc:text-xl"
                       type="button"
                     >
                       Ver carrito
                     </button>
                     <button
-                      className="bg-gray-300  text-gray-500  font-bold py-2 px-4 rounded-md  mx-2  pc:text-xl"
+                      className="bg-gray-300 border border-black text-gray-500  font-bold py-2 px-4 rounded-md  mx-2  pc:text-xl"
                       disabled
                     >
                       Confirmar pedido{" "}
                       <i className="fa-solid fa-check  pc:text-xl"></i>
                     </button>
-                    <div className="border flex flex-col mt-4">
+                    <div className="pc:border flex flex-col mt-1s">
                       <button
-                        className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-2  pc:text-xl"
+                        className="bg-gray-300 border border-black hover:bg-gray-400 text-black font-bold py-2 px-4 rounded-md movil:my-1 pc:my-2 mx-2  pc:text-xl"
                         onClick={() => {
                           navigate("/myorders");
                         }}
                       >
-                        Mis ordenes{" "}
+                        Mis ordenes
                         <i className="fa-solid fa-file-invoice pc:text-xl"></i>
                       </button>
                     </div>

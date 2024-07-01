@@ -86,11 +86,30 @@ export default function Products() {
   };
   const columns = [
     {
-      name: "#",
-      sortable: true,
+      name: "Editar",
       center: true,
-      wrap: true,
-      selector: (row, index) => index + 1,
+      cell: (product) => (
+        <button
+          className="py-2 px-4 m-2  bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
+          type="button"
+          onClick={(e) => navigate("/productform", { state: product })}
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+      ),
+    },
+    {
+      name: "Eliminar",
+      center: true,
+      cell: (row) => (
+        <button
+          className=" py-2 px-4 m-2  bg-red-500 hover:bg-red-600 text-white font-bold rounded-md text-lg"
+          type="button"
+          onClick={(e) => deleteProductId(row.id)}
+        >
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      ),
     },
     {
       name: "Nombre",
@@ -148,32 +167,6 @@ export default function Products() {
       center: true,
       wrap: true,
       selector: (row) => row.currency.name,
-    },
-    {
-      name: "Editar",
-      center: true,
-      cell: (product) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2  bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
-          type="button"
-          onClick={(e) => navigate("/productform", { state: product })}
-        >
-          Editar
-        </button>
-      ),
-    },
-    {
-      name: "Eliminar",
-      center: true,
-      cell: (row) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2  bg-red-500 hover:bg-red-600 text-white font-bold rounded-md text-lg"
-          type="button"
-          onClick={(e) => deleteProductId(row.id)}
-        >
-          Eliminar
-        </button>
-      ),
     },
   ];
   return (

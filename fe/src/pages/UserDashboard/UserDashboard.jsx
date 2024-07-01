@@ -93,13 +93,31 @@ export default function UserDashboard() {
 
   const columns = [
     {
-      name: "#",
-      sortable: true,
+      name: "Editar",
       center: true,
-      wrap: true,
-      selector: (row, index) => index + 1,
+      cell: (user) => (
+        <button
+          className=" py-2 px-4 m-2 text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold   rounded-md "
+          type="button"
+          onClick={(e) => navigate("/userForm", { state: user })}
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+      ),
     },
-
+    {
+      name: "Eliminar",
+      center: true,
+      cell: (row) => (
+        <button
+          className=" py-2 px-4 m-2 text-lg bg-red-500 hover:bg-red-600 text-white font-bold rounded-md "
+          type="button"
+          onClick={(e) => deleteUser(row.id, user.companyId)}
+        >
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      ),
+    },
     {
       name: "Usuario",
       sortable: true,
@@ -150,36 +168,6 @@ export default function UserDashboard() {
             style={{ color: "#e66565" }}
           ></i>
         ),
-    },
-    {
-      name: "Acción",
-      center: true,
-      cell: (user) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2 text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold   rounded-md "
-          type="button"
-          onClick={(e) => navigate("/userForm", { state: user })}
-        >
-          Editar
-        </button>
-      ),
-    },
-    {
-      name: "Action",
-      center: true,
-      cell: (row) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2 text-lg bg-red-500 hover:bg-red-600 text-white font-bold rounded-md "
-          type="button"
-          onClick={(e) => deleteUser(row.id, user.companyId)}
-        >
-          {!deleteLoading ? (
-            "Eliminar"
-          ) : (
-            <i className="fa-solid fa-hourglass-half fa-bounce"></i>
-          )}
-        </button>
-      ),
     },
   ];
 

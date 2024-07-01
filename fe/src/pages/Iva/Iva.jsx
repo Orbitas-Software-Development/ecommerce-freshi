@@ -81,10 +81,30 @@ export default function Iva() {
   };
   const columns = [
     {
-      name: "#",
-      sortable: true,
+      name: "Editar",
       center: true,
-      selector: (row, index) => index + 1,
+      cell: (row) => (
+        <button
+          className="py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md mx-6 text-lg"
+          type="button"
+          onClick={(e) => navigate("/addIva", { state: row })}
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+      ),
+    },
+    {
+      name: "Eliminar",
+      center: true,
+      cell: (row) => (
+        <button
+          className=" py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md  mx-6 text-lg"
+          type="button"
+          onClick={(e) => deleteIva(row.id)}
+        >
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      ),
     },
     {
       name: "Nombre",
@@ -107,32 +127,7 @@ export default function Iva() {
       wrap: true,
       selector: (row) => row.porcentage,
     },
-    {
-      name: "Editar",
-      center: true,
-      cell: (row) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md mx-6 text-lg"
-          type="button"
-          onClick={(e) => navigate("/addIva", { state: row })}
-        >
-          Editar
-        </button>
-      ),
-    },
-    {
-      name: "Eliminar",
-      center: true,
-      cell: (row) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md  mx-6 text-lg"
-          type="button"
-          onClick={(e) => deleteIva(row.id)}
-        >
-          Eliminar
-        </button>
-      ),
-    },
+    ,
   ];
   return (
     <Layout>

@@ -4,11 +4,11 @@ import axios from "axios";
 import Layout from "../../../components/Layout/Layout";
 import { getUserInfo } from "../../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
-import MicroModal from "react-micro-modal";
+
 import Table from "../../../components/Tables/Table/Table";
 import SimpleModal from "../../../components/Modals/SimpleModal";
 import clientPriceListStore from "../../../stores/clientPriceList";
-
+import moment from "moment";
 export default function CompanyProductSales() {
   //navigate
   const navigate = new useNavigate();
@@ -103,7 +103,8 @@ export default function CompanyProductSales() {
       sortable: true,
       center: true,
       wrap: true,
-      selector: (row) => row.createdDate,
+      selector: (row) =>
+        moment(row.createdDate.toString()).format("YYYY-MM-DD"),
     },
     {
       name: "Categoria",
@@ -162,7 +163,7 @@ export default function CompanyProductSales() {
       <div className="w-full justify-center  p-5 ">
         <h2 className="text-center text-4xl mt-6">{userInfo?.branch?.name}</h2>{" "}
         <h2 className="text-center text-4xl mt-6">
-          Venta detallada por artículo
+          Ventas detalladas por artículo
         </h2>{" "}
         <button
           className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"

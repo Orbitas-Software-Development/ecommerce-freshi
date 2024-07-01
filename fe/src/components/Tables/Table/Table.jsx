@@ -8,9 +8,15 @@ export default function Table({ columns, data, exportButton = false }) {
     selectAllRowsItemText: "Todos",
   };
   const Export = ({ onExport }) => (
-    <button onClick={(e) => onExport(e.target.value)}>
-      <i class="fa-solid fa-cloud-arrow-down m-2"></i>
-    </button>
+    <div className="w-full text-end pr-16 text-sm">
+      <button
+        className="hover:text-blue-600"
+        onClick={(e) => onExport(e.target.value)}
+      >
+        <i class=""></i>
+        Descargar <i class="fa-solid fa-file-arrow-down fa-xl"></i>
+      </button>
+    </div>
   );
 
   function downloadCSV(array) {

@@ -79,12 +79,19 @@ export default function PriceList() {
 
   const columns = [
     {
-      name: "#",
-      sortable: true,
+      name: "Asignar Producto",
       center: true,
-      wrap: true,
-      selector: (row, index) => index + 1,
+      cell: (product) => (
+        <button
+          className="py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
+          type="button"
+          onClick={(e) => navigate("/assignProduct", { state: product })}
+        >
+          <i class="fa-solid fa-square-plus"></i>
+        </button>
+      ),
     },
+
     {
       name: "Nombre",
       sortable: true,
@@ -100,41 +107,29 @@ export default function PriceList() {
       selector: (row) => row.description,
     },
     {
-      name: "Acción",
+      name: "Editar",
       center: true,
       cell: (priceList) => (
         <button
-          className="min-w-[100px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md  text-lg"
+          className="py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md  text-lg"
           type="button"
           onClick={(e) => navigate("/priceListform", { state: priceList })}
         >
-          Editar
+          <i class="fa-solid fa-pencil"></i>
         </button>
       ),
     },
+
     {
-      name: "Acción",
+      name: "Eliminar",
       center: true,
       cell: (product) => (
         <button
-          className="min-w-[120px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
-          type="button"
-          onClick={(e) => navigate("/assignProduct", { state: product })}
-        >
-          Asignar Producto
-        </button>
-      ),
-    },
-    {
-      name: "Acción",
-      center: true,
-      cell: (product) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md text-lg"
+          className="py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md text-lg"
           type="button"
           onClick={() => deletePriceList(product.id)}
         >
-          Eliminar
+          <i class="fa-solid fa-trash-can"></i>
         </button>
       ),
     },

@@ -4,7 +4,7 @@ export default function TodayGreeting() {
   //getHour
   const hour = new Date().getHours();
   return (
-    <div className="text-end flex flex-row justify-center items-center">
+    <div className="text-end flex flex-row pc:justify-end movil:justify-end  items-center">
       {hour < 12 ? (
         <>
           <span className="font-thin pc:block movil:hidden">¡Buenos Días!</span>

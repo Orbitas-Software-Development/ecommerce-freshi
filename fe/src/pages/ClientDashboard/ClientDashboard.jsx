@@ -97,17 +97,30 @@ export default function ClientDashboard() {
 
   const columns = [
     {
-      name: "#",
-      sortable: true,
+      name: "Editar",
       center: true,
-      selector: (row, index) => index + 1,
+      cell: (client) => (
+        <button
+          className="py-2 px-4 m-2  text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md "
+          type="button"
+          onClick={(e) => navigate("/clientform", { state: client })}
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+      ),
     },
     {
-      name: "Creado",
-      sortable: true,
+      name: "Eliminar",
       center: true,
-      wrap: true,
-      selector: (row) => new Date(row.createdDate).toLocaleDateString(),
+      cell: (row) => (
+        <button
+          className="py-2 px-4 m-2  text-lg bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md "
+          type="button"
+          onClick={(e) => deleteClient(row.id)}
+        >
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      ),
     },
     {
       name: "Nombre",
@@ -115,6 +128,13 @@ export default function ClientDashboard() {
       center: true,
       wrap: true,
       selector: (row) => row.name,
+    },
+    {
+      name: "Creado",
+      sortable: true,
+      center: true,
+      wrap: true,
+      selector: (row) => new Date(row.createdDate).toLocaleDateString(),
     },
     {
       name: "Cédula Jurídica",
@@ -153,33 +173,6 @@ export default function ClientDashboard() {
           checked={row.isClient}
           onChange={(e) => setActiveUser(row.id)}
         />
-      ),
-    },
-
-    {
-      name: "Acción",
-      center: true,
-      cell: (client) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2  text-lg bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md "
-          type="button"
-          onClick={(e) => navigate("/clientform", { state: client })}
-        >
-          Editar
-        </button>
-      ),
-    },
-    {
-      name: "Acción",
-      center: true,
-      cell: (row) => (
-        <button
-          className="min-w-[100px] py-2 px-4 m-2  text-lg bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md "
-          type="button"
-          onClick={(e) => deleteClient(row.id)}
-        >
-          Eliminar
-        </button>
       ),
     },
   ];

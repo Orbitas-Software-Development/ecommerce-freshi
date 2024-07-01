@@ -8,7 +8,7 @@ import MicroModal from "react-micro-modal";
 import Table from "../../../components/Tables/Table/Table";
 import SimpleModal from "../../../components/Modals/SimpleModal";
 import clientPriceListStore from "../../../stores/clientPriceList";
-import { wrap } from "framer-motion";
+
 export default function CompanyOrder() {
   //navigate
   const navigate = new useNavigate();
@@ -73,79 +73,18 @@ export default function CompanyOrder() {
 
   const columns = [
     {
-      name: "#",
-      cell: (row, index) => index + 1,
-    },
-    {
-      name: "ID",
-      cell: (row) => row.id,
+      name: "Ver detalles",
       center: true,
       sortable: true,
-      wrap: true,
-    },
-    {
-      name: "Fecha",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) => `${new Date(row.createdDate).toLocaleString()} `,
-    },
-    {
-      name: "Cliente",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) => row.branch.client.name,
-    },
-    {
-      name: "Sucursales",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) => row.branch.name,
-    },
-    {
-      name: "Cajas totales",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) => boxesNumber(row.ordersDetails),
-    },
-    {
-      name: "Unidades totales",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) => unitsNumber(row.ordersDetails),
-    },
-    {
-      name: "total",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) =>
-        getCurrencySimbol(row.currencyId) + row.total.toFixed(2),
-    },
-    {
-      name: "Total + IVA",
-      center: true,
-      sortable: true,
-      wrap: true,
-      selector: (row) =>
-        getCurrencySimbol(row.currencyId) + row.totalIVA.toFixed(2),
-    },
-    {
-      name: "Acción",
-
       cell: (row) => (
         <MicroModal
           trigger={(open) => (
             <button
-              className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
+              className="py-2 px-4 bg-blue-700 hover:bg-blue-900 text-white font-bold  rounded-md m-4 mx-6 text-lg"
               type="button"
               onClick={open}
             >
-              Ver
+              <i class="fa-solid fa-file-invoice"></i>
             </button>
           )}
         >
@@ -172,7 +111,7 @@ export default function CompanyOrder() {
                       <tr>
                         <th scope="col" class="px-6 py-3">
                           #
-                        </th>{" "}
+                        </th>
                         <th scope="col" class="px-6 py-3">
                           Producto
                         </th>
@@ -228,7 +167,9 @@ export default function CompanyOrder() {
       ),
     },
     {
-      name: "Acción",
+      center: true,
+      sortable: true,
+      name: "Ver reporte",
       cell: (row) => (
         <button
           className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-md m-4 mx-6 text-lg"
@@ -239,9 +180,69 @@ export default function CompanyOrder() {
             });
           }}
         >
-          Ver
+          <i class="fa-solid fa-file-pdf"></i>
         </button>
       ),
+    },
+    {
+      name: "ID",
+      cell: (row) => row.id,
+      center: true,
+      sortable: true,
+      wrap: true,
+    },
+
+    {
+      name: "Cliente",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) => row.branch.client.name,
+    },
+
+    {
+      name: "Sucursales",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) => row.branch.name,
+    },
+    {
+      name: "Fecha",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) => `${new Date(row.createdDate).toLocaleString()} `,
+    },
+    {
+      name: "Cajas totales",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) => boxesNumber(row.ordersDetails),
+    },
+    {
+      name: "Unidades totales",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) => unitsNumber(row.ordersDetails),
+    },
+    {
+      name: "total",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) =>
+        getCurrencySimbol(row.currencyId) + row.total.toFixed(2),
+    },
+    {
+      name: "Total + IVA",
+      center: true,
+      sortable: true,
+      wrap: true,
+      selector: (row) =>
+        getCurrencySimbol(row.currencyId) + row.totalIVA.toFixed(2),
     },
   ];
 
