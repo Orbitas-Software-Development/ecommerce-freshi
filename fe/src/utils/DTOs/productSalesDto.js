@@ -1,3 +1,4 @@
+import { porcentageConverter } from "../../utils/Currency/currencyFunctions";
 export const productSales = (orders) => {
   let productSales = [];
 
@@ -26,7 +27,7 @@ export const productSales = (orders) => {
         description: orderDetail.product.description,
         quantity: orderDetail.units,
         subtotal: orderDetail.total,
-        iva: orderDetail.iva,
+        iva: porcentageConverter(orderDetail.iva) * orderDetail.total,
         total: orderDetail.totalIva,
       });
     });
