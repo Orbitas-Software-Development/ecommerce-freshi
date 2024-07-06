@@ -17,8 +17,8 @@ export default defineConfig(({ mode }) => {
         manifest: {
           // caches the assets/icons mentioned (assets/* includes all the assets present in your src/ directory)
           includeAssets: ["favicon.ico", "apple-touch-icon.jpeg", "assets/*"],
-          name: "Uber-direct",
-          short_name: "U-direct",
+          name: "e-commerce-oss",
+          short_name: "ec-oss",
           start_url: "/",
           background_color: "#ffffff",
           theme_color: "#000000",
