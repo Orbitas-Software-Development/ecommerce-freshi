@@ -71,10 +71,7 @@ export default function AdminDashboard() {
       <SimpleModal data={modalData} />
       <div className="w-full flex flex-col">
         <div className="w-full">
-          <h1 className="mt-4 font-semibold text-3xl text-center">Admin</h1>{" "}
-          <h1 className="mt-4 font-semibold text-3xl text-center">
-            {!companyInformation && "No datos"} sd
-          </h1>
+          <h1 className="mt-4 font-semibold text-3xl text-center">Admin</h1>
         </div>
         {basicInfo && (
           <>
