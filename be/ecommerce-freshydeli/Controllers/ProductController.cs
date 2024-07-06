@@ -51,21 +51,26 @@ namespace ecommerce_freshydeli.Controllers
 
             List<OrderDetails> orderDetails = await Context.OrderDetails.Where(plp=>plp.ProductId==productId).ToListAsync();
 
-            List<Product> products = await Context.Product.Where(p => p.CompanyId == companyId).Include(p => p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
-
+            
             if (orderDetails.Count == 0)
             {
 
-                Context.Remove(product);
+                Context.Product.Remove(product);
 
                 await Context.SaveChangesAsync();
 
-                return Ok(products);
+                List<Product> productList = await Context.Product.Where(p => p.CompanyId == companyId).Include(p => p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
+
+                return Ok(productList);
             }
 
             product.Active = false;
 
+            Context.Update(product);
+            
             await Context.SaveChangesAsync();
+
+            List<Product> products = await Context.Product.Where(p => p.CompanyId == companyId).Include(p => p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
 
             return Ok(products);
 

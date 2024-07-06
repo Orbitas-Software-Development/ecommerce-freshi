@@ -1,4 +1,6 @@
-﻿namespace ecommerce_freshydeli.Entities
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace ecommerce_freshydeli.Entities
 {
     public class Report
     {
@@ -15,7 +17,8 @@
        public int  CompanyId { get; set; }
 
        public Company? Company { get; set; }
-   
+
+      
     }
    
 }

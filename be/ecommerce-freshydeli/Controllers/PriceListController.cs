@@ -70,7 +70,7 @@ namespace ecommerce_freshydeli.Controllers
 
         }
         [HttpDelete("deletePriceList/{id}")]
-        public async Task<ActionResult> CreatePriceList(int id)
+        public async Task<ActionResult> DletePriceList(int id)
         {
 
             try
@@ -81,7 +81,7 @@ namespace ecommerce_freshydeli.Controllers
         
                 ctx.Remove(priceList);
                 await ctx.SaveChangesAsync(); 
-                List<PriceList> priceLists = await ctx.PriceList.ToListAsync();
+                List<PriceList> priceLists = await ctx.PriceList.Where(l=>l.CompanyId==priceList.CompanyId).ToListAsync();
                 return Ok(priceLists);
                
             }

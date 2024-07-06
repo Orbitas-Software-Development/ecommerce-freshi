@@ -58,18 +58,18 @@ namespace ecommerce_freshydeli.Controllers
 
                 Client client = await ctx.Client.Where(c => c.Id == Id).SingleOrDefaultAsync();
 
-                List<Order> orders=await ctx.Order.Include(o=>o.Branch).ThenInclude(b=>b.Client).ToListAsync();
+                List<Order> orders=await ctx.Order.Include(o=>o.Branch).ThenInclude(b=>b.Client).ToListAsync();//todas las ordenes
 
-                var orderByClient= orders.Find(o => o.Branch.Client.Id == Id);
+                var orderByClient= orders.Find(o => o.Branch.Client.Id == Id);//ordenes relacionadas al cliente
 
-                List<ClientPriceList> clientPriceList = await ctx.ClientPriceList.Where(cp => cp.ClientId == Id).ToListAsync();
+                List<ClientPriceList> clientPriceList = await ctx.ClientPriceList.Where(cp => cp.ClientId == Id).ToListAsync();//listas relacionas al cliente
 
                 ctx.RemoveRange(clientPriceList);
 
-                if (orderByClient == null)
+                if (orderByClient == null)//si el cliente no tiene nada relacionado se borra
                 {
-                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
-                    List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
+                  
+                    List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync(); //todas las sucursales asociadas
                     ctx.Branch.RemoveRange(branches);                  
                     ctx.Client.Remove(client);
 
@@ -81,12 +81,13 @@ namespace ecommerce_freshydeli.Controllers
 
 
                     await ctx.SaveChangesAsync();
+                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync(); // todos los clientes
                     return Ok(clients);
                 }
 
-                if (orderByClient != null)
+                if (orderByClient != null)//si el cliente tiene orden de compras relacionadas no se borran se desactiva
                 {
-                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();
+                   
                     
                     List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
                     List<Branch> newBranches=branches.Select(b => { b.Active = false; return b; }).ToList();
@@ -104,7 +105,7 @@ namespace ecommerce_freshydeli.Controllers
                     ctx.UpdateRange(newBranches);
                     ctx.Update(client);
                     await ctx.SaveChangesAsync();
-                    //ctx.Client.Remove(client); --> hay que hacer una validaci[on que no tenga nada relacionado
+                    List<Client> clients = await ctx.Client.Where(c => c.CompanyId == client.CompanyId).Where(c => c.Active == true).ToListAsync();//todos los clientes
                     return Ok(clients);
                 }
 
