@@ -22,6 +22,7 @@ export default function AddPriceList() {
   const navigate = useNavigate();
   const data = location.state;
   async function handleData(e) {
+    if (!priceList?.currencyId) priceList.currencyId = 1; // si no se ha sellecionado la moneda
     setPriceList({
       ...priceList,
       [e.target.name]: e.target.value,
@@ -60,10 +61,10 @@ export default function AddPriceList() {
             });
           })
       : axios
-          .post(`${process.env.REACT_APP_PROD}/api/priceList/createPriceList`, {
-            ...priceList,
-            currencyId: listInDolar ? 2 : 1,
-          })
+          .post(
+            `${process.env.REACT_APP_PROD}/api/priceList/createPriceList`,
+            priceList
+          )
           .then((res) => {
             okResponseModalHandle({
               setModalData,
@@ -109,14 +110,32 @@ export default function AddPriceList() {
           onSubmit={handleSubmit}
         >
           <label class="inline-flex items-center cursor-pointer ">
-            <input
-              type="checkbox"
-              class="sr-only peer ml-1"
-              checked={priceList?.currencyId === 2 ? true : false}
-              onChange={(e) => {
-                setListInDolar(!listInDolar);
-              }}
-            />
+            {priceList?.currencyId ? (
+              <input
+                type="checkbox"
+                class="sr-only peer ml-1"
+                checked={priceList?.currencyId === 2 ? true : false}
+                onChange={(e) => {
+                  console.log(priceList);
+                  setPriceList({
+                    ...priceList,
+                    ["currencyId"]: priceList?.currencyId === 1 ? 2 : 1,
+                  });
+                }}
+              />
+            ) : (
+              <input
+                type="checkbox"
+                class="sr-only peer ml-1"
+                onChange={(e) => {
+                  setPriceList({
+                    ...priceList,
+                    ["currencyId"]: priceList?.currencyId ? 1 : 2,
+                  });
+                }}
+              />
+            )}
+
             <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             <span class="ms-3 text-lg font-medium text-gray-900 dark:text-gray-300">
               Lista en Dólares

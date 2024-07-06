@@ -37,8 +37,9 @@ export default function CompanyInformation() {
         ["companyId"]: user.companyId,
       })
       .then((res) => {
-        setModalData({
-          loading: false,
+        okResponseModalHandle({
+          setModalData,
+          message: "Guardado",
         });
         res.data.information && setInformation(res.data.information);
       })
@@ -71,9 +72,9 @@ export default function CompanyInformation() {
       })
       .catch((e) => {
         errorResponseModalHandle({
-          message: "Cargar los datos",
-          route: "/admindashboard",
+          message: "No hay datos para cargar",
           setModalData,
+          modalIcon: "info",
           navigate: navigate,
         });
         console.log(e);
@@ -127,7 +128,7 @@ export default function CompanyInformation() {
               type="text"
               id="provider"
               class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Digíte roveedor"
+              placeholder="Digíte Proveedor"
               required
               name="provider"
               value={information?.provider || ""}
@@ -165,7 +166,7 @@ export default function CompanyInformation() {
               type="text"
               id="phone"
               class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Digíte Cédula Jurídica"
+              placeholder="Digíte Télefono"
               required
               name="phone"
               value={information?.phone || ""}
@@ -178,7 +179,7 @@ export default function CompanyInformation() {
               for="email"
               class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
-              Cédula Jurídica
+              Correo electrónico
             </label>
             <input
               type="email"
@@ -188,7 +189,7 @@ export default function CompanyInformation() {
               required
               onChange={(e) => handleData(e)}
               value={information?.email || ""}
-              placeholder="Dígite correo"
+              placeholder="Dígite Correo Electrónico"
               autoComplete="off"
             />
           </div>
@@ -206,7 +207,7 @@ export default function CompanyInformation() {
               name="direction"
               required
               onChange={(e) => handleData(e)}
-              placeholder="Dígite dirección"
+              placeholder="Dígite Dirección"
               value={information?.direction || ""}
               autoComplete="off"
             />
@@ -235,7 +236,7 @@ export default function CompanyInformation() {
               for="phone"
               class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
-              Texto Morosidad (Órden de Compra)
+              Mensaje de Morosidad (Órden de Compra)
             </label>
             <textarea
               type="text"
@@ -244,7 +245,7 @@ export default function CompanyInformation() {
               name="latePaymentMessage"
               required
               onChange={(e) => handleData(e)}
-              placeholder="Dígite el Texto"
+              placeholder="Dígite el Mensaje de Morosidad"
               value={information?.latePaymentMessage || ""}
               autoComplete="off"
             />

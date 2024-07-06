@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout";
 import productStore from "../../stores/productStore";
-import { v4 as uuidv4 } from "uuid";
+
 import { Link, useNavigate } from "react-router-dom";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import axios from "axios";

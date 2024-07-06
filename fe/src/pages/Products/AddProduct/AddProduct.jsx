@@ -31,10 +31,7 @@ export default function AddProduct() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      !productDTO?.id &&
-      validateExistedValue(products, product.name, "name")
-    ) {
+    if (!product?.id && validateExistedValue(products, product.name, "name")) {
       return errorResponseModalHandle({
         loading: true,
         message: <>{`La sucursal: ${branch.name}, ya existe`}</>,
@@ -47,14 +44,14 @@ export default function AddProduct() {
       text: <>Procesando</>,
       icon: "loading",
     });
-    let productDTO = product;
-    productDTO.companyId = user.companyId;
-    productDTO.currencyId = 1;
-    productDTO?.id
+
+    product.companyId = user.companyId;
+    product.currencyId = 1;
+    product?.id
       ? axios
           .put(
             `${process.env.REACT_APP_PROD}/api/product/UpdateProduct`,
-            productDTO
+            product
           )
           .then((res) => {
             okResponseModalHandle({
@@ -75,7 +72,7 @@ export default function AddProduct() {
       : axios
           .post(
             `${process.env.REACT_APP_PROD}/api/product/createProduct`,
-            productDTO
+            product
           )
           .then((res) => {
             okResponseModalHandle({
@@ -98,6 +95,7 @@ export default function AddProduct() {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
   const handleImage = (e) => {
+    console.log("handleimage");
     var file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -220,14 +218,14 @@ export default function AddProduct() {
               className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
             >
               Imagen
-            </label>{" "}
+            </label>
             <input
               type="file"
               accept="image/png, image/jpeg"
               id="base64Image"
               className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mt-2"
               placeholder="Imagen"
-              required
+              required={!product.id || imageError} //requerido si no se esta editando producto o sino tiene errores
               name="base64Image"
               onChange={(e) => handleImage(e)}
               autoComplete="off"

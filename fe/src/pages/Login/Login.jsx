@@ -147,6 +147,7 @@ const Login = () => {
               onSubmit={handleLogin}
               className="text-lg mt-4 bg-green-600 hover:bg-blue-dark text-white font-bold py-2 px-4 mb-2 rounded w-[200px] text-center"
               type="submit"
+              disabled={loading ? true : false}
             >
               {loading ? <Loading /> : "Ingresar"}
             </button>

@@ -6,10 +6,18 @@ import axios from "axios";
 import Layout from "../../../components/Layout/Layout";
 import { getUserInfo } from "../../../utils/localStorage/functions";
 import Table from "../../../components/Tables/Table/Table";
+import {
+  okResponseModalHandle,
+  errorResponseModalHandle,
+} from "../../../utils/http/functions";
 export default function EditEmail() {
+  //localstorage
+  let user = getUserInfo();
   //local
   const [reportForm, setReportForm] = useState({});
-  const [emails, setEmails] = useState([]);
+  const [emails, setEmails] = useState([
+    { email: `${user.email} (Mi correo)`, filter: true },
+  ]);
   const [modalData, setModalData] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   //email
@@ -18,8 +26,7 @@ export default function EditEmail() {
   const navigate = useNavigate();
   //params
   const { state } = useLocation();
-  //localstorage
-  let user = getUserInfo();
+
   //handleForm
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,8 +72,19 @@ export default function EditEmail() {
       )
       .then((res) => {
         setReportForm(res.data.report);
-        setEmails(res.data.emails);
+        setEmails([...emails, ...res.data.emails]);
         setModalData({ loading: false });
+
+        //Correo por defecto guardado en el localhost
+      })
+      .catch((e) => {
+        errorResponseModalHandle({
+          message: "No hay datos para cargar",
+          setModalData,
+          modalIcon: "info",
+          navigate: navigate,
+        });
+        console.log(e);
       });
   }, []);
   //save information
@@ -78,12 +96,26 @@ export default function EditEmail() {
     });
     axios
       .put(`${process.env.REACT_APP_PROD}/api/report/saveReport`, {
-        Report: reportForm,
-        Emails: emails,
+        report: {
+          ...reportForm,
+          name: state.report,
+          description: `${state.report} ${user.company.name}`,
+          companyId: user.company.id,
+        },
+        emails: emails.filter((value) => !value?.filter),
       })
       .then((res) => {
-        setModalData({
-          loading: false,
+        setReportForm(res.data.report);
+        res.data.emails.length > 0
+          ? setEmails([
+              { email: `${user.email} (Mi correo)`, filter: true },
+              ...res.data.emails,
+            ])
+          : setEmails([...emails]);
+
+        okResponseModalHandle({
+          setModalData,
+          message: "Guardado",
         });
       });
   };
@@ -99,12 +131,15 @@ export default function EditEmail() {
       name: "Editar",
       cell: (row) => (
         <button
-          className="min-w-[100px] py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md mx-6 text-lg"
+          className={`min-w-[100px] py-2 px-4 m-2  ${
+            row?.filter ? `bg-gray-500 ` : `bg-blue-500 hover:bg-blue-600`
+          }  text-white font-bold  rounded-md mx-6 text-lg`}
           type="button"
+          disabled={row?.filter && true}
           onClick={(e) => {
             setOpenForm(true);
             setEditing(true);
-            setEmail(row);
+            setEmail({ ...row, ["previousEmail"]: row.email });
           }}
         >
           Editar
@@ -115,7 +150,10 @@ export default function EditEmail() {
       name: "Eliminar",
       cell: (row) => (
         <button
-          className="min-w-[100px] py-2 px-4 m-2 bg-red-500 hover:bg-red-600 text-white font-bold  rounded-md mx-6 text-lg"
+          className={`min-w-[100px] py-2 px-4 m-2 ${
+            row?.filter ? `bg-gray-500 ` : `bg-red-500 hover:bg-red-600`
+          }  text-white font-bold  rounded-md mx-6 text-lg`}
+          disabled={row?.filter && true}
           type="button"
           onClick={(e) => deleteEmail(row.id)}
         >
@@ -127,14 +165,24 @@ export default function EditEmail() {
 
   const saveEmail = () => {
     if (editing) {
+      setEditing(false);
       return setEmails(
         emails.map((value) => {
-          if (value.id === email.id) return email;
+          if (value.email === email.previousEmail) return email;
           return value;
         })
       );
     }
-    setEmails([...emails, { ...email, ["reportId"]: emails[0].reportId }]);
+    setEmails([...emails, { ...email, ["reportId"]: reportForm.id }]);
+  };
+
+  const submitEmail = (e) => {
+    e.preventDefault();
+    if (!emailExistedError) {
+      setOpenForm(false);
+      setEmail("");
+      return saveEmail();
+    }
   };
   return (
     <Layout>
@@ -146,57 +194,52 @@ export default function EditEmail() {
       >
         {(close) => (
           <div className="w-full ">
-            {emailExistedError && (
-              <p className="text-red-400 text-lg">Este correo ya existe</p>
-            )}
-
-            <label
-              for="name"
-              class="block mb-4 text-lg font-medium text-gray-900 dark:text-white"
-            >
-              Correo
-            </label>
-            <input
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
-              type="email"
-              required
-              name="email"
-              value={email?.email || ""}
-              onChange={(e) => {
-                if (emailExisted(e)) {
-                  setEmailExistedError(true);
-                  return setEmail({ ...email, ["email"]: e.target.value });
-                } else {
-                  setEmailExistedError(false);
-                  setEmail({ ...email, ["email"]: e.target.value });
-                }
-              }}
-            />
-            <div>
-              <button
-                className="w-52 m-1 text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                onClick={(e) => {
-                  if (!emailExistedError) {
-                    setOpenForm(false);
-                    setEmail("");
-                    return saveEmail();
+            <form onSubmit={submitEmail}>
+              {emailExistedError && (
+                <p className="text-red-400 text-lg">Este correo ya existe</p>
+              )}
+              <label
+                for="name"
+                class="block mb-4 text-lg font-medium text-gray-900 dark:text-white"
+              >
+                Correo
+              </label>
+              <input
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
+                type="email"
+                required
+                name="email"
+                value={email?.email || ""}
+                onChange={(e) => {
+                  if (emailExisted(e)) {
+                    setEmailExistedError(true);
+                    return setEmail({ ...email, ["email"]: e.target.value });
+                  } else {
+                    setEmailExistedError(false);
+                    setEmail({ ...email, ["email"]: e.target.value });
                   }
                 }}
-              >
-                Guardar
-              </button>
-              <button
-                className="w-52 m-1 text-white  text-lg  bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                onClick={(e) => {
-                  setEmailExistedError(false);
-                  setOpenForm(false);
-                  setEditing(false);
-                  setEmail("");
-                }}
-              >
-                cancelar
-              </button>
-            </div>
+              />
+              <div>
+                <button
+                  type="submit"
+                  className="w-52 m-1 text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Guardar
+                </button>
+                <button
+                  className="w-52 m-1 text-white  text-lg  bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={(e) => {
+                    setEmailExistedError(false);
+                    setOpenForm(false);
+                    setEditing(false);
+                    setEmail("");
+                  }}
+                >
+                  cancelar
+                </button>
+              </div>
+            </form>
           </div>
         )}
       </MicroModal>
@@ -276,27 +319,37 @@ export default function EditEmail() {
             <div className="flex justify-center text-2xl font-semibold">
               <p>Correos</p>
             </div>
-            <button
-              type="submit"
-              className="text-white w-[150px] text-lg mx-2  my-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={(e) => {
-                setOpenForm(true);
-              }}
-            >
-              Agregar <i class="fa-solid fa-plus"></i>
-            </button>
-            <div className="border  rounded-md">
-              <Table columns={columns} data={emails} />{" "}
-              <div className="flex justify-center border-t p-5">
+            {reportForm?.id ? (
+              <>
+                {" "}
                 <button
                   type="submit"
-                  className="min-w-[200px]  text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  onClick={saveReportInfo}
+                  className="text-white w-[150px] text-lg mx-2  my-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={(e) => {
+                    setOpenForm(true);
+                  }}
                 >
-                  Guardar
+                  Agregar <i class="fa-solid fa-plus"></i>
                 </button>
+                <div className="border  rounded-md">
+                  <Table columns={columns} data={emails} />
+
+                  <div className="flex justify-center border-t p-5">
+                    <button
+                      type="submit"
+                      className="min-w-[200px]  text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      onClick={saveReportInfo}
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="w-full text-center mt-4">
+                <p>Nota: Guarde la información del correo primeramente</p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

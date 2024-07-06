@@ -31,7 +31,9 @@ export default function ClientDashboard() {
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.id}`)
+      .get(
+        `${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.company.id}`
+      )
       .then(async (res) => {
         setClients(res.data);
         setModalData({
@@ -50,7 +52,7 @@ export default function ClientDashboard() {
   const deleteClient = (clientId) => {
     setModalData({
       loading: true,
-      message: "Eliminando",
+      text: <>Eliminando</>,
       icon: "loading",
     });
 

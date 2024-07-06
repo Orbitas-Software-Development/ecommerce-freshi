@@ -165,7 +165,7 @@ export default function Iva() {
         ) : (
           <EmptyResponse
             message={"No hay listas de precios registrados"}
-            redirectRoute={"ivaForm"}
+            redirectRoute={"addIva"}
             addMessage={"Agregar IVA"}
           />
         )}

@@ -87,7 +87,9 @@ export default function AddBranch() {
       icon: "loading",
     });
     axios
-      .get(`${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.id}`)
+      .get(
+        `${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.company.id}`
+      )
       .then((res) => {
         setClients(res.data);
         setModalData({

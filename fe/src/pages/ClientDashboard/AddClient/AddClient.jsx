@@ -20,6 +20,7 @@ export default function AddClient() {
   const [persons, setPersons] = useState([]);
   const [clientPriceList, setClientPriceList] = useState([]);
   const [priceList, setPriceList] = useState([]);
+  const [priceListSelected, setPriceListSelected] = useState({});
   const [priceListNoRecords, setPriceListNoRecords] = useState("");
   //localhost
   const user = getUserInfo();
@@ -134,15 +135,37 @@ export default function AddClient() {
       });
   }, []);
   const validatePriceList = async (e) => {
-    let res = await axios.get(
-      `${process.env.REACT_APP_PROD}/api/PricelistProduct/getPricelistProductByPriceListId/${e.target.value}`
-    );
-    if (res.data.length > 0) {
-      setPriceListNoRecords("");
-      return handleData(e);
-    } else {
-      setPriceListNoRecords("No tiene producto asignados");
-    }
+    setModalData({
+      loading: true,
+      text: <>Validando lista de precios</>,
+      icon: "loading",
+    });
+    await axios
+      .get(
+        `${process.env.REACT_APP_PROD}/api/PricelistProduct/getPricelistProductByPriceListId/${e.target.value}`
+      )
+      .then((res) => {
+        if (res.data.length > 0) {
+          okResponseModalHandle({
+            setModalData,
+            message: "Lista de precios con productos",
+            modalIcon: "check",
+          });
+          setPriceListSelected("");
+          return handleData(e);
+        } else {
+          setModalData({
+            loading: false,
+          });
+        }
+      })
+      .catch((e) => {
+        errorResponseModalHandle({
+          route: "/clientdashboard",
+          navigate: navigate,
+          setModalData,
+        });
+      });
   };
   return (
     <Layout>
@@ -172,6 +195,10 @@ export default function AddClient() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="priceListId"
               onChange={(e) => {
+                var a = priceList.find(
+                  (value) => value.id === parseInt(e.target.value)
+                );
+                setPriceListSelected(a);
                 e.target.value !== "" && validatePriceList(e);
               }}
             >
@@ -188,12 +215,13 @@ export default function AddClient() {
                 )
               )}
             </select>{" "}
-            {priceListNoRecords && (
+            {priceListSelected && (
               <div className="w-full">
                 <RedirectButton
                   message={"No hay productos asignados para esta lista"}
-                  redirect={"/priceList"}
-                  actionMessage={"Editar Lista"}
+                  redirect={"/assignProduct"}
+                  actionMessage={"Asignar productos"}
+                  state={priceListSelected}
                 />
               </div>
             )}

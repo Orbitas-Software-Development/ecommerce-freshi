@@ -81,11 +81,11 @@ export default function PriceList() {
     {
       name: "Asignar Producto",
       center: true,
-      cell: (product) => (
+      cell: (priceList) => (
         <button
           className="py-2 px-4 m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-lg"
           type="button"
-          onClick={(e) => navigate("/assignProduct", { state: product })}
+          onClick={(e) => navigate("/assignProduct", { state: priceList })}
         >
           <i class="fa-solid fa-square-plus"></i>
         </button>
@@ -105,6 +105,13 @@ export default function PriceList() {
       center: true,
       wrap: true,
       selector: (row) => row.description,
+    },
+    {
+      name: "Moneda",
+      sortable: true,
+      center: true,
+      wrap: true,
+      selector: (row) => (row.currencyId === 1 ? "Colones" : "Dólares"),
     },
     {
       name: "Editar",
@@ -149,7 +156,7 @@ export default function PriceList() {
         </button>
         <div className="w-full">
           <h1 className="mt-4 font-semibold text-3xl text-center">
-            Lista de Precio
+            Lista de Precios
           </h1>
         </div>
         {priceList.length > 0 ? (

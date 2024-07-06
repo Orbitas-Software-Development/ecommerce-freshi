@@ -161,13 +161,6 @@ export default function Products() {
       wrap: true,
       selector: (row) => row.iva.name,
     },
-    {
-      name: "Moneda",
-      sortable: true,
-      center: true,
-      wrap: true,
-      selector: (row) => row.currency.name,
-    },
   ];
   return (
     <Layout>

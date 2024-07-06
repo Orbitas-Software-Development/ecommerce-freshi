@@ -104,7 +104,7 @@ export default function CompanyProductSales() {
       center: true,
       wrap: true,
       selector: (row) =>
-        moment(row.createdDate.toString()).format("YYYY-MM-DD"),
+        moment(row.createdDate.toString()).format("DD-MM-YYYY"),
     },
     {
       name: "Categoria",

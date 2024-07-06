@@ -203,7 +203,7 @@ export const generatePDF = ({
       if (getValueLocalStorage("companyLogo")) {
         doc.addImage(
           logo,
-          "JPEG",
+          "PNG",
           data.settings.margin.left,
           15,
           logo.width,

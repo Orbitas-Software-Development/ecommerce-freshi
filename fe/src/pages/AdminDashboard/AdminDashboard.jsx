@@ -12,6 +12,8 @@ import {
   errorResponseModalHandle,
 } from "../../utils/http/functions";
 export default function AdminDashboard() {
+  //navigate
+  const navigate = useNavigate();
   //localStorage
   const user = getUserInfo();
   const [basicInfo, setBasicInfo] = useState(false);
@@ -45,8 +47,7 @@ export default function AdminDashboard() {
           )
           .then((res) => {
             setCompanyOrder(
-              Object.keys(res.data.report ? res.data.report : {}).length > 0 &&
-                res.data.emails.length > 0
+              Object.keys(res.data.report ? res.data.report : {}).length > 0
             );
             setModalData({
               loading: false,
@@ -55,10 +56,12 @@ export default function AdminDashboard() {
           });
       })
       .catch((e) => {
-        console.log(e);
+        setCompanyInformation(e.response.data.information);
+        setBasicInfo(true);
         errorResponseModalHandle({
-          message: "Error al cargar los datos",
+          message: "No hay datos para cargar",
           setModalData,
+          modalIcon: "info",
         });
       });
   }, []);
@@ -68,11 +71,14 @@ export default function AdminDashboard() {
       <SimpleModal data={modalData} />
       <div className="w-full flex flex-col">
         <div className="w-full">
-          <h1 className="mt-4 font-semibold text-3xl text-center">Admin</h1>
+          <h1 className="mt-4 font-semibold text-3xl text-center">Admin</h1>{" "}
+          <h1 className="mt-4 font-semibold text-3xl text-center">
+            {!companyInformation && "No datos"} sd
+          </h1>
         </div>
         {basicInfo && (
           <>
-            {!companyInformation || !companyOrder ? (
+            {companyInformation === false || companyOrder === false ? (
               <div className="w-full p-4">
                 <h1 className="mt-4 font-semibold text-lg text-start">
                   {`Hola, ${getName()} tienes las siguientes acciones pendientes:`}
@@ -92,7 +98,7 @@ export default function AdminDashboard() {
                 )}
                 {!companyOrder && (
                   <h1 className="mt-4 font-semibold text text-start">
-                    - Asignar correos para la orden de compra.
+                    -Completar información para la orden de compra.
                     <button
                       onClick={() => {
                         navigate("/emails");
