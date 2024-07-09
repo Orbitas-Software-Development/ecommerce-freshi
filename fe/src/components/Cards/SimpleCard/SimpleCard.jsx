@@ -10,12 +10,13 @@ export default function SimpleCard({
   const navigate = new useNavigate();
   return (
     <div
+      disabled={disabled}
       onClick={() => {
         !disabled && navigate(`/${route}`, params);
       }}
       className={`${
-        disabled ? "" : "cursor-pointer border"
-      }  w-[150px] h-[150px] flex flex-col justify-center items-center p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 m-4 hover:shadow-md  `}
+        disabled ? "" : "cursor-pointer border hover:shadow-md "
+      }  w-[150px] h-[150px] flex flex-col justify-center items-center p-6 bg-white border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-700 m-4  `}
     >
       <div className="text-center">
         <p className="text-xl font-semibold">{titulo}</p>

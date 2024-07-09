@@ -27,7 +27,7 @@ export const getName = (key) => {
   let role = JSON.parse(localStorage.getItem("role"));
 
   if (role === "admin") {
-    return user.firstName + " " + user.lastName;
+    return user.firstName + " " + (user.lastName === null ? "" : user.lastName);
   }
   return user?.fullName;
 };
