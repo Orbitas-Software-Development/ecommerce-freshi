@@ -62,7 +62,11 @@ export default function AdminDashboard() {
           });
       })
       .catch((e) => {
+        setModalData({
+          loading: false,
+        });
         setCompanyInformation(e.response.data.information);
+        setCompanyOrder(true);
         setBasicInfo(true);
         setExtendedModalData(true);
       });
@@ -77,7 +81,43 @@ export default function AdminDashboard() {
             Administrador
           </h1>
         </div>
-
+        {basicInfo && (
+          <>
+            {companyInformation === false || companyOrder === false ? (
+              <div className="w-full p-4">
+                <h1 className="mt-4 font-semibold text-lg text-start">
+                  {`Hola, ${getName()} tienes las siguientes acciones pendientes:`}
+                </h1>
+                {!companyInformation && (
+                  <h1 className="mt-4 font-semibold text text-start">
+                    - Completar la información de la empresa.
+                    <button
+                      onClick={() => {
+                        navigate("/CompanyInformation");
+                      }}
+                      className="text-white w-[150px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Completar
+                    </button>
+                  </h1>
+                )}
+                {!companyOrder && (
+                  <h1 className="mt-4 font-semibold text text-start">
+                    -Completar información para la orden de compra.
+                    <button
+                      onClick={() => {
+                        navigate("/emails");
+                      }}
+                      className="text-white w-[150px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Asignar
+                    </button>
+                  </h1>
+                )}
+              </div>
+            ) : null}
+          </>
+        )}
         <div className="mt-4 flex flex-wrap  w-full justify-center">
           <SimpleCard
             disabled={!companyInformation || !companyOrder}

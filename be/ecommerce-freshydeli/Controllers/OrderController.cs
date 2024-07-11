@@ -50,8 +50,7 @@ namespace ecommerce_freshydeli.Controllers
                 //emails
                 List<EmailReport> emails = await applicationDbContext.EmailReport.Where(er=>er.ReportId== report.Id).ToListAsync();
                 //sendEmail
-            //    EmailServices.SendOrder(new { orderDTO.UserName, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email,ReportInfo=report,Email= emails }, orderDTO.pdfReport,emails,report);
-                
+        
                 return Ok(order);
 
             }catch (Exception ex)

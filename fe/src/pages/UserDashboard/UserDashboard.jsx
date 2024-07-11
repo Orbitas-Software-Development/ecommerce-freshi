@@ -126,6 +126,13 @@ export default function UserDashboard() {
       selector: (row) => row.userName,
     },
     {
+      name: "E-mail",
+      sortable: true,
+      center: true,
+      wrap: true,
+      selector: (row) => row.email,
+    },
+    {
       name: "Nombre",
       sortable: true,
       center: true,

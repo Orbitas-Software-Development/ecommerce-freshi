@@ -265,6 +265,18 @@ export default function AddBranch() {
               autoComplete="off"
               value={branch?.longitude || ""}
             />
+            <a
+              target="blank"
+              href={`https://www.google.com/maps/@${branch.longitude},${branch.latitude},12.00z?entry=ttu`}
+              onClick={() => {}}
+            >
+              <button
+                type="button"
+                className="mt-4 min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Checkear localización
+              </button>
+            </a>
           </div>
           <div className="text-center">
             <button

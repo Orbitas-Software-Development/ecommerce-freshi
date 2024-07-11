@@ -283,7 +283,7 @@ export default function AddClient() {
               for="Identifier"
               className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
             >
-              Cédula Jurídica
+              {client?.personId === "1" ? "Cédula Física" : "Cédula Jurídica"}
             </label>
             <input
               type="number"

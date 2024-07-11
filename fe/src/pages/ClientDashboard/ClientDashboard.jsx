@@ -49,14 +49,14 @@ export default function ClientDashboard() {
       });
   }, []);
 
-  const deleteClient = (clientId) => {
+  const deleteClient = async (clientId) => {
     setModalData({
       loading: true,
       text: <>Eliminando</>,
       icon: "loading",
     });
 
-    axios
+    await axios
       .delete(`${process.env.REACT_APP_PROD}/deleteClientById/${clientId}`)
       .then((res) => {
         setClients(res.data);
@@ -137,6 +137,13 @@ export default function ClientDashboard() {
       center: true,
       wrap: true,
       selector: (row) => new Date(row.createdDate).toLocaleDateString(),
+    },
+    {
+      name: "E-mail",
+      sortable: true,
+      center: true,
+      wrap: true,
+      selector: (row) => row.email,
     },
     {
       name: "Cédula Jurídica",
