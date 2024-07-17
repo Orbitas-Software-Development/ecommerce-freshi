@@ -9,5 +9,7 @@ namespace ecommerce_freshydeli.DTOs
 
         [Required]
         public string password { get; set; }
+        [Required]
+        public int companyId { get; set; }
     }
 }

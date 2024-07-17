@@ -79,7 +79,7 @@ namespace ecommerce_freshydeli.Controllers
 
 
 
-            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u=>u.AspNetUser==null).Include(u => u.Company).FirstOrDefaultAsync();
+            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u=>u.AspNetUser==null).Where(u => u.CompanyId==loginDTO.companyId).Include(u => u.Company).FirstOrDefaultAsync();
             if (user != null)
             {
 

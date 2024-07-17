@@ -105,6 +105,27 @@ const Login = () => {
               )}
             </motion.div>{" "}
           </div>{" "}
+          <label
+            className="block text-black text-lg font-bold mb-2"
+            htmlFor="userName"
+          >
+            Compañia
+          </label>{" "}
+          <div className="mb-4">
+            <select
+              required
+              id="countries"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker text-lg "
+              name="company"
+              onChange={handleData}
+            >
+              <option selected value="">
+                ESCOJA UNA COMPAÑIA
+              </option>
+              <option value={13}>JADE</option>
+              <option value={12}>FRESHI</option>
+            </select>
+          </div>
           <div className="mb-4">
             <label
               className="block text-black text-lg font-bold mb-2"
