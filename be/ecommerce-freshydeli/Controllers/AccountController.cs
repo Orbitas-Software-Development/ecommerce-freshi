@@ -54,8 +54,13 @@ namespace ecommerce_freshydeli.Controllers
 
             if (resultado.Succeeded)
             {
+                    await ctx.Users.AddAsync(new User { Password = registerDto.Password, Email=registerDto.Email,Login=registerDto.UserName,FirstName=registerDto.FullName ,AspNetUser=user.Id,CreationDate=DateTime.Now});
 
-                EmailServices.SendUserRegistered(new { fullName = user.FullName, user = user.UserName, email=user.Email, password = user.UserName, Action = "create" });
+                    await ctx.SaveChangesAsync();
+
+                   
+
+                    EmailServices.SendUserRegistered(new { fullName = user.FullName, user = user.UserName, email=user.Email, password = user.UserName, Action = "create" });
 
                 return Ok(new { registered = true, user, token = "Por definir", expiratio = "Por definir" });
 
@@ -74,7 +79,7 @@ namespace ecommerce_freshydeli.Controllers
 
 
 
-            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Include(u => u.Company).FirstOrDefaultAsync();
+            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u=>u.AspNetUser==null).Include(u => u.Company).FirstOrDefaultAsync();
             if (user != null)
             {
 
@@ -182,14 +187,19 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
                 ApplicationUser user = await userManager.FindByIdAsync(updateUserDTO.Id);
+                User ossUser = await ctx.Users.Where(os=>os.AspNetUser== updateUserDTO.Id).Include(u => u.Company).FirstOrDefaultAsync();
                 if (user == null)
                 {
                     return NotFound();
                 }
                 user.PasswordHash = userManager.PasswordHasher.HashPassword(user, updateUserDTO.Password);
+                ossUser.Password = updateUserDTO.Password;
                 user.EmailConfirmed = true;
                 EmailServices.SendUserRegistered(new { email=user.Email,fullName = user.FullName, user = user.UserName, password = user.UserName, Action = "update" });
                 await userManager.UpdateAsync(user);
+             
+                ctx.Users.Update(ossUser);
+                await ctx.SaveChangesAsync();
                 return Ok(new { update = true });
             }
             catch (Exception ex)

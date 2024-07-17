@@ -38,11 +38,12 @@ namespace ecommerce_freshydeli.Entities
 
         public string? DeviceToken { get; set; }
 
+        public string? AspNetUser { get; set; }
         public int? DepartmentId { get; set; }
 
         public virtual Company? Company { get; set; }
 
-
+       
     }
 
 }
