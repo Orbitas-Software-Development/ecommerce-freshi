@@ -37,8 +37,9 @@ namespace ecommerce_freshydeli.Controllers
                 foreach (var clientsDTO in clientsDTOs)
                 {
                     ClientPriceList foundList =  clientPriceLists.Find(PriceList => PriceList.ClientId == clientsDTO.Id);
-                    clientsDTO.PriceListId = foundList.PriceListId;
+                    if (foundList !=null) {   clientsDTO.PriceListId = foundList.PriceListId;
                     clientsDTO.PriceListName = foundList.PriceList.Name;
+                    }
 
                 }
 
@@ -62,13 +63,13 @@ namespace ecommerce_freshydeli.Controllers
 
                 var orderByClient= orders.Find(o => o.Branch.Client.Id == Id);//ordenes relacionadas al cliente
 
-                List<ClientPriceList> clientPriceList = await ctx.ClientPriceList.Where(cp => cp.ClientId == Id).ToListAsync();//listas relacionas al cliente
-
-                ctx.RemoveRange(clientPriceList);
+          
 
                 if (orderByClient == null)//si el cliente no tiene nada relacionado se borra
                 {
-                  
+                    List<ClientPriceList> clientPriceList = await ctx.ClientPriceList.Where(cp => cp.ClientId == Id).ToListAsync();//listas relacionas al cliente
+                    ctx.RemoveRange(clientPriceList);// SE BORRAN SINO TIENE NADA RELACIONADO
+
                     List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync(); //todas las sucursales asociadas
                     ctx.Branch.RemoveRange(branches);                  
                     ctx.Client.Remove(client);
@@ -76,7 +77,7 @@ namespace ecommerce_freshydeli.Controllers
                     List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Id).ToListAsync();
                     foreach (ApplicationUser user in users)
                     {
-                        userManager.DeleteAsync(user);
+                       await userManager.DeleteAsync(user);
                     }
 
 
@@ -97,7 +98,7 @@ namespace ecommerce_freshydeli.Controllers
 
                     foreach(ApplicationUser user in newUsers)
                     {
-                        userManager.UpdateAsync(user);
+                        await userManager.UpdateAsync(user);
                     }
 
                   

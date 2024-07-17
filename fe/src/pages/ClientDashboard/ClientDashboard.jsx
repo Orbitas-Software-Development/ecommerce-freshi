@@ -32,7 +32,7 @@ export default function ClientDashboard() {
     });
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/getClientByCompanyId/${user.company.id}`
+        `${process.env.REACT_APP_DEV}/getClientByCompanyId/${user.company.id}`
       )
       .then(async (res) => {
         setClients(res.data);
@@ -57,7 +57,7 @@ export default function ClientDashboard() {
     });
 
     await axios
-      .delete(`${process.env.REACT_APP_PROD}/deleteClientById/${clientId}`)
+      .delete(`${process.env.REACT_APP_DEV}/deleteClientById/${clientId}`)
       .then((res) => {
         setClients(res.data);
         okResponseModalHandle({
