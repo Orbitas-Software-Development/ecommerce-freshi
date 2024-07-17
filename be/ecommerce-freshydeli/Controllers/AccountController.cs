@@ -174,7 +174,7 @@ namespace ecommerce_freshydeli.Controllers
         public async Task<IActionResult> getUserByClientId(int ClientId)
         {
 
-            List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Id == ClientId).ToListAsync();
+            List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Id == ClientId).OrderByDescending(o => o.CreatedDate).ToListAsync();
 
             return Ok(users);
 
@@ -255,7 +255,7 @@ namespace ecommerce_freshydeli.Controllers
                 {
                    
                     await userManager.DeleteAsync(user);
-                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Include(u => u.Branch).Include(u => u.Branch.Client).ToListAsync();
+                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Where(u => u.Active == true).Include(u => u.Branch).Include(u => u.Branch.Client).OrderByDescending(o => o.CreatedDate).ToListAsync();
                     return Ok(users);
                     
                 }
@@ -264,7 +264,7 @@ namespace ecommerce_freshydeli.Controllers
 
                 await userManager.UpdateAsync(user);
 
-                List<ApplicationUser> userss = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Include(u => u.Branch).Include(u => u.Branch.Client).ToListAsync();
+                List<ApplicationUser> userss = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Where(u=>u.Active==true).Include(u => u.Branch).Include(u => u.Branch.Client).OrderByDescending(o => o.CreatedDate).ToListAsync();
 
                 return Ok(userss);
             }

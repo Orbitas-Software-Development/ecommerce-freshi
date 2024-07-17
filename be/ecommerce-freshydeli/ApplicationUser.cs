@@ -19,5 +19,6 @@ namespace ecommerce_freshydeli
         public Boolean Active { get; set; } = true;
         public Boolean isClient { get; set; } = true;
 
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

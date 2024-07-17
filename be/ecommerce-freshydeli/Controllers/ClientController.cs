@@ -28,7 +28,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Client> clients = await ctx.Client.Where(c => c.CompanyId == Id).Where(c => c.Active == true).Include(c => c.Company).Include(c=>c.Person).ToListAsync();
+                List<Client> clients = await ctx.Client.Where(c => c.CompanyId == Id).Where(c => c.Active == true).Include(c => c.Company).Include(c=>c.Person).OrderByDescending(o=>o.CreatedDate).ToListAsync();
                 List<ClientDTO> clientsDTOs= mapper.Map<List<ClientDTO>>(clients);
 
 
@@ -92,7 +92,7 @@ namespace ecommerce_freshydeli.Controllers
                     List<Branch> branches = await ctx.Branch.Where(b => b.Client.Id == Id).ToListAsync();
                     List<Branch> newBranches=branches.Select(b => { b.Active = false; return b; }).ToList();
             
-                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Id).ToListAsync();
+                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Id == Id).ToListAsync();
                     List<ApplicationUser> newUsers =  users.Select(b => { b.Active = false; return b; }).ToList();
 
                     foreach(ApplicationUser user in newUsers)

@@ -104,7 +104,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Order> orders = await applicationDbContext.Order.Where(order => order.BranchId == branchId).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(p=>p.Currency).ToListAsync();
+                List<Order> orders = await applicationDbContext.Order.Where(order => order.BranchId == branchId).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(p=>p.Currency).OrderByDescending(o=>o.CreatedDate).ToListAsync();
                 return Ok(orders);
             }
             catch (Exception ex)
@@ -117,7 +117,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Order> orders = await applicationDbContext.Order.Where(o => o.Branch.Client.Company.Id == companyId).Include(ctx=>ctx.Branch).ThenInclude(ctx=>ctx.Client).Include(ctx => ctx.OrdersDetails).ThenInclude(x=>x.Product).ThenInclude(x => x.Iva).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(x => x.Category).ToListAsync();
+                List<Order> orders = await applicationDbContext.Order.Where(o => o.Branch.Client.Company.Id == companyId).Include(ctx=>ctx.Branch).ThenInclude(ctx=>ctx.Client).Include(ctx => ctx.OrdersDetails).ThenInclude(x=>x.Product).ThenInclude(x => x.Iva).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(x => x.Category).OrderByDescending(o=>o.CreatedDate).ToListAsync();
                 return Ok(orders);
             }
             catch (Exception ex)

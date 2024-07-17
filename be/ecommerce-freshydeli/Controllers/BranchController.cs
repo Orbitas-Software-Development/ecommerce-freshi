@@ -29,7 +29,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Branch> branches = await ctx.Branch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).ToListAsync();
+                List<Branch> branches = await ctx.Branch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).OrderByDescending(o => o.CreatedDate).ToListAsync();
                 return Ok(branches);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace ecommerce_freshydeli.Controllers
                     await ctx.SaveChangesAsync();
                     foreach (ApplicationUser user in users)
                     {
-                        userManager.DeleteAsync(user);
+                       await userManager.DeleteAsync(user);
                     }
                     return Ok();
                 }
@@ -66,11 +66,11 @@ namespace ecommerce_freshydeli.Controllers
 
                 foreach (ApplicationUser user in newUsers)
                 {
-                    userManager.UpdateAsync(user);
+                    await userManager.UpdateAsync(user);
                 }
                 branch.Active = false;
-                    ctx.Update(branch);
-                    await ctx.SaveChangesAsync();
+                ctx.Branch.Update(branch);
+                await ctx.SaveChangesAsync();
                     //ctx.Client.Remove(client); --> hay que hacer una validaci[on que no tenga nada relacionado
 
                    // List<Branch> branches = await ctx.Branch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).ToListAsync();
