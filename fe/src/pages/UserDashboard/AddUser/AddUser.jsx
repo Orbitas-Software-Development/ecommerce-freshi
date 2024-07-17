@@ -153,7 +153,7 @@ export default function AddUser() {
         </div>
         <ToastContainer position="bottom-center" />
         <form
-          class="w-[50%] mx-auto mt-4 border rounded-md p-8"
+          class="pc:w-[50%] movil:w-[100%]   mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">
@@ -354,17 +354,19 @@ export default function AddUser() {
               onChange={(e) => handleData(e)}
               autoComplete="off"
               value={user?.direction || ""}
-            />
-            <button
-              type="submit"
-              class="text-white  text-lg mt-4 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              {loading ? (
-                <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-              ) : (
-                "Guardar"
-              )}
-            </button>
+            />{" "}
+            <div className="text-center">
+              <button
+                type="submit"
+                class="mt-4 min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg   sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                {loading ? (
+                  <i class="fa-solid fa-hourglass-half fa-bounce"></i>
+                ) : (
+                  "Guardar"
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>

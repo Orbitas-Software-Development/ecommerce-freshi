@@ -5,10 +5,10 @@ import Layout from "../../components/Layout/Layout";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
 import MicroModal from "react-micro-modal";
-
 import Table from "../../components/Tables/Table/Table";
 import SimpleModal from "../../components/Modals/SimpleModal";
 import clientPriceListStore from "../../stores/clientPriceList";
+import { numberWithCommas } from "../../utils/Currency/currencyFunctions";
 export default function MyOrders() {
   //navigate
   const navigate = new useNavigate();
@@ -55,7 +55,7 @@ export default function MyOrders() {
     setUserInfo(getUserInfo());
     axios
       .get(
-        `${process.env.REACT_APP_PROD}/getOrderByBranchId/${
+        `${process.env.REACT_APP_DEV}/getOrderByBranchId/${
           JSON.parse(localStorage.getItem("user")).branchId
         }`
       )
@@ -99,12 +99,14 @@ export default function MyOrders() {
     {
       name: "TOTAL",
       selector: (row) =>
-        getCurrencySimbol(row.currencyId) + row.total.toFixed(2),
+        getCurrencySimbol(row.currencyId) +
+        numberWithCommas(row.total.toFixed(2)),
     },
     {
       name: "TOTAL + IVA",
       selector: (row) =>
-        getCurrencySimbol(row.currencyId) + row.totalIVA.toFixed(2),
+        getCurrencySimbol(row.currencyId) +
+        numberWithCommas(row.totalIVA.toFixed(2)),
     },
     {
       name: "DETALLES",
@@ -176,16 +178,16 @@ export default function MyOrders() {
                           <td class="px-6 py-4">{value.units}</td>
                           <td class="px-6 py-4">
                             {getCurrencySimbol(row.currencyId) +
-                              value.unitPrice.toFixed(2)}
+                              numberWithCommas(value.unitPrice.toFixed(2))}
                           </td>
                           <td class="px-6 py-4">{value.iva + "%"}</td>{" "}
                           <td class="px-6 py-4">
                             {getCurrencySimbol(row.currencyId) +
-                              value.total.toFixed(2)}
+                              numberWithCommas(value.total.toFixed(2))}
                           </td>
                           <td class="px-6 py-4">
                             {getCurrencySimbol(row.currencyId) +
-                              value.totalIva.toFixed(2)}
+                              numberWithCommas(value.totalIva.toFixed(2))}
                           </td>
                         </tr>
                       ))}

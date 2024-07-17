@@ -57,7 +57,7 @@ export default function UserDashboard() {
     });
     axios
       .delete(
-        `${process.env.REACT_APP_PROD}/deleteUser/${clientId}/${companyId}`
+        `${process.env.REACT_APP_DEV}/deleteUser/${clientId}/${companyId}`
       )
       .then((res) => {
         setClients(res.data);
@@ -73,21 +73,6 @@ export default function UserDashboard() {
           setModalData,
           time: 3000,
         });
-      });
-  };
-
-  const updateClient = () => {
-    setUpdateLoading(true);
-    axios
-      .put(`${process.env.REACT_APP_PROD}/updateClients`, clients)
-      .then((res) => {
-        setClients(res.data);
-        toast("Actualizado correctamente");
-        setUpdateLoading(false);
-      })
-      .catch((e) => {
-        toast("No se ha Actualizado");
-        setUpdateLoading(false);
       });
   };
 

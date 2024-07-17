@@ -84,7 +84,7 @@ export default function AddIva() {
           <h1 className="mt-4 font-semibold text-3xl text-center">IVA</h1>
         </div>
         <form
-          className="pc:w-[50%] movil:w-[100%] mx-auto mt-4 border rounded-md p-8"
+          className="pc:w-[50%] movil:w-[100%]   mx-auto my-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">

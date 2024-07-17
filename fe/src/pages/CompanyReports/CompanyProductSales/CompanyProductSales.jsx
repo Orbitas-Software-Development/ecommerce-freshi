@@ -9,6 +9,7 @@ import Table from "../../../components/Tables/Table/Table";
 import SimpleModal from "../../../components/Modals/SimpleModal";
 import clientPriceListStore from "../../../stores/clientPriceList";
 import moment from "moment";
+import { numberWithCommas } from "../../../utils/Currency/currencyFunctions";
 export default function CompanyProductSales() {
   //navigate
   const navigate = new useNavigate();
@@ -146,14 +147,14 @@ export default function CompanyProductSales() {
       sortable: true,
       center: true,
       wrap: true,
-      selector: (row) => row.subtotal,
+      selector: (row) => numberWithCommas(row.subtotal.toFixed(2)),
     },
     {
       name: "Total",
       sortable: true,
       center: true,
       wrap: true,
-      selector: (row) => row.total,
+      selector: (row) => numberWithCommas(row.total.toFixed(2)),
     },
   ];
 

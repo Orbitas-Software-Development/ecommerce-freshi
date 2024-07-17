@@ -14,7 +14,7 @@ export const generatePDF = ({
   productsSelected,
   companyInfo,
   signature,
-  orderId = "Por definir",
+  orderId = "",
   currencyId,
 }) => {
   var logo = new Image(30, "auto");

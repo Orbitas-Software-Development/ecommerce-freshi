@@ -83,7 +83,7 @@ export default function AddCategory() {
       <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
         <button
-          class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          class="text-white min-w-[200px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           onClick={(e) => {
             navigate("/category");
           }}
@@ -96,7 +96,7 @@ export default function AddCategory() {
           </h1>
         </div>{" "}
         <form
-          class="w-96 mx-auto mt-4 border rounded-md p-8"
+          class="w-96 mx-auto mt-4 border rounded-md p-8 pc:w-[50%] movil:w-[100%]"
           onSubmit={handleSubmit}
         >
           <div class="mb-5">
@@ -116,13 +116,15 @@ export default function AddCategory() {
               onChange={(e) => handleData(e)}
               value={category?.name || ""}
               autocomplete="off"
-            />
-            <button
-              type="submit"
-              class="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Guardar
-            </button>
+            />{" "}
+            <div className="text-center">
+              <button
+                type="submit"
+                class="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Guardar
+              </button>
+            </div>
           </div>
         </form>
       </div>
