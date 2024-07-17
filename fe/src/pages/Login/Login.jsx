@@ -14,7 +14,7 @@ import axios from "axios";
 import TodayGreeting from "../../components/TodayGreeting/TodayGreeting";
 const Login = () => {
   //local
-  const [userCredentials, setUserCredentials] = useState({});
+  const [userCredentials, setUserCredentials] = useState({ companyId: 12 });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   //LocalStorage
@@ -116,14 +116,13 @@ const Login = () => {
               required
               id="countries"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker text-lg "
-              name="company"
+              name="companyId"
               onChange={handleData}
             >
-              <option selected value="">
-                ESCOJA UNA COMPAÑIA
-              </option>
               <option value={13}>JADE</option>
-              <option value={12}>FRESHI</option>
+              <option selected value={12}>
+                FRESHI
+              </option>
             </select>
           </div>
           <div className="mb-4">
