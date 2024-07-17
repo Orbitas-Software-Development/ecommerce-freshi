@@ -57,7 +57,7 @@ export default function UserDashboard() {
     });
     axios
       .delete(
-        `${process.env.REACT_APP_DEV}/deleteUser/${clientId}/${companyId}`
+        `${process.env.REACT_APP_PRO}/deleteUser/${clientId}/${companyId}`
       )
       .then((res) => {
         setClients(res.data);

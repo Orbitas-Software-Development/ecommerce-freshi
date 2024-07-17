@@ -127,7 +127,7 @@ export default function BranchesDashboard() {
       icon: "loading",
     });
     axios
-      .delete(`${process.env.REACT_APP_DEV}/deleteBranchById/${branchId}`)
+      .delete(`${process.env.REACT_APP_PROD}/deleteBranchById/${branchId}`)
       .then((res) => {
         setModalData({
           loading: false,
