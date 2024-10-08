@@ -78,13 +78,19 @@ namespace ecommerce_freshydeli.Controllers
         {
 
 
-
+            //Para usuario de OSS  y FreshyDeli
             User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u=>u.AspNetUser==null).Where(u => u.CompanyId==loginDTO.companyId).Include(u => u.Company).FirstOrDefaultAsync();
             if (user != null)
             {
-
                 return Ok(new { auth = true, user, role = "admin" });
+            }           
+            // Para usuario de OSS en general
+            User ossUser = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u => u.AspNetUser == null).Include(u => u.Company).FirstOrDefaultAsync();
+            if (ossUser != null)
+            {
+                return Ok(new { auth = true, ossUser, role = "admin" });
             }
+
 
             //Usuarios desactivos
             ApplicationUser userBranch = await userManager.FindByNameAsync(loginDTO.userName);
