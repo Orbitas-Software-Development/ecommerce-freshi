@@ -4,7 +4,7 @@ namespace ecommerce_freshydeli.DTOs
 {
     public class UpdateUserDTO
     {
-        public string? Id { get; set; }
+        public int? Id { get; set; }
 
         public string? Password { get; set; }
         public string? Email { get; set; }

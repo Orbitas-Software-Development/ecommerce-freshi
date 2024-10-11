@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using ecommerce_freshydeli.DTOs;
 using ecommerce_freshydeli.Entities;
 using ecommerce_freshydeli.Services;
@@ -40,34 +41,38 @@ namespace ecommerce_freshydeli.Controllers
         public async Task<IActionResult> Register(RegisterDTO registerDto)
         {
 
-            try { 
-            var registeredEmail = await userManager.FindByEmailAsync( registerDto.Email);
-            var registeredUser = await userManager.FindByNameAsync(registerDto.UserName);
-           
-            if(registeredUser != null || registeredEmail != null)
+            try
             {
-                 return BadRequest(new { registeredEmail?.Email, registeredUser?.UserName });
+                // var registeredEmail = await userManager.FindByEmailAsync( registerDto.Email);
+                // var registeredUser = await userManager.FindByNameAsync(registerDto.UserName);
+
+                //Nota: Implemetar esto en el FE es mejor, se obtienen todos los usuario y se valida en tiempo real
+                var registeredEmail = await ctx.Users.Where(u => u.Email == registerDto.Email).FirstOrDefaultAsync();
+                var registeredUser = await ctx.Users.Where(u => u.Login == registerDto.UserName).FirstOrDefaultAsync();
+
+
+                if (registeredUser != null || registeredEmail != null)
+                {
+                    return BadRequest(new { registeredEmail?.Email, userName= registeredUser?.Login });
+                }
+
+                User user = mapper.Map<User>(registerDto);
+
+                // var resultado = await userManager.CreateAsync(user, registerDto.Password);
+
+
+                await ctx.Users.AddAsync(user);
+
+                await ctx.SaveChangesAsync();
+
+
+
+                EmailServices.SendUserRegistered(new { fullName = user.FirstName, user = user.Login, email = user.Email, password = user.Login, Action = "create" });
+
+                return Ok(new { registered = true, user, token = "Por definir", expiration = "Por definir" });
+
             }
-
-            var user = mapper.Map<ApplicationUser>(registerDto);
-            var resultado = await userManager.CreateAsync(user, registerDto.Password);
-
-            if (resultado.Succeeded)
-            {
-                    await ctx.Users.AddAsync(new User { Password = registerDto.Password, Email=registerDto.Email,Login=registerDto.UserName,FirstName=registerDto.FullName ,AspNetUser=user.Id,CreationDate=DateTime.Now});
-
-                    await ctx.SaveChangesAsync();
-
-                   
-
-                    EmailServices.SendUserRegistered(new { fullName = user.FullName, user = user.UserName, email=user.Email, password = user.UserName, Action = "create" });
-
-                return Ok(new { registered = true, user, token = "Por definir", expiratio = "Por definir" });
-
-            }
-            return BadRequest(new { registered = false, message = resultado.Errors });
-
-            }catch (Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
@@ -78,49 +83,69 @@ namespace ecommerce_freshydeli.Controllers
         {
 
 
-            //Para usuario de OSS  y FreshyDeli
-            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u=>u.AspNetUser==null).Where(u => u.CompanyId==loginDTO.companyId).Include(u => u.Company).FirstOrDefaultAsync();
-            if (user != null)
+            //validar si el usuario es administrador
+            var adminUser = await userManager.Users.Where(u => u.UserName == loginDTO.userName).FirstOrDefaultAsync();
+
+            if (adminUser != null)
             {
-                return Ok(new { auth = true, user, role = "admin" });
-            }           
-            // Para usuario de OSS en general
-            User ossUser = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u => u.AspNetUser == null).Include(u => u.Company).FirstOrDefaultAsync();
-            if (ossUser != null)
-            {
-                return Ok(new { auth = true, user=ossUser, role = "admin" });
+
+                //  User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u => u.AspNetUser == null).Where(u => u.CompanyId == loginDTO.companyId).Include(u => u.Company).FirstOrDefaultAsync();
+
+                User adminUserConfirmed = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u => u.AspNetUser == null).Where(u => u.CompanyId == adminUser.CompanyId).Include(u => u.Company).FirstOrDefaultAsync();
+
+                if (adminUserConfirmed != null)
+                {
+                    return Ok(new { auth = true, user = adminUserConfirmed, role = "admin" });
+                }
+
             }
+
+            User clientUser = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Include(u => u.Company).Include(u => u.Branch).ThenInclude(b => b.Client).FirstOrDefaultAsync();
+
+            ApplicationUserDTO userDTOs = mapper.Map<ApplicationUserDTO>(clientUser);
+
+           
+            
+            FeaturestManagement featurestManagement = await ctx.FeaturestManagement.Where(fm => fm.CompanyId == clientUser.CompanyId).FirstOrDefaultAsync();
+
+            userDTOs.FeaturestManagement= featurestManagement;
+
+            CustomTheme customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == clientUser.CompanyId).FirstOrDefaultAsync();
+
+            userDTOs.CustomTheme = customTheme;
 
 
             //Usuarios desactivos
-            ApplicationUser userBranch = await userManager.FindByNameAsync(loginDTO.userName);
-            if (userBranch!=null && userBranch.Active == false )
+
+            if (clientUser != null && clientUser.Active == false)
             {
                 return NotFound();
             }
-        
+
             //Login
-            var resultado = await signInManager.PasswordSignInAsync(loginDTO.userName, loginDTO.password, isPersistent: false, lockoutOnFailure: false);
 
-
-            if (resultado.Succeeded )
+            if (clientUser.Branch.Client.isClient == false || clientUser.Branch.isClient == false || clientUser.isClient == false)
             {
-
-                var response = await buildToken(loginDTO);
-
-                if (response.User.Branch.Client.isClient ==false || response.User.Branch.isClient == false || response.User.isClient==false)
-                {
-                    return NotFound();
-                }
-          
-
-                return Ok(new { auth = true, token = response.Token, user = response.User, Expiration = response.Expiration, role = "client" });
+                return NotFound();
             }
 
-            return NotFound(new { auth = false, message = resultado });
+            return Ok(new { auth = true, token = "no definido", user = userDTOs, Expiration = "no definido", role = "client" });
+
+            /*  var response = await buildToken(loginDTO);
+
+              if (response.User.Branch.Client.isClient ==false || response.User.Branch.isClient == false || response.User.isClient==false)
+              {
+                  return NotFound();
+              }
+
+
+              return Ok(new { auth = true, token = response.Token, user = response.User, Expiration = response.Expiration, role = "client" });
+
+
+          return NotFound(new { auth = false, message = resultado });*/
         }
 
-        private async Task<AuthenticationResponseDTO> buildToken(LoginDTO loginDTO)
+       /* private async Task<AuthenticationResponseDTO> buildToken(LoginDTO loginDTO)
         {
             ApplicationUser user = await userManager.FindByNameAsync(loginDTO.userName);
 
@@ -149,7 +174,7 @@ namespace ecommerce_freshydeli.Controllers
             };
 
 
-        }
+        }*/
 
         [HttpPost("/getUser")]
         public async Task<IActionResult> getUser(LoginDTO loginDTO)
@@ -167,8 +192,10 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
 
-                List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == CompanyId).Where(u=>u.Active==true).Include(u => u.Branch).Include(u => u.Branch.Client).ToListAsync();
-                return Ok(users);
+
+                List<User> users = await ctx.Users.Where(u => u.CompanyId == CompanyId).Where(u => u.Active == true).Include(u => u.Branch).ThenInclude(b => b.Client).ToListAsync();
+                List<ApplicationUserDTO> userDTOs = mapper.Map<List<ApplicationUserDTO>>(users);
+                return Ok(userDTOs);
             }
             catch (Exception ex)
             {
@@ -180,30 +207,35 @@ namespace ecommerce_freshydeli.Controllers
         public async Task<IActionResult> getUserByClientId(int ClientId)
         {
 
-            List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Id == ClientId).OrderByDescending(o => o.CreatedDate).ToListAsync();
+            List<User> users = await ctx.Users.Where(u => u.Branch.Client.Id == ClientId).OrderByDescending(o => o.CreationDate
+            ).ToListAsync();
 
-            return Ok(users);
+
+
+            List<ApplicationUserDTO> userDTOs = mapper.Map<List<ApplicationUserDTO>>(users);
+
+            return Ok(userDTOs);
 
 
         }
 
-        [HttpPost("/updateUser")]
+        [HttpPost("updateUser")]
         public async Task<IActionResult> updateUser([FromBody] UpdateUserDTO updateUserDTO)
         {
             try
             {
-                ApplicationUser user = await userManager.FindByIdAsync(updateUserDTO.Id);
-                User ossUser = await ctx.Users.Where(os=>os.AspNetUser== updateUserDTO.Id).Include(u => u.Company).FirstOrDefaultAsync();
-                if (user == null)
+                //ApplicationUser user = await userManager.FindByIdAsync(updateUserDTO.Id);
+                User ossUser = await ctx.Users.Where(os => os.Id == updateUserDTO.Id).Include(u => u.Company).FirstOrDefaultAsync();
+                if (ossUser == null)
                 {
                     return NotFound();
                 }
-                user.PasswordHash = userManager.PasswordHasher.HashPassword(user, updateUserDTO.Password);
+              //  user.PasswordHash = userManager.PasswordHasher.HashPassword(user, updateUserDTO.Password);
                 ossUser.Password = updateUserDTO.Password;
-                user.EmailConfirmed = true;
-                EmailServices.SendUserRegistered(new { email=user.Email,fullName = user.FullName, user = user.UserName, password = user.UserName, Action = "update" });
-                await userManager.UpdateAsync(user);
-             
+                ossUser.EmailConfirmed = true;
+                EmailServices.SendUserRegistered(new { email = ossUser.Email, fullName = ossUser.FirstName, user = ossUser.Login, password = ossUser.Login, Action = "update" });
+               // await userManager.UpdateAsync(user);
+
                 ctx.Users.Update(ossUser);
                 await ctx.SaveChangesAsync();
                 return Ok(new { update = true });
@@ -221,20 +253,22 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                ApplicationUser user = await userManager.FindByIdAsync(updateUserDTO.Id);
-                if (user == null)
+                //ApplicationUser user = await userManager.FindByIdAsync(updateUserDTO.Id);
+                User ossUser = await ctx.Users.Where(os => os.Id == updateUserDTO.Id).Include(u => u.Company).FirstOrDefaultAsync();
+                if (ossUser == null)
                 {
                     return NotFound();
                 }
-                user.BranchId = (int)updateUserDTO.BranchId;
-                user.Email = updateUserDTO.Email;
-                user.UserName = updateUserDTO.UserName;
-                user.FullName = updateUserDTO.FullName;
-                user.PersonalIdentification = updateUserDTO.PersonalIdentification;
-                user.JobtTitle = updateUserDTO.JobtTitle;
-                user.Direction = updateUserDTO.Direction;
-                await userManager.UpdateAsync(user);
-                return Ok(user);
+                ossUser.BranchId = (int)updateUserDTO.BranchId;
+                ossUser.Email = updateUserDTO.Email;
+                ossUser.Login = updateUserDTO.UserName;
+                ossUser.FirstName = updateUserDTO.FullName;
+                ossUser.PersonalIdentification = updateUserDTO.PersonalIdentification;
+                ossUser.JobtTitle = updateUserDTO.JobtTitle;
+                ossUser.Direction = updateUserDTO.Direction;
+                ctx.Users.Update(ossUser);
+                await ctx.SaveChangesAsync();
+                return Ok(ossUser);
             }
             catch (Exception ex)
             {
@@ -245,32 +279,38 @@ namespace ecommerce_freshydeli.Controllers
 
 
         [HttpDelete("/deleteUser/{userId}/{companyId}")]
-        public async Task<IActionResult> DeleteUser( string userId, string companyId)
+        public async Task<IActionResult> DeleteUser(int userId, string companyId)
         {
             try
             {
-                ApplicationUser user = await userManager.FindByIdAsync(userId);
-                if (user == null)
+                User ossUser = await ctx.Users.Where(os => os.Id == userId).FirstOrDefaultAsync();
+                if (ossUser == null)
                 {
                     return NotFound();
                 }
-                
-                List<Order> orders =await ctx.Order.Where(u=>u.UserId == userId).ToListAsync();
 
-                if (orders.Count ==0 )
+                List<Order> orders = await ctx.Order.Where(u => u.UserId == userId).ToListAsync();
+
+                if (orders.Count == 0)
                 {
-                   
-                    await userManager.DeleteAsync(user);
-                    List<ApplicationUser> users = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Where(u => u.Active == true).Include(u => u.Branch).Include(u => u.Branch.Client).OrderByDescending(o => o.CreatedDate).ToListAsync();
-                    return Ok(users);
+
+                   ctx.Users.Remove(ossUser);
+                   await ctx.SaveChangesAsync();
+
+
+                    List<User> users = await ctx.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Where(u => u.Active == true).Include(u => u.Branch).ThenInclude(b => b.Client).OrderByDescending(o => o.CreationDate).ToListAsync();
+                 
                     
+                    return Ok(users);
+
                 }
-              
-                user.Active = false;
+                //solo se deshabilita
+                ossUser.Active = false;
 
-                await userManager.UpdateAsync(user);
+                ctx.Users.Update(ossUser);
+                await ctx.SaveChangesAsync();
 
-                List<ApplicationUser> userss = await userManager.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Where(u=>u.Active==true).Include(u => u.Branch).Include(u => u.Branch.Client).OrderByDescending(o => o.CreatedDate).ToListAsync();
+                List<User> userss = await ctx.Users.Where(u => u.Branch.Client.Company.Id == Int32.Parse(companyId)).Where(u => u.Active == true).Include(u => u.Branch).ThenInclude(b => b.Client).OrderByDescending(o => o.CreationDate).ToListAsync();
 
                 return Ok(userss);
             }
@@ -280,6 +320,6 @@ namespace ecommerce_freshydeli.Controllers
             }
 
         }
-        
+
     }
-    }
+}

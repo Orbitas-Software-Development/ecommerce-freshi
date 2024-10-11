@@ -6,8 +6,6 @@ namespace ecommerce_freshydeli.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-
         public string PhoneNumber {get;set;}
         
         public string Direction { get;set;}
@@ -21,7 +19,6 @@ namespace ecommerce_freshydeli.Entities
         public  Client Client { get;set;}
 
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-
 
         public Boolean Active { get; set; } = true;
 

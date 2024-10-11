@@ -145,16 +145,18 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
+                //guarda el cliente
                 Client client = mapper.Map<Client>(clientDTO);
                 await ctx.AddAsync(client);
                 await ctx.SaveChangesAsync();
 
                 ClientPriceListDTO clientPriceListDTO = new ClientPriceListDTO();
                 clientPriceListDTO.PriceListId = (int)clientDTO.PriceListId;
-              
                 clientPriceListDTO.ClientId = client.Id;
                 ClientPriceList clientPriceList = mapper.Map<ClientPriceList>(
                 clientPriceListDTO);
+
+                //guarda la lista asignada al cliente
                 await ctx.AddAsync(clientPriceList);
                 await ctx.SaveChangesAsync();
 

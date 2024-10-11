@@ -6,6 +6,7 @@
 
         public string? id { get; set; }
 
+        public int CompanyId { get; set; }
         public string Name { get; set; }
 
 
@@ -19,7 +20,7 @@
 
         public int ClientId { get; set; }
 
-
+        public ClientDTO? ClientDTO { get; set; }
 
     }
 }

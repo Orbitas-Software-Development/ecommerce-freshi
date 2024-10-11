@@ -59,5 +59,12 @@ namespace ecommerce_freshydeli
         public DbSet<Person> Person { get; set; }
         public DbSet<Report> Report { get; set; }
         public DbSet<EmailReport> EmailReport { get; set; }
+
+        public DbSet<DboBranch> DboBranch { get; set; }
+
+
+        public DbSet<FeaturestManagement> FeaturestManagement { get; set; }
+
+        public DbSet<CustomTheme> CustomTheme { get; set; }
     }
 }

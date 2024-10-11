@@ -4,7 +4,7 @@ using ecommerce_freshydeli.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
+
 
 namespace ecommerce_freshydeli.Controllers
 {
@@ -24,13 +24,42 @@ namespace ecommerce_freshydeli.Controllers
          
         }
 
+
+
+        [HttpGet("/testDboBranch")]
+        public async Task<ActionResult> TestDboBranch()
+        {
+            try
+            {
+              List<DboBranch> branches = await ctx.DboBranch.ToListAsync();
+
+
+                List<BranchDTO> branchDTOs = mapper.Map<List<BranchDTO>>(branches);
+
+                List<CustomTheme> customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == 38).ToListAsync();
+
+
+
+                return Ok(customTheme);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("/getBranchByClient/{Id}")]
         public async Task<ActionResult> GetClientByCompanyId(int Id)
         {
             try
             {
-                List<Branch> branches = await ctx.Branch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).OrderByDescending(o => o.CreatedDate).ToListAsync();
-                return Ok(branches);
+                List<DboBranch> branches = await ctx.DboBranch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).OrderByDescending(o => o.CreationDate).ToListAsync();
+
+
+                List<BranchDTO> branchDTOs = mapper.Map<List<BranchDTO>>(branches);
+
+                return Ok(branchDTOs);
             }
             catch (Exception ex)
             {
@@ -43,7 +72,7 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
 
-                Branch branch = await ctx.Branch.Where(c => c.Id == Id).SingleOrDefaultAsync();
+                DboBranch branch = await ctx.DboBranch.Where(c => c.Id == Id).SingleOrDefaultAsync();
                 if (branch == null) { return NotFound(); }
 
                 List<Order> orders = await ctx.Order.Where(plp => plp.BranchId == Id).ToListAsync();
@@ -69,11 +98,11 @@ namespace ecommerce_freshydeli.Controllers
                     await userManager.UpdateAsync(user);
                 }
                 branch.Active = false;
-                ctx.Branch.Update(branch);
+                ctx.DboBranch.Update(branch);
                 await ctx.SaveChangesAsync();
                     //ctx.Client.Remove(client); --> hay que hacer una validaci[on que no tenga nada relacionado
 
-                   // List<Branch> branches = await ctx.Branch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).ToListAsync();
+                   // List<DboBranch> branches = await ctx.DboBranch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).ToListAsync();
 
                 return Ok(branch);
                
@@ -91,9 +120,9 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
 
-                Branch branch = mapper.Map<Branch>(branchDTO);
+                DboBranch branch = mapper.Map<DboBranch>(branchDTO);
 
-              
+              if(branch == null) { return BadRequest(); }
 
                 await ctx.AddAsync(branch);
                 await ctx.SaveChangesAsync();
@@ -140,7 +169,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                Branch branch= mapper.Map<Branch>(branchDTO);
+                DboBranch branch= mapper.Map<DboBranch>(branchDTO);
 
 
                 ctx.Update(branch);

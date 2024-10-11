@@ -8,13 +8,13 @@ namespace ecommerce_freshydeli.DTOs
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public string Code { get; set; }
+        public string Code { get; set; } = "No Aplica";
 
         public string Base64Image { get; set; }
 
-        public int UnitsPerBox { get; set; }
+        public int UnitsPerBox { get; set; } = 0;
 
-        public double UnitWeight { get; set; }
+        public double UnitWeight { get; set; } = 0;
 
         public int CompanyId { get; set; }
 
@@ -25,8 +25,18 @@ namespace ecommerce_freshydeli.DTOs
         public int CurrencyId { get; set; } = 1;
 
 
-        public int pricce { get; set; } 
+        public int price { get; set; } 
 
         public int priceListId { get; set; } = 1;
+
+
+        public int Stock { get; set; } = 0;
+
+        //exclusivos de tacobell
+        public string? DescriptionEn { get; set; } = "No Aplica";//--> tacobell
+        public string? WasserCode { get; set; } = "No Aplica";//--> tacobell
+        public string? FrankeCode { get; set; } = "No Aplica";//--> tacobell
+
+
     }
 }

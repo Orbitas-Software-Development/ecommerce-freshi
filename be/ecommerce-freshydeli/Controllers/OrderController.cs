@@ -43,8 +43,8 @@ namespace ecommerce_freshydeli.Controllers
                 await applicationDbContext.SaveChangesAsync();
 
                 Branch branch=await applicationDbContext.Branch.Where(b =>b.Id== order.BranchId).Include(b=>b.Client).ThenInclude(c=>c.Company).SingleOrDefaultAsync();
+                User user = await applicationDbContext.Users.Where(os => os.Id == order.UserId).FirstOrDefaultAsync();
 
-                ApplicationUser user = await userManager.FindByIdAsync(order.UserId);
                 //Report Information
                 Report report=await applicationDbContext.Report.Where(r=>r.Name== "Orden de compra").Where(r=>r.CompanyId==branch.Client.CompanyId).FirstOrDefaultAsync();
                 //emails
@@ -70,15 +70,18 @@ namespace ecommerce_freshydeli.Controllers
 
                 applicationDbContext.Update(order);
                 await applicationDbContext.SaveChangesAsync();
-                Branch branch = order.Branch;
+                DboBranch branch = order.Branch;
 
-                ApplicationUser user = await userManager.FindByIdAsync(order.UserId);
+              
+
+                User user = await applicationDbContext.Users.Where(os => os.Id == order.UserId).FirstOrDefaultAsync();
+
                 //Report Information
                 Report report = await applicationDbContext.Report.Where(r => r.Name == "Orden de compra").Where(r => r.CompanyId == branch.Client.CompanyId).FirstOrDefaultAsync();
                 //emails
                 List<EmailReport> emails = await applicationDbContext.EmailReport.Where(er => er.ReportId == report.Id).ToListAsync();
                
-                EmailServices.SendOrder(new { user.UserName, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
+                EmailServices.SendOrder(new { user.Login, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
             
                 return Ok();
             }catch(Exception ex)
@@ -88,7 +91,7 @@ namespace ecommerce_freshydeli.Controllers
         }
 
             [HttpGet("getOrderByUserId/{userId}")]
-        public async Task<IActionResult> GetOrderByUser(string userId)
+        public async Task<IActionResult> GetOrderByUser(int userId)
         {
             try { 
             List<Order> orders=await applicationDbContext.Order.Where(order=>order.UserId==userId).Include(ctx=>ctx.OrdersDetails).ThenInclude(x=>x.Product).ToListAsync();

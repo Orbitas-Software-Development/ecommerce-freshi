@@ -26,7 +26,12 @@ namespace ecommerce_freshydeli.DTOs
 
         public Boolean isClient { get; set; } = true;
 
+        public Boolean EmailConfirmed { get; set; } = false;
 
 
+        public DateTime CreationDate { get; set; }= DateTime.Now;
+
+
+        public int CompanyId { get; set; }
     }
 }

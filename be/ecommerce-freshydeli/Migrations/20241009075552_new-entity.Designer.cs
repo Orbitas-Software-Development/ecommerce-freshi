@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ecommerce_freshydeli;
 
@@ -11,9 +12,11 @@ using ecommerce_freshydeli;
 namespace ecommerce_freshydeli.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241009075552_new-entity")]
+    partial class newentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,10 +170,7 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -242,8 +242,6 @@ namespace ecommerce_freshydeli.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -500,40 +498,6 @@ namespace ecommerce_freshydeli.Migrations
                     b.ToTable("Currency", "oss-ecommerce");
                 });
 
-            modelBuilder.Entity("ecommerce_freshydeli.Entities.CustomTheme", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AuthImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BranchCustomName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LogoUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PrimaryColorHex")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecondaryColorHex")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("CustomThemes", "dbo");
-                });
-
             modelBuilder.Entity("ecommerce_freshydeli.Entities.DboBranch", b =>
                 {
                     b.Property<int>("Id")
@@ -541,12 +505,6 @@ namespace ecommerce_freshydeli.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ClientId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
@@ -559,9 +517,6 @@ namespace ecommerce_freshydeli.Migrations
 
                     b.Property<int?>("DepartmentId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Direction")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -588,12 +543,7 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<int?>("WorkflowId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isClient")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
 
                     b.ToTable("Branch", "dbo");
                 });
@@ -617,31 +567,6 @@ namespace ecommerce_freshydeli.Migrations
                     b.HasIndex("ReportId");
 
                     b.ToTable("EmailReport", "oss-ecommerce");
-                });
-
-            modelBuilder.Entity("ecommerce_freshydeli.Entities.FeaturestManagement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Inventary")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("FeaturestManagement", "oss-ecommerce");
                 });
 
             modelBuilder.Entity("ecommerce_freshydeli.Entities.Iva", b =>
@@ -713,8 +638,9 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<double?>("TotalIVA")
                         .HasColumnType("float");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -887,7 +813,7 @@ namespace ecommerce_freshydeli.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Stock")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<double>("UnitWeight")
@@ -960,14 +886,8 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<int?>("ActivationKey")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("AspNetUser")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ChatBotCode")
                         .HasColumnType("nvarchar(max)");
@@ -984,19 +904,10 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<string>("DeviceToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Direction")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("JobtTitle")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -1006,9 +917,6 @@ namespace ecommerce_freshydeli.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonalIdentification")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -1023,12 +931,7 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<bool?>("State")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("isClient")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("BranchId");
 
                     b.HasIndex("CompanyId");
 
@@ -1090,15 +993,11 @@ namespace ecommerce_freshydeli.Migrations
                 {
                     b.HasOne("ecommerce_freshydeli.Entities.Branch", "Branch")
                         .WithMany()
-                        .HasForeignKey("BranchId");
-
-                    b.HasOne("ecommerce_freshydeli.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("ecommerce_freshydeli.Entities.Branch", b =>
@@ -1166,26 +1065,6 @@ namespace ecommerce_freshydeli.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("ecommerce_freshydeli.Entities.CustomTheme", b =>
-                {
-                    b.HasOne("ecommerce_freshydeli.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("ecommerce_freshydeli.Entities.DboBranch", b =>
-                {
-                    b.HasOne("ecommerce_freshydeli.Entities.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.Navigation("Client");
-                });
-
             modelBuilder.Entity("ecommerce_freshydeli.Entities.EmailReport", b =>
                 {
                     b.HasOne("ecommerce_freshydeli.Entities.Report", "Report")
@@ -1193,17 +1072,6 @@ namespace ecommerce_freshydeli.Migrations
                         .HasForeignKey("ReportId");
 
                     b.Navigation("Report");
-                });
-
-            modelBuilder.Entity("ecommerce_freshydeli.Entities.FeaturestManagement", b =>
-                {
-                    b.HasOne("ecommerce_freshydeli.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("ecommerce_freshydeli.Entities.Iva", b =>
@@ -1217,7 +1085,7 @@ namespace ecommerce_freshydeli.Migrations
 
             modelBuilder.Entity("ecommerce_freshydeli.Entities.Order", b =>
                 {
-                    b.HasOne("ecommerce_freshydeli.Entities.DboBranch", "Branch")
+                    b.HasOne("ecommerce_freshydeli.Entities.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1325,15 +1193,9 @@ namespace ecommerce_freshydeli.Migrations
 
             modelBuilder.Entity("ecommerce_freshydeli.Entities.User", b =>
                 {
-                    b.HasOne("ecommerce_freshydeli.Entities.DboBranch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId");
-
                     b.HasOne("ecommerce_freshydeli.Entities.Company", "Company")
                         .WithMany("Users")
                         .HasForeignKey("CompanyId");
-
-                    b.Navigation("Branch");
 
                     b.Navigation("Company");
                 });

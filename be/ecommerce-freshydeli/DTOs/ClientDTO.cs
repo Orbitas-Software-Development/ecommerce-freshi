@@ -9,7 +9,7 @@
 
         public string Name { get; set; }
 
-        public string Identifier { get; set; }
+        public string? Identifier { get; set; } = "No definido";
 
         public int CompanyId { get; set; }
 

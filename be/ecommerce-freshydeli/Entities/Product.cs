@@ -10,7 +10,11 @@ namespace ecommerce_freshydeli.Entities
 
         public string Description { get; set; }
 
+        public int Stock { get; set; }
+
         public string Code { get; set; }
+
+  
 
         public string Base64Image { get; set; }
 
@@ -36,6 +40,11 @@ namespace ecommerce_freshydeli.Entities
         public DateTime DateTime { get; set; }=DateTime.Now;
 
         public Boolean Active { get; set; } = true;
+
+        //exclusivos de tacobell
+        public string? DescriptionEn { get; set; }//--> tacobell
+        public string? WasserCode { get; set; }//--> tacobell
+        public string? FrankeCode { get; set; }//--> tacobell
 
 
     }

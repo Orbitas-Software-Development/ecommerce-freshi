@@ -17,8 +17,8 @@ export default defineConfig(({ mode }) => {
         manifest: {
           // caches the assets/icons mentioned (assets/* includes all the assets present in your src/ directory)
           includeAssets: ["favicon.ico", "apple-touch-icon.jpeg", "assets/*"],
-          name: "e-commerce-oss",
-          short_name: "ec-oss",
+          name: "sos",
+          short_name: "sos",
           start_url: "/",
           background_color: "#ffffff",
           theme_color: "#000000",

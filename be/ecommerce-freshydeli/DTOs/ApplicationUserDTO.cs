@@ -9,7 +9,7 @@ namespace ecommerce_freshydeli.DTOs
         public string JobtTitle { get; set; }
         public string Direction { get; set; }
         public int BranchId { get; set; }
-        public Branch Branch { get; set; }
+        public DboBranch Branch { get; set; }
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
         public string Email { get; set; }
@@ -17,6 +17,10 @@ namespace ecommerce_freshydeli.DTOs
         public Boolean EmailConfirmed { get; set; }
         public Boolean isClient { get; set; } = true;
         public string Id { get; set; }
-  
+
+        public FeaturestManagement? FeaturestManagement { get; set; }
+
+        public CustomTheme? CustomTheme { get; set; }
+
     }
 }
