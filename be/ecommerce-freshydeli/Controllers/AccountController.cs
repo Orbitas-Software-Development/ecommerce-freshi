@@ -95,7 +95,10 @@ namespace ecommerce_freshydeli.Controllers
 
                 if (adminUserConfirmed != null)
                 {
-                    return Ok(new { auth = true, user = adminUserConfirmed, role = "admin" });
+
+                    CustomTheme customThemeAdmin = await ctx.CustomTheme.Where(ct => ct.CompanyId == adminUserConfirmed.CompanyId).FirstOrDefaultAsync();
+
+                    return Ok(new { auth = true, user = adminUserConfirmed,CustomTheme= customThemeAdmin,role = "admin" });
                 }
 
             }
@@ -110,9 +113,9 @@ namespace ecommerce_freshydeli.Controllers
 
             userDTOs.FeaturestManagement= featurestManagement;
 
-            CustomTheme customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == clientUser.CompanyId).FirstOrDefaultAsync();
+           
 
-            userDTOs.CustomTheme = customTheme;
+        
 
 
             //Usuarios desactivos
@@ -128,8 +131,9 @@ namespace ecommerce_freshydeli.Controllers
             {
                 return NotFound();
             }
+            CustomTheme customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == clientUser.CompanyId).FirstOrDefaultAsync();
 
-            return Ok(new { auth = true, token = "no definido", user = userDTOs, Expiration = "no definido", role = "client" });
+            return Ok(new { auth = true, token = "no definido", CustomTheme = customTheme, user = userDTOs, Expiration = "no definido", role = "client" });
 
             /*  var response = await buildToken(loginDTO);
 
@@ -193,7 +197,7 @@ namespace ecommerce_freshydeli.Controllers
             {
 
 
-                List<User> users = await ctx.Users.Where(u => u.CompanyId == CompanyId).Where(u => u.Active == true).Include(u => u.Branch).ThenInclude(b => b.Client).ToListAsync();
+                List<User> users = await ctx.Users.AsNoTracking().Where(u => u.CompanyId == CompanyId && u.Active == true).Include(u => u.Branch).ThenInclude(b => b.Client).ToListAsync();
                 List<ApplicationUserDTO> userDTOs = mapper.Map<List<ApplicationUserDTO>>(users);
                 return Ok(userDTOs);
             }
@@ -209,8 +213,6 @@ namespace ecommerce_freshydeli.Controllers
 
             List<User> users = await ctx.Users.Where(u => u.Branch.Client.Id == ClientId).OrderByDescending(o => o.CreationDate
             ).ToListAsync();
-
-
 
             List<ApplicationUserDTO> userDTOs = mapper.Map<List<ApplicationUserDTO>>(users);
 

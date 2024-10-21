@@ -54,7 +54,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<DboBranch> branches = await ctx.DboBranch.Where(c => c.Client.Company.Id == Id).Where(c => c.Active == true).Include(c => c.Client).OrderByDescending(o => o.CreationDate).ToListAsync();
+                List<DboBranch> branches = await ctx.DboBranch.AsNoTracking().Where(c => c.Client.Company.Id == Id &&  c.Active == true).Include(c => c.Client).OrderByDescending(o => o.CreationDate).ToListAsync();
 
 
                 List<BranchDTO> branchDTOs = mapper.Map<List<BranchDTO>>(branches);
