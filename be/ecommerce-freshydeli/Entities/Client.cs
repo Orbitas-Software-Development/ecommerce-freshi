@@ -29,5 +29,9 @@
         public Boolean isClient { get; set; } = true;
 
         public Boolean LatePayment { get; set; } = false;
+
+        public string? logoBase64 { get; set; }
+
+
     }
 }

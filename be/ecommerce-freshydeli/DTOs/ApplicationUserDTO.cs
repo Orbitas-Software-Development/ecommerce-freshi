@@ -18,9 +18,11 @@ namespace ecommerce_freshydeli.DTOs
         public Boolean isClient { get; set; } = true;
         public string Id { get; set; }
 
+        public string? ProfilePicture { get; set; }
+
         public FeaturestManagement? FeaturestManagement { get; set; }
 
-        public CustomTheme? CustomTheme { get; set; }
+
 
     }
 }

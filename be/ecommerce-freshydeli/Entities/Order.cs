@@ -24,5 +24,10 @@ namespace ecommerce_freshydeli.Entities
 
         public int CurrencyId { get; set; }
         public string? PdfReport { get; set; }
+
+        public int CompanyId { get; set; }
+
+        public bool notificate { get; set; } = true;
+
     }
 }
