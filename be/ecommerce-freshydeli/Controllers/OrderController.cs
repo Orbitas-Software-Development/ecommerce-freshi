@@ -35,14 +35,31 @@ namespace ecommerce_freshydeli.Controllers
 
                 await  applicationDbContext.SaveChangesAsync();
 
+                //obtiene si la empresa tiene control de inventario
+
+                FeaturestManagement featurestManagement =await applicationDbContext.FeaturestManagement.AsNoTracking().Where(fm=>fm.CompanyId==orderDTO.CompanyId).FirstOrDefaultAsync();
+
                 foreach (var item in orderDetail)
                 {
                     item.orderId = order.Id;
+
+                    if (featurestManagement != null)
+                    {
+                        Product product=await applicationDbContext.Product.Where(p=>p.Id==item.ProductId).FirstOrDefaultAsync();
+                        product.Stock = product.Stock - item.Units;
+                        applicationDbContext.Product.Update(product);
+                     
+                    }
+
                 }
                 await applicationDbContext.AddRangeAsync(orderDetail);
                 await applicationDbContext.SaveChangesAsync();
 
-                Branch branch=await applicationDbContext.Branch.Where(b =>b.Id== order.BranchId).Include(b=>b.Client).ThenInclude(c=>c.Company).SingleOrDefaultAsync();
+
+
+
+
+                DboBranch branch=await applicationDbContext.DboBranch.Where(b =>b.Id== order.BranchId).Include(b=>b.Client).ThenInclude(c=>c.Company).SingleOrDefaultAsync();
                 User user = await applicationDbContext.Users.Where(os => os.Id == order.UserId).FirstOrDefaultAsync();
 
                 //Report Information
@@ -80,8 +97,13 @@ namespace ecommerce_freshydeli.Controllers
                 Report report = await applicationDbContext.Report.Where(r => r.Name == "Orden de compra").Where(r => r.CompanyId == branch.Client.CompanyId).FirstOrDefaultAsync();
                 //emails
                 List<EmailReport> emails = await applicationDbContext.EmailReport.Where(er => er.ReportId == report.Id).ToListAsync();
+
+
+
+
+
                
-                EmailServices.SendOrder(new { user.Login, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
+          //      EmailServices.SendOrder(new { user.Login, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
             
                 return Ok();
             }catch(Exception ex)

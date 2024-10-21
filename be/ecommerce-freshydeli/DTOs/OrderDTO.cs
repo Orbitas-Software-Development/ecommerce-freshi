@@ -16,5 +16,7 @@ namespace ecommerce_freshydeli.DTOs
         public List<OrderDetailsDTO> orderDetails { get; set; }
         public string SignatureBase64 { get; set; }
         public int CurrencyId { get; set; }
+
+        public int CompanyId { get; set; }
     }
 }
