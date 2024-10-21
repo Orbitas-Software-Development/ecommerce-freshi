@@ -21,13 +21,13 @@ namespace ecommerce_freshydeli.Controllers
         [HttpGet("getProductsByCompanyId/{companyId}")]
         public async Task<IActionResult> GetProduct(int companyId)
         {
-            List<Product> product=await Context.Product.Where(p=>p.CompanyId==companyId).Where(p=>p.Active==true).Include(p=>p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
+            List<Product> product=await Context.Product.AsNoTracking().Where(p=>p.CompanyId==companyId).Where(p=>p.Active==true).Include(p=>p.Currency).Include(p => p.Iva).Include(p => p.Category).ToListAsync();
             return Ok(product);
         }
         [HttpGet("getProductsByListId/{listId}")]
         public async Task<IActionResult> GetProductByListId(int listId)
         {
-            List<PriceListProduct> priceListProduct = await Context.PriceListProduct.Where(p => p.PriceListId== listId).Include(p=>p.Product).ThenInclude(p=>p.Currency).Include(p=>p.Product).ThenInclude(p=>p.Category).Include(p => p.Product).ThenInclude(p => p.Iva).ToListAsync();
+            List<PriceListProduct> priceListProduct = await Context.PriceListProduct.AsNoTracking().Where(p => p.PriceListId== listId).Include(p=>p.Product).ThenInclude(p=>p.Currency).Include(p=>p.Product).ThenInclude(p=>p.Category).Include(p => p.Product).ThenInclude(p => p.Iva).ToListAsync();
 
             List<Product> products = [];
 
@@ -158,7 +158,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Product> products = await Context.Product.Where(i => i.CategoryId == id).ToListAsync();
+                List<Product> products = await Context.Product.AsNoTracking().Where(i => i.CategoryId == id).ToListAsync();
                 return Ok(products.Count);
             }
             catch (Exception ex)

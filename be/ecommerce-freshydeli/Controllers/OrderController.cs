@@ -20,9 +20,6 @@ namespace ecommerce_freshydeli.Controllers
             this.userManager = userManager;
         }
 
-
-
-
         [HttpPost("createOrder")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO orderDTO)
         {
@@ -144,6 +141,24 @@ namespace ecommerce_freshydeli.Controllers
             {
                 List<Order> orders = await applicationDbContext.Order.Where(o => o.Branch.Client.Company.Id == companyId).Include(ctx=>ctx.Branch).ThenInclude(ctx=>ctx.Client).Include(ctx => ctx.OrdersDetails).ThenInclude(x=>x.Product).ThenInclude(x => x.Iva).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(x => x.Category).OrderByDescending(o=>o.CreatedDate).ToListAsync();
                 return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("getOrderForNotificate/{companyId}")]
+        public async Task<IActionResult>GetOrderForNotificate(int companyId)
+        {
+            try
+            {
+                List<Order> orders = await applicationDbContext.Order.AsNoTracking().Where(o => o.CompanyId == companyId && o.notificate==true).ToListAsync();
+
+
+                List<OrderForNotificate> OrderForNotificate = mapper.Map<List<OrderForNotificate>>(orders);
+
+                return Ok(OrderForNotificate);
             }
             catch (Exception ex)
             {
