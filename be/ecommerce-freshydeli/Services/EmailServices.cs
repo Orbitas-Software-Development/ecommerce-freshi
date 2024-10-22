@@ -46,7 +46,7 @@ namespace ecommerce_freshydeli.Services
 
                 MailMessage mailMessage = new MailMessage();
                 mailMessage.From = new MailAddress("soporte@orbitacr.net");
-                mailMessage.To.Add(new MailAddress(parameters.UserEmail));
+                mailMessage.To.Add(new MailAddress(parameters.BranchEmail));
                 mailMessage.CC.Add(new MailAddress(parameters.ClientEmail));
 
 
@@ -78,7 +78,39 @@ namespace ecommerce_freshydeli.Services
                 Console.WriteLine(ex.ToString());
             }
         }
+        public static void SendOrderStatus(dynamic parameters)
+        {
+            try
+            {
 
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress("soporte@orbitacr.net");
+                mailMessage.To.Add(new MailAddress(parameters.BranchEmail));
+                mailMessage.CC.Add(new MailAddress(parameters.ClientEmail));
+
+                //subject
+                mailMessage.Subject = $"{"Estado Orden de compra"} - {parameters.OrderId}";
+
+                mailMessage.IsBodyHtml = true;
+                mailMessage.Body = GetHtml("ORDER_STATUS", parameters);
+
+                /*  var bytes = Convert.FromBase64String(pdfReport);
+                  MemoryStream strm = new MemoryStream(bytes);
+                  //document  name
+                  var fileName = $"{parameters.ClientName} - {report.DocumentName} - {parameters.OrderId}.pdf";
+                  Attachment attachment = new Attachment(strm, fileName);
+                  ContentDisposition contentDisposition = attachment.ContentDisposition;
+                  attachment.ContentId = fileName;
+                  contentDisposition.Inline = true;
+                  mailMessage.Attachments.Add(attachment);*/
+
+                SendHtmlEmail(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
         private static void SendHtmlEmail(MailMessage mailMessage)
         {
             CancellationTokenSource source = new CancellationTokenSource();
@@ -89,6 +121,9 @@ namespace ecommerce_freshydeli.Services
                 client.Send(mailMessage);
             }
         }
+
+
+     
 
         private static string GetHtml(string document, object parameters)
         {

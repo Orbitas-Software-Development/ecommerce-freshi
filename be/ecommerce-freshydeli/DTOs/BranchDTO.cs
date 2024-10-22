@@ -21,6 +21,7 @@
         public int ClientId { get; set; }
 
         public ClientDTO? ClientDTO { get; set; }
+        public string Email { get; set; }
 
     }
 }

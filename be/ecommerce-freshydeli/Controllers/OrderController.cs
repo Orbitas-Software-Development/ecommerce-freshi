@@ -96,12 +96,8 @@ namespace ecommerce_freshydeli.Controllers
                 List<EmailReport> emails = await applicationDbContext.EmailReport.Where(er => er.ReportId == report.Id).ToListAsync();
 
 
+               // EmailServices.SendOrder(new { user.Login, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, BranchEmail = branch.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
 
-
-
-               
-          //      EmailServices.SendOrder(new { user.Login, ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, UserEmail = user.Email, ClientEmail = branch.Client.Email, ReportInfo = report, Email = emails }, SendOrderReportDTO.ReportBase64, emails, report);
-            
                 return Ok();
             }catch(Exception ex)
             {
@@ -153,12 +149,39 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Order> orders = await applicationDbContext.Order.AsNoTracking().Where(o => o.CompanyId == companyId && o.notificate==true).ToListAsync();
+                List<Order> orders = await applicationDbContext.Order.AsNoTracking().Where(o => o.CompanyId == companyId).OrderByDescending(o => o.CreatedDate).Include(o=>o.Branch).ThenInclude(b => b.Client).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ToListAsync();
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
+        [HttpPost("ApproveOrder/{orderId}")]
+        public async Task<IActionResult> ApproveOrder( int orderId)
+        {
+            Console.WriteLine(orderId);
+            try
+            {
+                Order order= await applicationDbContext.Order.Where(o => o.Id == orderId).Include(o=>o.Branch).ThenInclude(b=>b.Client).FirstOrDefaultAsync();
 
-                List<OrderForNotificate> OrderForNotificate = mapper.Map<List<OrderForNotificate>>(orders);
+                order.Status = "Processed";
+                order.notificate = false;
 
-                return Ok(OrderForNotificate);
+                applicationDbContext.Order.Update(order);
+
+                await  applicationDbContext.SaveChangesAsync();
+
+                DboBranch branch = order.Branch;
+
+                Console.WriteLine(branch.Email);
+
+                Console.WriteLine(branch.Client.Email);
+
+                EmailServices.SendOrderStatus(new {  ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, BranchEmail = branch.Email, ClientEmail = branch.Client.Email});
+
+                return Ok(order);
             }
             catch (Exception ex)
             {
