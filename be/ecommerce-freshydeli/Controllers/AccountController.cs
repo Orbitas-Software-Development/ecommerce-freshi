@@ -84,7 +84,7 @@ namespace ecommerce_freshydeli.Controllers
 
 
             //validar si el usuario es administrador
-            var adminUser = await userManager.Users.Where(u => u.UserName == loginDTO.userName).FirstOrDefaultAsync();
+            var adminUser = await ctx.AdminUser.Where(u => u.Username == loginDTO.userName && u.Password==loginDTO.password).FirstOrDefaultAsync();
 
             if (adminUser != null)
             {
