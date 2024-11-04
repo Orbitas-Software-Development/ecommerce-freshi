@@ -13,7 +13,7 @@ namespace ecommerce_freshydeli.Entities
 
         public OrderStatus   OrderStatus { get; set; }
 
-        public int OrderStatusId { get; set; } = 1;
+        public int OrderStatusId { get; set; }
 
         public string Status { get; set; }
 
