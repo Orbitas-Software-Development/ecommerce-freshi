@@ -69,6 +69,6 @@ namespace ecommerce_freshydeli
 
         public DbSet<AdminUser> AdminUser { get; set; }
 
-        public DbSet<OrderState> OrderState { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
     }
 }

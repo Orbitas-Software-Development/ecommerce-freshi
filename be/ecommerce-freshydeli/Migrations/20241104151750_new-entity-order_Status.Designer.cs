@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ecommerce_freshydeli;
 
@@ -11,9 +12,11 @@ using ecommerce_freshydeli;
 namespace ecommerce_freshydeli.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104151750_new-entity-order_Status")]
+    partial class newentityorder_Status
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -726,9 +729,6 @@ namespace ecommerce_freshydeli.Migrations
                     b.Property<int>("CurrencyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PdfReport")
                         .HasColumnType("nvarchar(max)");
 
@@ -755,8 +755,6 @@ namespace ecommerce_freshydeli.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
-
-                    b.HasIndex("OrderStatusId");
 
                     b.ToTable("Order", "oss-ecommerce");
                 });
@@ -1278,15 +1276,7 @@ namespace ecommerce_freshydeli.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ecommerce_freshydeli.Entities.OrderStatus", "OrderStatus")
-                        .WithMany()
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Branch");
-
-                    b.Navigation("OrderStatus");
                 });
 
             modelBuilder.Entity("ecommerce_freshydeli.Entities.OrderDetails", b =>
