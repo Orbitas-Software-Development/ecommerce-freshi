@@ -1,6 +1,6 @@
 ﻿namespace ecommerce_freshydeli.DTOs
 {
-    public class OrderForNotificate
+    public class OrderForNotificateDTO
     {
         public int Id { get; set; }
 

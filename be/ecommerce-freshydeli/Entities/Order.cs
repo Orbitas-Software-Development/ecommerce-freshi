@@ -11,6 +11,10 @@ namespace ecommerce_freshydeli.Entities
 
         public int UserId { get; set; }
 
+        public OrderState OrderState { get; set; }
+
+        public int OrderStateId { get; set; } = 1;
+
         public string Status { get; set; }
 
         public string? BrokenId{ get; set; } = null! ;

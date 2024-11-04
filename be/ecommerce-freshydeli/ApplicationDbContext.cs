@@ -68,5 +68,7 @@ namespace ecommerce_freshydeli
         public DbSet<CustomTheme> CustomTheme { get; set; }
 
         public DbSet<AdminUser> AdminUser { get; set; }
+
+        public DbSet<OrderState> OrderState { get; set; }
     }
 }

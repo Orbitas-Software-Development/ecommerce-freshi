@@ -166,7 +166,7 @@ namespace ecommerce_freshydeli.Controllers
             {
                 Order order= await applicationDbContext.Order.Where(o => o.Id == orderId).Include(o=>o.Branch).ThenInclude(b=>b.Client).FirstOrDefaultAsync();
 
-                order.Status = "Processed";
+                order.OrderStateId = 2;
                 order.notificate = false;
 
                 applicationDbContext.Order.Update(order);

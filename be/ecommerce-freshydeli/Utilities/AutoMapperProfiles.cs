@@ -55,7 +55,7 @@ namespace ecommerce_freshydeli.Utilities
 
             CreateMap<EmailReport, EmailDTO>().ReverseMap();
 
-            CreateMap<Order, OrderForNotificate>().ReverseMap();
+            CreateMap<Order, OrderForNotificateDTO>().ReverseMap();
         }
 
 

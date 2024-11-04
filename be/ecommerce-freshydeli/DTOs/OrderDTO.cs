@@ -8,7 +8,8 @@ namespace ecommerce_freshydeli.DTOs
         public int BranchId { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public string Status { get; set; } = "Pending";
+        public string Status { get; set; }
+        public string OrderStatusId { get; set; }
         public string BrokenId { get; set; } = null!;
         public DateTime DateTime { get; set; } = DateTime.Now;
         public double Total { get; set; }
