@@ -1,5 +1,6 @@
 ﻿using ecommerce_freshydeli.DTOs;
 using ecommerce_freshydeli.Entities;
+using ecommerce_freshydeli.Utilities;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -92,7 +93,24 @@ namespace ecommerce_freshydeli.Services
                 mailMessage.Subject = $"{"Estado Orden de compra"} - {parameters.OrderId}";
 
                 mailMessage.IsBodyHtml = true;
-                mailMessage.Body = GetHtml("ORDER_STATUS", parameters);
+
+                switch (parameters.OrderStatus)
+                {
+                    //orden en estado pendiente
+                    case (int)StatusEnum.accepted:
+                        mailMessage.Body = GetHtml("ORDER_STATUS_ACCEPTED", parameters);
+                        break;
+                    //orden en estado aceptada
+                    case (int)StatusEnum.processed:
+                        mailMessage.Body = GetHtml("ORDER_STATUS_PROCESSED", parameters);
+                        break;
+                    default:
+                        Console.WriteLine($"");
+                        break;
+                }
+
+
+             
 
                 /*  var bytes = Convert.FromBase64String(pdfReport);
                   MemoryStream strm = new MemoryStream(bytes);
@@ -122,8 +140,7 @@ namespace ecommerce_freshydeli.Services
             }
         }
 
-
-     
+          
 
         private static string GetHtml(string document, object parameters)
         {

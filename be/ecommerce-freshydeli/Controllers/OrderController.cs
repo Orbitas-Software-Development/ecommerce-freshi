@@ -193,7 +193,7 @@ namespace ecommerce_freshydeli.Controllers
 
                 DboBranch branch = order.Branch;
 
-                EmailServices.SendOrderStatus(new {  ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, BranchEmail = branch.Email, ClientEmail = branch.Client.Email,Status=order.OrderStatusId});
+                EmailServices.SendOrderStatus(new {  ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, BranchEmail = branch.Email, ClientEmail = branch.Client.Email,OrderStatus=order.OrderStatusId});
 
                 return Ok(order);
             }
