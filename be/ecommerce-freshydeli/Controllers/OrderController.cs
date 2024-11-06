@@ -2,9 +2,11 @@
 using ecommerce_freshydeli.DTOs;
 using ecommerce_freshydeli.Entities;
 using ecommerce_freshydeli.Services;
+using ecommerce_freshydeli.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 
 namespace ecommerce_freshydeli.Controllers
 {
@@ -165,9 +167,25 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
                 Order order= await applicationDbContext.Order.Where(o => o.Id == orderId).Include(o=>o.Branch).ThenInclude(b=>b.Client).FirstOrDefaultAsync();
+              
 
-                order.OrderStatusId = 2;
-                order.notificate = false;
+
+                switch (order.OrderStatusId)
+                {
+                    //orden en estado pendiente
+                    case (int)StatusEnum.Pending:
+                        order.OrderStatusId =2;
+                        break;
+                    //orden en estado aceptada
+                    case (int)StatusEnum.accepted:
+                        order.OrderStatusId = 3;
+                        order.notificate = false;// la orden no se notifica, llegó al estado final
+                        break;
+                    default:
+                        Console.WriteLine($"");
+                        break;
+                }
+
 
                 applicationDbContext.Order.Update(order);
 
@@ -175,11 +193,7 @@ namespace ecommerce_freshydeli.Controllers
 
                 DboBranch branch = order.Branch;
 
-                Console.WriteLine(branch.Email);
-
-                Console.WriteLine(branch.Client.Email);
-
-                EmailServices.SendOrderStatus(new {  ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, BranchEmail = branch.Email, ClientEmail = branch.Client.Email});
+                EmailServices.SendOrderStatus(new {  ClientName = branch.Client.Name, BranchName = branch.Name, OrderId = order.Id, BranchEmail = branch.Email, ClientEmail = branch.Client.Email,Status=order.OrderStatusId});
 
                 return Ok(order);
             }
