@@ -14,6 +14,7 @@ import { validateExistedValue } from "../../../utils/utils";
 import branchStore from "../../../stores/branchesStore";
 export default function AddBranch() {
   const user = getUserInfo();
+  const { companyId } = user;
   //local
   const [branch, setBranch] = useState({});
   const [clients, setClients] = useState([]);
@@ -29,6 +30,7 @@ export default function AddBranch() {
   async function handleData(e) {
     setBranch({
       ...branch,
+      companyId,
       [e.target.name]: e.target.value,
     });
   }
@@ -196,7 +198,24 @@ export default function AddBranch() {
               value={branch?.name || ""}
             />
           </div>
-
+          <div className="mb-5">
+            <label
+              for="email"
+              className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+            >
+              Correo electrónico
+            </label>
+            <input
+              type="text"
+              id="email"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Dígite correo electrónico"
+              required
+              name="email"
+              onChange={(e) => handleData(e)}
+              value={branch?.email || ""}
+            />
+          </div>
           <div class="mb-5">
             <label
               for="phoneNumber"
