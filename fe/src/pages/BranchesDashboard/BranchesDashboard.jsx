@@ -117,7 +117,7 @@ export default function BranchesDashboard() {
       sortable: true,
       center: true,
       wrap: true,
-      selector: (row) => row.client.name,
+      selector: (row) => row.clientDTO.name,
     },
   ];
   const deleteBranch = (branchId) => {
