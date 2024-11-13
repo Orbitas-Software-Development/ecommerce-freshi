@@ -36,7 +36,7 @@ namespace ecommerce_freshydeli.Controllers
 
                 //obtiene si la empresa tiene control de inventario
 
-                FeaturestManagement featurestManagement =await applicationDbContext.FeaturestManagement.AsNoTracking().Where(fm=>fm.CompanyId==orderDTO.CompanyId).FirstOrDefaultAsync();
+                FeaturestManagement featurestManagement =await applicationDbContext.FeaturestManagement.AsNoTracking().Where(fm=>fm.CompanyId==orderDTO.CompanyId && fm.Inventary==true).FirstOrDefaultAsync();
 
                 foreach (var item in orderDetail)
                 {
