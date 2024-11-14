@@ -187,7 +187,7 @@ export default function AssignProduct() {
           id={product.id}
           disabled={product?.added ? false : true}
           autofocus={product?.added ? false : true}
-          className="w-[300px]  m-1 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:enabled:bg-gray-200"
+          className="w-[300px]  m-1 bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5  hover:enabled:bg-gray-200"
           placeholder="Ingrese el precio"
           onChange={(e) => {
             assignPrice(product.id, e.target.value);

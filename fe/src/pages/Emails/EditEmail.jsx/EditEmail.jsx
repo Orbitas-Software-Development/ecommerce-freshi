@@ -200,12 +200,12 @@ export default function EditEmail() {
               )}
               <label
                 for="name"
-                class="block mb-4 text-lg font-medium text-gray-900 dark:text-white"
+                class="block mb-4 text-lg font-medium text-gray-900 "
               >
                 Correo
               </label>
               <input
-                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  mb-2"
                 type="email"
                 required
                 name="email"
@@ -261,12 +261,12 @@ export default function EditEmail() {
             <div className="mb-5">
               <label
                 for="documentName"
-                className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg  font-medium text-gray-900 "
               >
                 Nombre del documento
               </label>
               <input
-                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 id="documentName"
                 value={reportForm?.documentName || ""}
                 type="text"
@@ -284,14 +284,14 @@ export default function EditEmail() {
             <div className="mb-5">
               <label
                 for="subject"
-                className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-lg  font-medium text-gray-900 "
               >
                 Subject del correo
               </label>
               <input
                 id="subject"
                 value={reportForm?.subject || ""}
-                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                 type="text"
                 name="subject"
                 autoComplete="false"

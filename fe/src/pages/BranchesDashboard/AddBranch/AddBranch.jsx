@@ -151,13 +151,13 @@ export default function AddBranch() {
           <div class="mb-5">
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900 "
             >
               Cliente
             </label>
             <select
               required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="clientId"
               onChange={(e) => {
                 e.target.value !== "" && handleData(e);
@@ -191,14 +191,14 @@ export default function AddBranch() {
           <div class="mb-5">
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900 "
             >
               Nombre de Sucursal
             </label>
             <input
               type="text"
               id="name"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Dígite nombre de sucursal"
               required
               name="name"
@@ -209,14 +209,14 @@ export default function AddBranch() {
           <div className="mb-5">
             <label
               for="email"
-              className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg font-medium text-gray-900 "
             >
               Correo electrónico
             </label>
             <input
               type="text"
               id="email"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Dígite correo electrónico"
               required
               name="email"
@@ -227,14 +227,14 @@ export default function AddBranch() {
           <div class="mb-5">
             <label
               for="phoneNumber"
-              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Télefono
             </label>
             <input
               type="text"
               id="phoneNumber"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="phoneNumber"
               required
               onChange={(e) => handleData(e)}
@@ -243,14 +243,14 @@ export default function AddBranch() {
             />
             <label
               for="direction"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Dirección
             </label>
             <input
               type="text"
               id="direction"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="direction"
               required
               onChange={(e) => handleData(e)}
@@ -260,14 +260,14 @@ export default function AddBranch() {
             />
             <label
               for="latitude"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Latitud
             </label>
             <input
               type="number"
               id="latitude"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="latitude"
               required
               onChange={(e) => {
@@ -279,14 +279,14 @@ export default function AddBranch() {
             />
             <label
               for="longitud"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Longitud
             </label>
             <input
               type="number"
               id="longitud"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="longitude"
               required
               onChange={(e) => {

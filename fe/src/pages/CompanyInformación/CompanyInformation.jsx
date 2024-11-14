@@ -120,14 +120,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="provider"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900 "
             >
               Proveedor
             </label>
             <input
               type="text"
               id="provider"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Digíte Proveedor"
               required
               name="provider"
@@ -139,14 +139,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="identifier"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900 "
             >
               Cédula jurídica
             </label>
             <input
               type="text"
               id="identifier"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Digíte Cédula Jurídica"
               required
               name="identifier"
@@ -158,14 +158,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="phone"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900 "
             >
               Teléfono
             </label>
             <input
               type="text"
               id="phone"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Digíte Télefono"
               required
               name="phone"
@@ -177,14 +177,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="email"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Correo electrónico
             </label>
             <input
               type="email"
               id="email"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="email"
               required
               onChange={(e) => handleData(e)}
@@ -196,14 +196,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="phone"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Dirección
             </label>
             <input
               type="text"
               id="direction"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="direction"
               required
               onChange={(e) => handleData(e)}
@@ -215,14 +215,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="phone"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Texto Parametrizable (Órden de Compra)
             </label>
             <textarea
               type="text"
               id="parameterizableText"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="parameterizableText"
               required
               onChange={(e) => handleData(e)}
@@ -234,14 +234,14 @@ export default function CompanyInformation() {
           <div class="mb-5">
             <label
               for="phone"
-              class="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Mensaje de Morosidad (Órden de Compra)
             </label>
             <textarea
               type="text"
               id="latePaymentMessage"
-              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="latePaymentMessage"
               required
               onChange={(e) => handleData(e)}
