@@ -348,7 +348,7 @@ export default function AddUser() {
               type="text"
               id="direction"
               class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-              placeholder="Dígite direction"
+              placeholder="Dígite dirección"
               required
               name="direction"
               onChange={(e) => handleData(e)}
