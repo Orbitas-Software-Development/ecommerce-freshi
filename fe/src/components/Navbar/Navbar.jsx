@@ -1,41 +1,69 @@
 import { React } from "react";
-import { getUserInfo, getName } from "../../utils/localStorage/functions";
+import {
+  getUserInfo,
+  getName,
+  getCompanyLogo,
+  getCustomTheme,
+  getClientLogo,
+  getRole,
+} from "../../utils/localStorage/functions";
 import { useNavigate } from "react-router-dom";
 import TodayGreeting from "../TodayGreeting/TodayGreeting";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import MotionGesture from "../Motion/MotionGesture/MotionGesture";
+//import OrderNotification from "../../pages/OrderNotification/OrderNotification";
 const Navbar = () => {
-  const userLocalStorage = getUserInfo();
-  console.log(getName());
-  const getNavImage = () => {
-    if (userLocalStorage?.branch) {
-      return userLocalStorage?.branch?.client?.company?.pictureBusinessName;
-    }
-    return userLocalStorage?.company?.pictureBusinessName;
-  };
+  //user localhost
+  const user = getUserInfo();
+  const customTheme = getCustomTheme();
   const navigate = useNavigate();
   return (
-    <nav className="h-[8vh]  sticky top-[0rem] bg-green-700 flex items-center justify-between shadow-sm shadow-gray-900 z-10">
+    <nav
+      style={{
+        backgroundColor: customTheme
+          ? customTheme?.primaryColorHex
+          : "bg-gray-400",
+      }}
+      className={`pc:h-[8vh] movil:h-[10.5vh] sticky top-[0rem]  flex items-center justify-between shadow-md shadow-gray-400 z-10`}
+    >
       <div className="flex items-center pl-2">
-        {userLocalStorage && <img src={getNavImage()} width="100" alt="" />}
+        {user && <img src={"Logo_Freshi.jpg"} width="100" alt="" />}
+        {user && (
+          <img
+            className="ml-5 "
+            src={`data:image/png;base64,${getClientLogo()}`}
+            width="100"
+            alt=""
+          />
+        )}
       </div>
       <div className="flex justify-center items-center">
-        <span className="text-primary-50 m-2 pc:text-lg  flex justify-center items-center">
+        <span className="text-primary-50 m-2 pc:text-lg  flex justify-center items-center pc:block movil:hidden">
           <b className="w-full">{getName()}</b>
         </span>
-        <span className="text-primary-50 mr-2 pc:text-lg  flex justify-center items-center">
+        <span className="text-primary-50 mr-4 pc:text-lg  flex justify-center items-center pc:block movil:hidden">
           <TodayGreeting />
         </span>
+        <div className="mr-4">
+          {/*getRole() === "admin" && <OrderNotification />*/}
+        </div>
         <div className="flex justify-center items-center">
-          <button
-            className="mr-4 ml-4 bg-slate-100 rounded-full  py-2 px-3"
-            type="button"
+          <div
+            className="w-10 h-10 p-1 rounded-full  flex justify-center items-center mr-5 ml-2 shadow-xl shadow-green-900/20 ring-4 ring-gray-800/30 border border-black cursor-pointer"
             onClick={() => {
               navigate("/login");
               localStorage.removeItem("storeUser");
             }}
           >
-            <i className="fa-solid fa-right-from-bracket"></i>
-          </button>
+            <MotionGesture>
+              <FontAwesomeIcon
+                className="pc:text-lg movil:text-sm"
+                icon={faRightToBracket}
+                color="#ff4242"
+              />{" "}
+            </MotionGesture>
+          </div>
         </div>
       </div>
     </nav>

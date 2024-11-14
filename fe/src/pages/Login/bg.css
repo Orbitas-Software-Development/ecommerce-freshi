@@ -1,6 +1,12 @@
-.layout {
-  background-image: url("/public/wallpaper.jpg");
+.bg {
+  background-image: url("/wallpaper.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
+}
+.bg-login-img {
+  background-image: url("/checking-boxes.png");
+  background-repeat: no-repeat;
+  background-size: contain;
   background-position: center;
 }

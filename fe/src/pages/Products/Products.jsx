@@ -112,6 +112,18 @@ export default function Products() {
       ),
     },
     {
+      name: "Imagen",
+      center: true,
+      cell: (product) => (
+        <img
+          className="object-cover bg-center rounded-lg border m-1"
+          src={`data:image/png;base64,${product.base64Image}`}
+          alt="product photo"
+          width={"150px"}
+        />
+      ),
+    },
+    {
       name: "Nombre",
       sortable: true,
       center: true,
