@@ -33,5 +33,8 @@ namespace ecommerce_freshydeli.DTOs
 
 
         public int CompanyId { get; set; }
+
+        public string ProfilePicture { get; set; } = "No aplica usuario freshi";
+
     }
 }
