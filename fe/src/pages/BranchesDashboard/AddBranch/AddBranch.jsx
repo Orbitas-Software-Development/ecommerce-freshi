@@ -13,6 +13,14 @@ import RedirectButton from "../../../components/Buttons/RedirectButton/RedirectB
 import { validateExistedValue } from "../../../utils/utils";
 import branchStore from "../../../stores/branchesStore";
 export default function AddBranch() {
+  //solución
+  function preventDot(id) {
+    let str = document.getElementById(id).value;
+    console.log(str);
+    alert(str);
+    document.getElementById(id).value = str.replace(".", "");
+  }
+
   const user = getUserInfo();
   const { companyId } = user;
   //local
@@ -191,7 +199,7 @@ export default function AddBranch() {
               type="text"
               id="name"
               className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Dígite nombre"
+              placeholder="Dígite nombre de sucursal"
               required
               name="name"
               onChange={(e) => handleData(e)}
@@ -257,13 +265,15 @@ export default function AddBranch() {
               Latitud
             </label>
             <input
-              type="text"
+              type="number"
               id="latitude"
               className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="latitude"
               required
-              onChange={(e) => handleData(e)}
-              placeholder="Dígite Latitud"
+              onChange={(e) => {
+                handleData(e);
+              }}
+              placeholder="Dígite latitud"
               autoComplete="off"
               value={branch?.latitude || ""}
             />
@@ -274,19 +284,21 @@ export default function AddBranch() {
               Longitud
             </label>
             <input
-              type="text"
-              id="longitude"
+              type="number"
+              id="longitud"
               className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               name="longitude"
               required
-              onChange={(e) => handleData(e)}
-              placeholder="Dígite longitude"
+              onChange={(e) => {
+                handleData(e);
+              }}
+              placeholder="Dígite longitud"
               autoComplete="off"
               value={branch?.longitude || ""}
             />
             <a
               target="blank"
-              href={`https://www.google.com/maps/@${branch.longitude},${branch.latitude},12.00z?entry=ttu`}
+              href={`https://www.google.com/maps/@${branch.latitude},${branch.longitude},12.00z?entry=ttu`}
               onClick={() => {}}
             >
               <button

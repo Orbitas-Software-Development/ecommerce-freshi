@@ -159,7 +159,7 @@ export default function AddUser() {
           <div class="mb-5">
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Cliente
             </label>
@@ -197,7 +197,7 @@ export default function AddUser() {
             )}
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Sucursal
             </label>
@@ -254,7 +254,7 @@ export default function AddUser() {
             )}
             <label
               for="name"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Email
             </label>
@@ -271,7 +271,7 @@ export default function AddUser() {
             />
             <label
               for="userName"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Usuario
             </label>
@@ -289,7 +289,7 @@ export default function AddUser() {
             />{" "}
             <label
               for="fullName"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Nombre Completo
             </label>
@@ -306,7 +306,7 @@ export default function AddUser() {
             />
             <label
               for="personalIdentification"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Identificación
             </label>
@@ -323,7 +323,7 @@ export default function AddUser() {
             />
             <label
               for="jobtTitle"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Puesto
             </label>
@@ -331,7 +331,7 @@ export default function AddUser() {
               type="text"
               id="jobtTitle"
               class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Dígite nombre"
+              placeholder="Dígite puesto"
               required
               name="jobtTitle"
               onChange={(e) => handleData(e)}
@@ -340,7 +340,7 @@ export default function AddUser() {
             />
             <label
               for="direction"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              class="block mb-2 text-lg font-medium text-gray-900"
             >
               Dirección
             </label>
@@ -348,7 +348,7 @@ export default function AddUser() {
               type="text"
               id="direction"
               class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Dígite puesto"
+              placeholder="Dígite direction"
               required
               name="direction"
               onChange={(e) => handleData(e)}
