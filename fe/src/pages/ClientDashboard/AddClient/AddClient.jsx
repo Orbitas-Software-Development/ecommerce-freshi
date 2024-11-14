@@ -12,7 +12,9 @@ import {
   okResponseModalHandle,
   errorResponseModalHandle,
 } from "../../../utils/http/functions";
-export default function AddClient() {
+import { TextButton } from "../../../components/Button/Button";
+import { faHome, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
+export default function AddClientResco() {
   //global
   const clients = clientStore((state) => state.clients);
   //local
@@ -31,6 +33,7 @@ export default function AddClient() {
   const location = useLocation();
   const data = location.state;
   async function handleData(e) {
+    console.log(client);
     setClient({
       ...client,
       [e.target.name]: e.target.value,
@@ -97,6 +100,7 @@ export default function AddClient() {
 
   useEffect(() => {
     data && setClient(data);
+
     setModalData({
       loading: true,
       text: <>Cargando</>,
@@ -111,6 +115,7 @@ export default function AddClient() {
             `${process.env.REACT_APP_PROD}/getListPriceByCompanyId/${user.company.id}`
           )
           .then((res) => {
+            console.log(client);
             setPriceList(res.data);
           });
         data?.id &&
@@ -118,8 +123,13 @@ export default function AddClient() {
             .get(
               `${process.env.REACT_APP_PROD}/api/ClientPriceList/getClientPriceListByClientId/${data?.id}`
             )
-            .then((res) => {
+            .then(async (res) => {
               setClientPriceList(res.data);
+              //valida lista de precios ya seleccionada
+              await validatePriceList({
+                target: { value: res.data.priceListId, name: "priceListId" },
+              });
+              setClient({ ...data, ["priceListId"]: res.data.priceListId });
             }));
         setModalData({
           loading: false,
@@ -134,7 +144,9 @@ export default function AddClient() {
         });
       });
   }, []);
+  //valida lista de precios cuando se selecciona o viene precargada
   const validatePriceList = async (e) => {
+    console.log(client);
     setModalData({
       loading: true,
       text: <>Validando lista de precios</>,
@@ -160,6 +172,7 @@ export default function AddClient() {
         }
       })
       .catch((e) => {
+        console.log(e);
         errorResponseModalHandle({
           route: "/clientdashboard",
           navigate: navigate,
@@ -167,19 +180,23 @@ export default function AddClient() {
         });
       });
   };
+  useEffect(() => {}, [client]);
+
   return (
     <Layout>
       <SimpleModal data={modalData} />
       <div className="w-full flex flex-col justify-start items-start">
-        <button
-          type="submit"
-          className="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        <TextButton
+          text={"Atras"}
+          bgColor={`bg-blue-700`}
+          hoverBgColor={`hover:bg-blue-700`}
+          hoverTextColor={`hover:text-black`}
+          otherProperties="max-w-[120px] mx-4 my-4"
+          icon={faHome}
           onClick={(e) => {
             navigate("/clientdashboard");
           }}
-        >
-          Atras
-        </button>
+        />
         <div className="w-full">
           <h1 className="mt-4 font-semibold text-3xl text-center">
             Creación de cliente
@@ -190,9 +207,15 @@ export default function AddClient() {
           onSubmit={handleSubmit}
         >
           <div className="mb-5">
+            <label
+              for="name"
+              className="block mb-2 text-lg font-medium text-gray-900 "
+            >
+              Lista de precios
+            </label>
             <select
               required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="priceListId"
               onChange={(e) => {
                 var a = priceList.find(
@@ -214,29 +237,40 @@ export default function AddClient() {
                   </option>
                 )
               )}
-            </select>{" "}
-            {priceListSelected && (
+            </select>
+            {priceList.length === 0 ? (
               <div className="w-full">
                 <RedirectButton
-                  message={"No hay productos asignados para esta lista"}
-                  redirect={"/assignProduct"}
-                  actionMessage={"Asignar productos"}
+                  message={"No hay lista de precios"}
+                  redirect={"/priceList"}
+                  actionMessage={"Crear lista de precios"}
                   state={priceListSelected}
                 />
               </div>
+            ) : (
+              priceListSelected && (
+                <div className="w-full">
+                  <RedirectButton
+                    message={"No hay productos asignados para esta lista"}
+                    redirect={"/assignProduct"}
+                    actionMessage={"Asignar productos"}
+                    state={priceListSelected}
+                  />
+                </div>
+              )
             )}
           </div>
           <div className="mb-5">
             <label
               for="name"
-              className="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg font-medium text-gray-900 "
             >
               Razón Social
             </label>
             <input
               type="text"
               id="name"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               placeholder="Dígite nombre"
               required
               name="name"
@@ -248,17 +282,16 @@ export default function AddClient() {
               value={client?.name || ""}
             />
           </div>{" "}
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="person"
-              class="block mb-2 text-lg font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg font-medium text-gray-900 "
             >
               Tipo identificación
             </label>
             <select
               id="person"
-              required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="personId"
               onChange={(e) => {
                 e.target.value !== "" && handleData(e);
@@ -278,37 +311,37 @@ export default function AddClient() {
               )}
             </select>
           </div>
-          <div class="mb-5">
+          <div className="mb-5">
             <label
               for="Identifier"
-              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 "
             >
               {client?.personId === "1" ? "Cédula Física" : "Cédula Jurídica"}
             </label>
             <input
               type="number"
               id="Identifier"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="identifier"
-              required
               onChange={(e) => handleData(e)}
               placeholder="Dígite identificación"
               min={10000000}
               autoComplete="off"
               value={client?.identifier || ""}
+              required
             />
           </div>
           <div className="mb-5">
             <label
               for="email"
-              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Correo electrónico
             </label>
             <input
               type="email"
               id="email"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="email"
               required
               onChange={(e) => handleData(e)}
@@ -321,14 +354,14 @@ export default function AddClient() {
           <div className="mb-5">
             <label
               for="direction"
-              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Dirección
             </label>
             <input
               type="text"
               id="direction"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="direction"
               required
               onChange={(e) => handleData(e)}
@@ -340,7 +373,7 @@ export default function AddClient() {
           <div className="mb-5">
             <label
               for="phone"
-              className="block mb-2 text-lg  font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-lg  font-medium text-gray-900 "
             >
               Teléfono
             </label>
@@ -348,7 +381,7 @@ export default function AddClient() {
               type="text"
               minLength={7}
               id="phone"
-              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               name="phone"
               required
               onChange={(e) => handleData(e)}
@@ -358,12 +391,14 @@ export default function AddClient() {
             />
           </div>
           <div className="text-center">
-            <button
+            <TextButton
+              text={"Guardar"}
+              hoverTextColor={`hover:text-black`}
+              otherProperties="max-w-[120px] mx-4 my-4"
               type="submit"
-              className="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg   sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Guardar
-            </button>
+              icon={faFloppyDisk}
+              onClick={() => {}}
+            />
           </div>
         </form>
       </div>
