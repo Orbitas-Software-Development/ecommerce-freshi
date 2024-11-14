@@ -12,6 +12,8 @@ import {
   errorResponseModalHandle,
 } from "../../../utils/http/functions";
 export default function AddUser() {
+  //user
+  const { companyId } = getUserInfo();
   //local
   const [branches, setBranches] = useState([]);
   const [clients, setClient] = useState([]);
@@ -64,6 +66,7 @@ export default function AddUser() {
       .post(`${process.env.REACT_APP_PROD}/api/cuentas/register`, {
         ...user,
         ["password"]: user.userName,
+        ["companyId"]: companyId,
       })
       .then((res) => {
         okResponseModalHandle({
