@@ -60,7 +60,7 @@ namespace ecommerce_freshydeli
         public DbSet<Report> Report { get; set; }
         public DbSet<EmailReport> EmailReport { get; set; }
 
-        public DbSet<DboBranch> DboBranch { get; set; }
+     
 
 
         public DbSet<FeaturestManagement> FeaturestManagement { get; set; }
@@ -70,5 +70,10 @@ namespace ecommerce_freshydeli
         public DbSet<AdminUser> AdminUser { get; set; }
 
         public DbSet<OrderStatus> OrderStatus { get; set; }
+
+
+        public DbSet<OssRoles> DboRoles { get; set; }
+        public DbSet<DboBranch> DboBranch { get; set; }
     }
 }
+// Scaffold-DbContext "Server=orbitas.database.windows.net;Database=oss;User=denilsonvr;Password=fCr9z2Z2g5mNLriC4QGT;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir scaffold -t roles

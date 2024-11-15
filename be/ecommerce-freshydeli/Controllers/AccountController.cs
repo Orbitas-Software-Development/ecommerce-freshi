@@ -82,109 +82,49 @@ namespace ecommerce_freshydeli.Controllers
         public async Task<IActionResult> login(LoginDTO loginDTO)
         {
 
+            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Include(u => u.Role).Include(u => u.Company).Include(u => u.Branch).ThenInclude(b => b.Client).FirstOrDefaultAsync();
 
-            //validar si el usuario es administrador
-            var adminUser = await ctx.AdminUser.Where(u => u.Username == loginDTO.userName && u.Password==loginDTO.password).FirstOrDefaultAsync();
-
-            if (adminUser != null)
+            if (user.Role !=null && user.Role.Name=="Administrador")
             {
 
-                //  User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u => u.AspNetUser == null).Where(u => u.CompanyId == loginDTO.companyId).Include(u => u.Company).FirstOrDefaultAsync();
+                    CustomTheme customThemeAdmin = await ctx.CustomTheme.Where(ct => ct.CompanyId == user.CompanyId).FirstOrDefaultAsync();
 
-                User adminUserConfirmed = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Where(u => u.AspNetUser == null).Where(u => u.CompanyId == adminUser.CompanyId).Include(u => u.Company).FirstOrDefaultAsync();
-
-                if (adminUserConfirmed != null)
-                {
-
-                    CustomTheme customThemeAdmin = await ctx.CustomTheme.Where(ct => ct.CompanyId == adminUserConfirmed.CompanyId).FirstOrDefaultAsync();
-
-                    return Ok(new { auth = true, user = adminUserConfirmed,CustomTheme= customThemeAdmin,role = "admin" });
-                }
+                    return Ok(new { auth = true, user = user, CustomTheme= customThemeAdmin,role = "admin" });
 
             }
 
-            User clientUser = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Include(u => u.Company).Include(u => u.Branch).ThenInclude(b => b.Client).FirstOrDefaultAsync();
 
-            ApplicationUserDTO userDTOs = mapper.Map<ApplicationUserDTO>(clientUser);
+            ApplicationUserDTO userDTOs = mapper.Map<ApplicationUserDTO>(user);
 
-           
-            
-            FeaturestManagement featurestManagement = await ctx.FeaturestManagement.Where(fm => fm.CompanyId == clientUser.CompanyId).FirstOrDefaultAsync();
+            FeaturestManagement featurestManagement = await ctx.FeaturestManagement.Where(fm => fm.CompanyId == user.CompanyId).FirstOrDefaultAsync();
 
             userDTOs.FeaturestManagement= featurestManagement;
 
-           
-
-        
-
-
             //Usuarios desactivos
 
-            if (clientUser != null && clientUser.Active == false)
+            if (user != null && user.Active == false)
             {
                 return NotFound();
             }
 
             //Login
 
-            if (clientUser.Branch.Client.isClient == false || clientUser.Branch.isClient == false || clientUser.isClient == false)
+            if (user.Branch.Client.isClient == false || user.Branch.isClient == false || user.isClient == false)
             {
                 return NotFound();
             }
-            CustomTheme customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == clientUser.CompanyId).FirstOrDefaultAsync();
+            CustomTheme customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == user.CompanyId).FirstOrDefaultAsync();
 
             return Ok(new { auth = true, token = "no definido", CustomTheme = customTheme, user = userDTOs, Expiration = "no definido", role = "client" });
 
-            /*  var response = await buildToken(loginDTO);
-
-              if (response.User.Branch.Client.isClient ==false || response.User.Branch.isClient == false || response.User.isClient==false)
-              {
-                  return NotFound();
-              }
-
-
-              return Ok(new { auth = true, token = response.Token, user = response.User, Expiration = response.Expiration, role = "client" });
-
-
-          return NotFound(new { auth = false, message = resultado });*/
         }
 
-       /* private async Task<AuthenticationResponseDTO> buildToken(LoginDTO loginDTO)
-        {
-            ApplicationUser user = await userManager.FindByNameAsync(loginDTO.userName);
-
-
-            ApplicationUserDTO userDTO = mapper.Map<ApplicationUserDTO>(user);
-
-            userDTO.Branch = await ctx.Branch.Where(branch => branch.Id == userDTO.BranchId).Include(b => b.Client).ThenInclude(c => c.Company).SingleAsync();
-
-            var claims = new List<Claim>()
-            {
-                new Claim("userName",loginDTO.userName),
-                new Claim("password",loginDTO.password)
-            };
-            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["keyJwt"]));
-            var creds = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
-
-            var expiracion = DateTime.UtcNow.AddHours(24);
-
-            var securityToken = new JwtSecurityToken(issuer: null, audience: null, claims: claims, expires: expiracion, signingCredentials: creds);
-
-            return new AuthenticationResponseDTO()
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                Expiration = expiracion,
-                User = userDTO
-            };
-
-
-        }*/
 
         [HttpPost("/getUser")]
         public async Task<IActionResult> getUser(LoginDTO loginDTO)
         {
 
-            var resultado = await ctx.Users.Where(u => u.Id == 1).Include(ctx => ctx.Company).SingleOrDefaultAsync();
+            var resultado = await ctx.Users.Where(u => u.Id == 1).Include(ctx => ctx.Company).Include(ctx => ctx.Role).SingleOrDefaultAsync();
 
             return Ok(resultado);
 
