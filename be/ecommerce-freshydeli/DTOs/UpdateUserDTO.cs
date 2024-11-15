@@ -26,7 +26,7 @@ namespace ecommerce_freshydeli.DTOs
         public Boolean? isClient { get; set; } = true;
 
         public string? PhoneNumber { get; set; }
-    
 
+        public string? CompanyId { get; set; }
     }
 }

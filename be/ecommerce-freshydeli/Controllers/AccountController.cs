@@ -172,10 +172,13 @@ namespace ecommerce_freshydeli.Controllers
                 {
                     return NotFound();
                 }
-              //  user.PasswordHash = userManager.PasswordHasher.HashPassword(user, updateUserDTO.Password);
+
+                DboBranch branches = await ctx.DboBranch.Where(b => b.Id == updateUserDTO.BranchId).FirstOrDefaultAsync();
+
+                //  user.PasswordHash = userManager.PasswordHasher.HashPassword(user, updateUserDTO.Password);
                 ossUser.Password = updateUserDTO.Password;
                 ossUser.EmailConfirmed = true;
-                EmailServices.SendUserRegistered(new { email = ossUser.Email, fullName = ossUser.FirstName, user = ossUser.Login, password = ossUser.Login, Action = "update" });
+                EmailServices.SendUserUpdated(new { fullName = ossUser.FirstName, user = ossUser.Login, email = ossUser.Email, password = ossUser.Password, Action = "create", branchName = branches.Name, companyId = ossUser.CompanyId });
                // await userManager.UpdateAsync(user);
 
                 ctx.Users.Update(ossUser);

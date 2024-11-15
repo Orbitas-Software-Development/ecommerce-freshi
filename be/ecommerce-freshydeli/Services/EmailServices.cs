@@ -25,28 +25,50 @@ namespace ecommerce_freshydeli.Services
 
             // mailMessage.CC.Add(new MailAddress("soporte@orbitacr.net"));
 
-            mailMessage.Subject = EmailInfo.GetEmailSubject(parameters.companyId,parameters.branchName);
+            mailMessage.Subject = EmailInfo.GetEmailSubject(parameters.companyId, parameters.branchName);
 
             mailMessage.IsBodyHtml = true;
 
-            
 
-            if (parameters.Action == "update")
-            {
-                mailMessage.Body = GetHtml("USER_UPDATED", parameters);
-            }
-            else
-            {
-                var content = new { fullName = parameters.fullName, content = EmailInfo.GetEmailContent(parameters.companyId, parameters.fullName, parameters.user) };
-                mailMessage.Body = GetHtml("USER_CREATED", content);
-            }
+
+
+
+            var content = new { fullName = parameters.fullName, content = EmailInfo.GetEmailContent(parameters.companyId, parameters.fullName, parameters.user) };
+            mailMessage.Body = GetHtml("USER_CREATED", content);
+
 
             // mailMessage.Attachments.Add(archivoAdjunto);
             SendHtmlEmail(mailMessage);
 
         }
 
-        public static void SendOrder(dynamic parameters, string pdfReport,List<EmailReport> emails,Report report)
+        public static void SendUserUpdated(dynamic parameters)
+        {
+            //fullName = user.FirstName, user = user.Login, email = user.Email, password = user.Login, Action = "create", branchName=branches.Name }
+
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("soporte@orbitacr.net");
+            mailMessage.To.Add(new MailAddress(parameters.email));
+
+            // mailMessage.CC.Add(new MailAddress("soporte@orbitacr.net"));
+
+            mailMessage.Subject = EmailInfo.GetEmailSubject(parameters.companyId, parameters.branchName);
+
+            mailMessage.IsBodyHtml = true;
+
+
+
+
+            mailMessage.Body = GetHtml("USER_UPDATED", parameters);
+
+
+            // mailMessage.Attachments.Add(archivoAdjunto);
+            SendHtmlEmail(mailMessage);
+
+        }
+
+
+        public static void SendOrder(dynamic parameters, string pdfReport, List<EmailReport> emails, Report report)
         {
             try
             {
@@ -67,7 +89,7 @@ namespace ecommerce_freshydeli.Services
 
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Body = GetHtml("ORDER_FRESHI", parameters);
-         
+
                 var bytes = Convert.FromBase64String(pdfReport);
                 MemoryStream strm = new MemoryStream(bytes);
                 //document  name
@@ -143,7 +165,7 @@ namespace ecommerce_freshydeli.Services
             }
         }
 
-          
+
 
         private static string GetHtml(string document, object parameters)
         {
