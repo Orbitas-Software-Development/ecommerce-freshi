@@ -86,7 +86,7 @@ export default function AddUser() {
                   : ""
               }`,
               setModalData,
-              route: "/userdashboard",
+              route: "",
               navigate: navigate,
               time: 3000,
             })

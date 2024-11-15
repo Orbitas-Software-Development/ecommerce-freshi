@@ -49,16 +49,14 @@ export default function UserDashboard() {
       });
   }, []);
 
-  const deleteUser = (clientId, companyId) => {
+  const deleteUser = (userId, companyId) => {
     setModalData({
       loading: true,
       text: <>Eliminando</>,
       icon: "loading",
     });
     axios
-      .delete(
-        `${process.env.REACT_APP_PRO}/deleteUser/${clientId}/${companyId}`
-      )
+      .delete(`${process.env.REACT_APP_PROD}/deleteUser/${userId}/${companyId}`)
       .then((res) => {
         setClients(res.data);
         okResponseModalHandle({
