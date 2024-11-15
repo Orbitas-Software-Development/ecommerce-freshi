@@ -11,9 +11,13 @@ namespace ecommerce_freshydeli.Services
 {
     public class EmailServices
     {
+
+
+
+
         public static void SendUserRegistered(dynamic parameters)
         {
-
+            //fullName = user.FirstName, user = user.Login, email = user.Email, password = user.Login, Action = "create", branchName=branches.Name }
 
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("soporte@orbitacr.net");
@@ -21,18 +25,20 @@ namespace ecommerce_freshydeli.Services
 
             // mailMessage.CC.Add(new MailAddress("soporte@orbitacr.net"));
 
-            mailMessage.Subject = "Registro de usuario";
+            mailMessage.Subject = EmailInfo.GetEmailSubject(parameters.companyId,parameters.branchName);
 
             mailMessage.IsBodyHtml = true;
+
+            
+
             if (parameters.Action == "update")
             {
-
                 mailMessage.Body = GetHtml("USER_UPDATED", parameters);
             }
             else
             {
-                mailMessage.Body = GetHtml("USER_CREATED", parameters);
-
+                var content = new { fullName = parameters.fullName, content = EmailInfo.GetEmailContent(parameters.companyId, parameters.fullName, parameters.user) };
+                mailMessage.Body = GetHtml("USER_CREATED", content);
             }
 
             // mailMessage.Attachments.Add(archivoAdjunto);

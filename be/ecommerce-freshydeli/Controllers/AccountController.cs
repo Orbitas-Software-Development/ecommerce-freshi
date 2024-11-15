@@ -65,9 +65,9 @@ namespace ecommerce_freshydeli.Controllers
 
                 await ctx.SaveChangesAsync();
 
+                DboBranch branches = await ctx.DboBranch.Where(b=>b.Id== registerDto.BranchId).FirstOrDefaultAsync();
 
-
-                EmailServices.SendUserRegistered(new { fullName = user.FirstName, user = user.Login, email = user.Email, password = user.Login, Action = "create" });
+                EmailServices.SendUserRegistered(new { fullName = user.FirstName, user = user.Login, email = user.Email, password = user.Login, Action = "create", branchName=branches.Name,companyId=registerDto.CompanyId });
 
                 return Ok(new { registered = true, user, token = "Por definir", expiration = "Por definir" });
 
