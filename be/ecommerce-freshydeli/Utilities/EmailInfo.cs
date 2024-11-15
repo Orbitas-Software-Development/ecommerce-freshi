@@ -9,9 +9,9 @@
             switch (companyId)
             {
                 case 12:
-                    return $"Cambio en Correo de validación / Asunto: Plataforma de Pedidos FRESHI - Registro de nuevo usuario {branchName}";
+                    return $"Plataforma de Pedidos FRESHI - Registro de nuevo usuario {branchName}";
                 case 38:
-                    return $"Cambio en Correo de validación / Asunto: Plataforma de Pedidos RESCO - Registro de nuevo usuario {branchName}";
+                    return $"Plataforma de Pedidos RESCO - Registro de nuevo usuario {branchName}";
                 default:
                     return "empresa no existe";
             }
