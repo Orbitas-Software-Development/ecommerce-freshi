@@ -22,8 +22,8 @@ export const generatePDF = (orders, companyInfo) => {
   let array = orders.ordersDetails.map((value, index) => {
     return [
       index + 1,
-      value.product["id"],
-      value.product.description,
+      value.product["code"],
+      value.product.name,
       value["boxes"],
       value["units"],
       getCurrencySimbol(orders.currencyId) +
@@ -44,7 +44,7 @@ export const generatePDF = (orders, companyInfo) => {
   var columns = [
     "#",
     "Código",
-    "Descripción",
+    "Nombre",
     "Cajas totales",
     "Unidades totales",
     "Precio/Unidad",
@@ -139,7 +139,7 @@ export const generatePDF = (orders, companyInfo) => {
   doc.text("Dirección: " + getUserInfo().branch?.direction, 14, 94);
   doc.setFontSize(12);
   doc.text("Teléfono: ", 14, 99);
-  doc.text("Teléfono: " + getUserInfo().branch?.phoneNumber, 14, 99);
+  doc.text("Teléfono: " + getUserInfo().branch?.phone, 14, 99);
   doc.text("Solicitudo por: ", 200, 40);
   doc.text("Solicitudo por: " + getUserInfo().fullName, 200, 40);
   doc.text("Firma: ", 200, 45);

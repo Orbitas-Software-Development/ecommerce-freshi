@@ -26,24 +26,24 @@ export const generatePDF = ({
     }
     return parseFloat("0." + porcentage.toString());
   };
-  let array = productsSelected.map((value, index) => {
+  let array = productsSelected.map((product, index) => {
     return [
       index + 1,
-      value["id"],
-      value["description"],
-      value["quantity"],
-      value["unitsPerBox"],
+      product["code"],
+      product["name"],
+      product["quantity"],
+      product["unitsPerBox"],
       getCurrencySimbol(currencyId) +
-        numberWithCommas(value["price"].toFixed(2)),
+        numberWithCommas(product["price"].toFixed(2)),
 
-      value["iva"] + " %",
+      product["iva"] + " %",
       getCurrencySimbol(currencyId) +
         numberWithCommas(
-          value["quantity"] * value["unitsPerBox"] * value["price"] +
-            value["quantity"] *
-              value["unitsPerBox"] *
-              value["price"] *
-              porcentageConverter(value["iva"]).toFixed(2)
+          product["quantity"] * product["unitsPerBox"] * product["price"] +
+            product["quantity"] *
+              product["unitsPerBox"] *
+              product["price"] *
+              porcentageConverter(product["iva"]).toFixed(2)
         ),
     ];
   });
@@ -58,7 +58,7 @@ export const generatePDF = ({
   var columns = [
     "#",
     "Código",
-    "Descripción",
+    "nombre",
     "Cajas totales",
     "Unidades totales",
     "Precio/Unidad",
@@ -145,7 +145,7 @@ export const generatePDF = ({
   doc.text("Dirección: " + getUserInfo().branch?.direction, 14, 94);
   doc.setFontSize(12);
   doc.text("Teléfono: ", 14, 99);
-  doc.text("Teléfono: " + getUserInfo().branch?.phoneNumber, 14, 99);
+  doc.text("Teléfono: " + getUserInfo().branch?.phone, 14, 99);
   doc.text("Solicitudo por: ", 200, 40);
   doc.text("Solicitudo por: " + getUserInfo().fullName, 200, 40);
   doc.text("Firma: ", 200, 45);
