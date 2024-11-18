@@ -83,7 +83,13 @@ export default function BranchesDashboard() {
       wrap: true,
       selector: (row) => row.name,
     },
-
+    {
+      name: "E-mail",
+      sortable: true,
+      center: true,
+      wrap: true,
+      selector: (row) => row.email,
+    },
     {
       name: "Télefono",
       sortable: true,
