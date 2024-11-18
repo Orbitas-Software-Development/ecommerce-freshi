@@ -10,6 +10,14 @@ import {
   okResponseModalHandle,
   errorResponseModalHandle,
 } from "../../../utils/http/functions";
+import { TextButton, IconButton } from "../../../components/Button/Button";
+import {
+  faHome,
+  faFloppyDisk,
+  faPlus,
+  faTrashCan,
+  faPencil,
+} from "@fortawesome/free-solid-svg-icons";
 export default function EditEmail() {
   //localstorage
   let user = getUserInfo();
@@ -32,7 +40,7 @@ export default function EditEmail() {
     e.preventDefault();
     saveReportInfo();
   };
-  const deleteEmail = (id) => {
+  const deleteEmail = (emailToDelete) => {
     if (emails.length === 1) {
       setModalData({
         ...modalData,
@@ -46,11 +54,10 @@ export default function EditEmail() {
       });
     }
     if (emails.length > 1) {
-      let email = emails.filter((email) => email.id !== id);
+      let email = emails.filter((email) => email.email !== emailToDelete);
       setEmails(email);
     }
   };
-  //get Information
 
   //validate emailexisted
   const emailExisted = (e) => {
@@ -130,35 +137,31 @@ export default function EditEmail() {
     {
       name: "Editar",
       cell: (row) => (
-        <button
-          className={`min-w-[100px] py-2 px-4 m-2  ${
-            row?.filter ? `bg-gray-500 ` : `bg-blue-500 hover:bg-blue-600`
-          }  text-white font-bold  rounded-md mx-6 text-lg`}
-          type="button"
-          disabled={row?.filter && true}
+        <IconButton
+          bgColor={`bg-blue-500`}
+          hoverBgColor={`hover:bg-blue-500`}
+          hoverTextColor={`hover:text-black`}
+          otherProperties="w-auto my-1"
+          icon={faPencil}
           onClick={(e) => {
             setOpenForm(true);
             setEditing(true);
             setEmail({ ...row, ["previousEmail"]: row.email });
           }}
-        >
-          Editar
-        </button>
+        />
       ),
     },
     {
       name: "Eliminar",
       cell: (row) => (
-        <button
-          className={`min-w-[100px] py-2 px-4 m-2 ${
-            row?.filter ? `bg-gray-500 ` : `bg-red-500 hover:bg-red-600`
-          }  text-white font-bold  rounded-md mx-6 text-lg`}
-          disabled={row?.filter && true}
-          type="button"
-          onClick={(e) => deleteEmail(row.id)}
-        >
-          Eliminar
-        </button>
+        <IconButton
+          bgColor={`bg-red-500`}
+          hoverBgColor={`hover:bg-red-500`}
+          hoverTextColor={`hover:text-black`}
+          otherProperties=" my-1"
+          icon={faTrashCan}
+          onClick={(e) => deleteEmail(row.email)}
+        />
       ),
     },
   ];
@@ -200,7 +203,7 @@ export default function EditEmail() {
               )}
               <label
                 for="name"
-                class="block mb-4 text-lg font-medium text-gray-900 "
+                className="block mb-4 text-lg font-medium text-gray-900 "
               >
                 Correo
               </label>
@@ -248,15 +251,19 @@ export default function EditEmail() {
           <div className="flex justify-center text-2xl font-semibold">
             <p>Información del correo</p>
           </div>
-          <button
-            type="submit"
-            class="text-white w-[100px] text-lg mx-2 my-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center "
-            onClick={(e) => {
-              navigate("/emails");
-            }}
-          >
-            Atras
-          </button>
+          <div className="flex">
+            <TextButton
+              text={"Atras"}
+              bgColor={`bg-blue-700`}
+              hoverBgColor={`hover:bg-blue-700`}
+              hoverTextColor={`hover:text-black`}
+              otherProperties="max-w-[120px] mx-4 my-4"
+              icon={faHome}
+              onClick={(e) => {
+                navigate("/emails");
+              }}
+            />
+          </div>
           <form onSubmit={handleSubmit} className="border p-5 rounded-md">
             <div className="mb-5">
               <label
@@ -305,12 +312,14 @@ export default function EditEmail() {
               />
             </div>
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="min-w-[200px] text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center "
-              >
-                Guardar
-              </button>
+              <TextButton
+                text={"Guardar"}
+                hoverTextColor={`hover:text-black`}
+                otherProperties="max-w-[120px] mx-4 my-4"
+                icon={faFloppyDisk}
+                type={"submit"}
+                onClick={(e) => {}}
+              />
             </div>
           </form>
         </div>
@@ -321,27 +330,31 @@ export default function EditEmail() {
             </div>
             {reportForm?.id ? (
               <>
-                {" "}
-                <button
-                  type="submit"
-                  className="text-white w-[150px] text-lg mx-2  my-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center "
-                  onClick={(e) => {
-                    setOpenForm(true);
-                  }}
-                >
-                  Agregar <i class="fa-solid fa-plus"></i>
-                </button>
+                <div className="flex">
+                  <TextButton
+                    text={"Agregar"}
+                    bgColor={`bg-blue-700`}
+                    hoverBgColor={`hover:bg-blue-700`}
+                    hoverTextColor={`hover:text-black`}
+                    otherProperties="max-w-[120px] mx-4 my-4"
+                    icon={faPlus}
+                    onClick={(e) => {
+                      setOpenForm(true);
+                    }}
+                  />
+                </div>
                 <div className="border  rounded-md">
                   <Table columns={columns} data={emails} />
 
                   <div className="flex justify-center border-t p-5">
-                    <button
-                      type="submit"
-                      className="min-w-[200px]  text-white  text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center "
+                    <TextButton
+                      text={"Guardar"}
+                      hoverTextColor={`hover:text-black`}
+                      otherProperties="max-w-[120px] mx-4 my-4"
+                      icon={faFloppyDisk}
+                      type={"submit"}
                       onClick={saveReportInfo}
-                    >
-                      Guardar
-                    </button>
+                    />
                   </div>
                 </div>
               </>

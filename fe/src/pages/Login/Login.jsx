@@ -116,7 +116,7 @@ const Login = () => {
                 id="userName"
                 type="text"
                 name="userName"
-                placeholder="Usuario"
+                placeholder="Dígite su usuario"
                 onChange={handleData}
                 required
                 autoComplete="off"
