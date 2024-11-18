@@ -1,10 +1,12 @@
-import { React, useState } from "react";
+import { React, useState, Fragment } from "react";
 import Layout from "../../components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { getUserInfo } from "../../utils/localStorage/functions";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
+import { TextButton } from "../../components/Button/Button";
+import { faHome, faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 export default function UpdatePassword() {
   const [password, setPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,9 +24,11 @@ export default function UpdatePassword() {
   const updatePasword = () => {
     setLoading(true);
     axios
-      .post(`${process.env.REACT_APP_PROD}/updateuser`, {
+      .post(`${process.env.REACT_APP_PROD}/api/cuentas/updateuser`, {
         ...password,
         ["id"]: getUserInfo().id,
+        ["companyId"]: getUserInfo().branch.companyId,
+        ["branchId"]: getUserInfo().branchId,
       })
       .then((res) => {
         toast("Clave actualizada");
@@ -41,51 +45,68 @@ export default function UpdatePassword() {
     <Layout>
       <div className="w-full flex flex-col justify-start items-start">
         <ToastContainer position="bottom-center" />{" "}
-        <button
-          type="submit"
-          class="text-white w-[100px] text-lg m-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  sm:w-auto px-5 py-2.5 text-center "
+        <TextButton
+          text={"Atras"}
+          bgColor={`bg-blue-700`}
+          hoverBgColor={`hover:bg-blue-700`}
+          hoverTextColor={`hover:text-black`}
+          otherProperties="max-w-[120px] mx-4 my-4"
+          icon={faHome}
           onClick={(e) => {
             navigate("/login");
           }}
-        >
-          Atras
-        </button>
+        />
         <div className="w-full">
           <h1 className="mt-4 font-semibold text-3xl text-center">
             Actualización de Contraseña
           </h1>
         </div>
         <form
-          class="w-96 mx-auto mt-4 border rounded-md p-8"
+          className="w-96 mx-auto mt-4 border rounded-md p-8"
           onSubmit={handleSubmit}
         >
           <label
             for="password"
-            class="block mb-2 text-lg font-medium text-gray-900"
+            className="block mb-2 text-lg font-medium text-gray-900"
           >
             Nueva contraseña
           </label>
           <input
             type="password"
             id="password"
-            class="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+            className="bg-gray-50 border text-lg  border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             placeholder="Dígite su clave"
             required
             name="password"
             onChange={(e) => handleData(e)}
             minLength={6}
           />
-          <button
+
+          <TextButton
             disabled={loading}
+            text={
+              loading ? (
+                <div className="flex items-center">
+                  <Fragment>
+                    <p className=" mr-1">Actualizar</p>
+                    <FontAwesomeIcon
+                      icon={faCircleNotch}
+                      size="lg"
+                      spin={true}
+                    />
+                  </Fragment>
+                </div>
+              ) : (
+                "Actualizando"
+              )
+            }
+            bgColor={`bg-blue-700`}
+            hoverBgColor={`hover:bg-blue-700`}
+            hoverTextColor={`hover:text-black`}
+            otherProperties="mt-4"
             type="submit"
-            class="text-white mt-4 text-lg  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  w-full sm:w-auto px-5 py-2.5 text-center "
-          >
-            {loading ? (
-              <i class="fa-solid fa-hourglass-half fa-bounce"></i>
-            ) : (
-              "Guardar"
-            )}
-          </button>
+            onClick={() => {}}
+          />
         </form>
       </div>
     </Layout>
