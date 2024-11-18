@@ -42,11 +42,9 @@ export const getCustomTheme = () => {
 
 export const getCompanyLogo = () => {
   try {
-    let userLocalStorage = JSON.parse(localStorage.getItem("user"));
-    if (userLocalStorage?.branch) {
-      return userLocalStorage?.branch?.client?.company?.pictureBusinessName;
-    }
-    return userLocalStorage?.company?.pictureBusinessName;
+    let companyLogo = localStorage.getItem("companyLogo");
+
+    return companyLogo;
   } catch (e) {
     return "";
   }

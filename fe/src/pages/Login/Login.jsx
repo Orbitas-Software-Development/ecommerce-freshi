@@ -29,15 +29,13 @@ const Login = () => {
     try {
       if (response?.user.branch) {
         await getBase64ImageFromUrl(
-          response.user.branch.client.company.pictureBusinessName
+          response.user.branch.client.company.logo
         ).then((img) => {
           console.log(img);
           saveCompanyLogoBase64(img);
         });
       }
-      await getBase64ImageFromUrl(
-        response.user.company.pictureBusinessName
-      ).then((img) => {
+      await getBase64ImageFromUrl(response.user.company.logo).then((img) => {
         console.log(img);
         saveCompanyLogoBase64(img);
       });
@@ -84,7 +82,7 @@ const Login = () => {
             {userLocalStorage && (
               <img
                 className="pc:block movil:hidden"
-                src={"Logo_Freshi.jpg"}
+                src={getCompanyLogo()}
                 width="250"
                 alt=""
               />

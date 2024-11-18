@@ -14,8 +14,6 @@ import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import MotionGesture from "../Motion/MotionGesture/MotionGesture";
 //import OrderNotification from "../../pages/OrderNotification/OrderNotification";
 const Navbar = () => {
-  //user localhost
-  const user = getUserInfo();
   const customTheme = getCustomTheme();
   const navigate = useNavigate();
   return (
@@ -28,15 +26,7 @@ const Navbar = () => {
       className={`pc:h-[8vh] movil:h-[10.5vh] sticky top-[0rem]  flex items-center justify-between shadow-md shadow-gray-400 z-10`}
     >
       <div className="flex items-center pl-2">
-        {user && <img src={"Logo_Freshi.jpg"} width="100" alt="" />}
-        {user && (
-          <img
-            className="ml-5 "
-            src={`data:image/png;base64,${getClientLogo()}`}
-            width="100"
-            alt=""
-          />
-        )}
+        {<img src={getCompanyLogo()} width="100" alt="" />}
       </div>
       <div className="flex justify-center items-center">
         <span className="text-primary-50 m-2 pc:text-lg  flex justify-center items-center pc:block movil:hidden">
