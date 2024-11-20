@@ -28,5 +28,7 @@
 
         public string? PriceListName { get; set; }
 
+        public string? ClientCode { get; set; }
+
     }
 }

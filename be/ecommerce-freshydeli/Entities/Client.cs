@@ -32,6 +32,6 @@
 
         public string? logoBase64 { get; set; }
 
-
+        public string? ClientCode { get; set; }
     }
 }

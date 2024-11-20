@@ -24,5 +24,6 @@
         public string? Email { get; set; } = "No definido";
 
         public string? LocationUrl { get; set; }
+      
     }
 }
