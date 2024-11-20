@@ -67,6 +67,7 @@ namespace ecommerce_freshydeli.Controllers
                 List<EmailReport> emailReports = await ctx.EmailReport.Where(e => e.ReportId == reportEmailDTO.Report.Id).ToListAsync();
                 ctx.EmailReport.RemoveRange(emailReports);
                 await ctx.SaveChangesAsync();
+
                 //Agrega correos
                 List<EmailReport> EmailReport = mapper.Map<List<EmailReport>>(reportEmailDTO.Emails);
                 ctx.EmailReport.AddRange(EmailReport);

@@ -24,5 +24,8 @@ namespace ecommerce_freshydeli.Entities
 
         public Boolean isClient { get; set; } = true;
 
+
+        public string? LocationUrl { get; set; } 
+
     }
 }
