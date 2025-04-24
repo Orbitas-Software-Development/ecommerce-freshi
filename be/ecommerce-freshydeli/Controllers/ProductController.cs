@@ -189,6 +189,25 @@ namespace ecommerce_freshydeli.Controllers
             }
         }
 
- 
+        [HttpPut("updateStock")]
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDTO dto)
+        {
+            var product = await Context.Product.FirstOrDefaultAsync(p => p.Id == dto.ProductId);
+
+            if (product == null)
+            {
+                return NotFound($"Producto con ID {dto.ProductId} no encontrado.");
+            }
+
+            product.Stock = dto.NewStock;
+
+            Context.Product.Update(product);
+            await Context.SaveChangesAsync();
+
+            return Ok(new { message = "Stock actualizado correctamente", productId = product.Id, newStock = product.Stock });
+        }
+
+
+
     }
 }
