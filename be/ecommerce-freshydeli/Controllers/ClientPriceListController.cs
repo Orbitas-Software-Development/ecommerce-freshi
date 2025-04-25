@@ -27,7 +27,7 @@ namespace ecommerce_freshydeli.Controllers
 
             try
             {
-                ClientPriceList ClientPriceList = await ctx.ClientPriceList.Where(pl => pl.ClientId == clientId).Include(cp=>cp.PriceList).FirstOrDefaultAsync();
+                ClientPriceList ClientPriceList = await ctx.ClientPriceList.AsNoTracking().Where(pl => pl.ClientId == clientId).Include(cp=>cp.PriceList).FirstOrDefaultAsync();
                 return Ok(ClientPriceList);
             }
             catch (Exception ex)

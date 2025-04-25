@@ -107,9 +107,9 @@ namespace ecommerce_freshydeli.Controllers
             try
             {
 
-                ClientPriceList clientPriceList = await ctx.ClientPriceList.Where(b => b.ClientId == clientId).SingleOrDefaultAsync();
+                ClientPriceList clientPriceList = await ctx.ClientPriceList.AsNoTracking().Where(b => b.ClientId == clientId).SingleOrDefaultAsync();
 
-                List<PriceListProduct> listPriceProduct = await ctx.PriceListProduct.Where(l => l.PriceListId == clientPriceList.PriceListId).Include(lp => lp.Product).Include(lp => lp.Product.Iva).Include(lp => lp.Product.Currency).ToListAsync();
+                List<PriceListProduct> listPriceProduct = await ctx.PriceListProduct.AsNoTracking().Where(l => l.PriceListId == clientPriceList.PriceListId).Include(lp => lp.Product).Include(lp => lp.Product.Iva).Include(lp => lp.Product.Currency).ToListAsync();
 
                 return Ok(listPriceProduct);
             }

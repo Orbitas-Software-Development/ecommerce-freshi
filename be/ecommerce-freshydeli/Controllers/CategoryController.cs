@@ -20,7 +20,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Category> categories = await ctx.Category.Where(c => c.CompanyId == companyId).ToListAsync();
+                List<Category> categories = await ctx.Category.AsNoTracking().Where(c => c.CompanyId == companyId).ToListAsync();
                 return Ok(categories);
 
 
