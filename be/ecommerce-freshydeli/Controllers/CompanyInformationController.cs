@@ -21,7 +21,7 @@ namespace ecommerce_freshydeli.Controllers
         public  async Task<IActionResult> GetInformation(int CompanyId)
         {
 
-            CompanyInformation companyInformation=await context.CompanyInformation.Where(ci=>ci.CompanyId==CompanyId).FirstOrDefaultAsync();
+            CompanyInformation companyInformation=await context.CompanyInformation.AsNoTracking().Where(ci=>ci.CompanyId==CompanyId).FirstOrDefaultAsync();
             if(companyInformation==null)
             {
                 return BadRequest(new { information=false});
