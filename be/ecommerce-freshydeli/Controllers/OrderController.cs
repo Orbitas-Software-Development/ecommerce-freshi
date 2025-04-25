@@ -124,7 +124,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             try
             {
-                List<Order> orders = await applicationDbContext.Order.Where(order => order.BranchId == branchId).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(p=>p.Currency).OrderByDescending(o=>o.CreatedDate).ToListAsync();
+                List<Order> orders = await applicationDbContext.Order.AsNoTracking().Where(order => order.BranchId == branchId).Include(ctx => ctx.OrdersDetails).ThenInclude(x => x.Product).ThenInclude(p=>p.Currency).OrderByDescending(o=>o.CreatedDate).ToListAsync();
                 return Ok(orders);
             }
             catch (Exception ex)
