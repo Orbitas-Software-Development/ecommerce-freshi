@@ -11,7 +11,7 @@ namespace ecommerce_freshydeli.Controllers
         {
             this.applicationDbContext = applicationDbContext;
         }
-
+        /*
         [HttpGet("getDashboardTotals")]
         public async Task<IActionResult> GetDashboardTotals(
             int departmentId,
@@ -42,6 +42,6 @@ namespace ecommerce_freshydeli.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
     }
 }

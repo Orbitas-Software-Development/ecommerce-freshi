@@ -175,10 +175,12 @@ namespace ecommerce_freshydeli.Controllers
                     //orden en estado pendiente
                     case (int)StatusEnum.Pending:
                         order.OrderStatusId =2;
+                        order.Status = "Accepted";
                         break;
                     //orden en estado aceptada
                     case (int)StatusEnum.accepted:
                         order.OrderStatusId = 3;
+                        order.Status = "Processed";
                         order.notificate = false;// la orden no se notifica, llegó al estado final
                         break;
                     default:
