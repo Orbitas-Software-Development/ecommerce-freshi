@@ -81,43 +81,71 @@ namespace ecommerce_freshydeli.Controllers
         [HttpPost("/login")]
         public async Task<IActionResult> login(LoginDTO loginDTO)
         {
+            // Empezamos la consulta con la búsqueda de usuario por nombre de usuario y contraseña
+            var query = ctx.Users.AsQueryable();
 
-            User user = await ctx.Users.Where(u => u.Password == loginDTO.password).Where(u => u.Login == loginDTO.userName).Include(u => u.Role).Include(u => u.Company).Include(u => u.Branch).ThenInclude(b => b.Client).FirstOrDefaultAsync();
-
-            if (user.Role !=null && user.Role.Name=="Administrador")
+            // Si el PIN de la empresa está presente, también se filtra por el PIN
+            if (!string.IsNullOrEmpty(loginDTO.CompanyPin))
             {
-
-                    CustomTheme customThemeAdmin = await ctx.CustomTheme.Where(ct => ct.CompanyId == user.CompanyId).FirstOrDefaultAsync();
-
-                    return Ok(new { auth = true, user = user, CustomTheme= customThemeAdmin,role = "admin" });
-
+                query = query.Where(u => u.Company.PrivatePin == loginDTO.CompanyPin);
             }
 
+            // Buscamos al usuario por el nombre de usuario y la contraseña
+            User user = await query
+                .Where(u => u.Password == loginDTO.password)
+                .Where(u => u.Login == loginDTO.userName)
+                .Include(u => u.Role)
+                .Include(u => u.Company)
+                .Include(u => u.Branch)
+                    .ThenInclude(b => b.Client)
+                .FirstOrDefaultAsync();
 
+            // Si no se encuentra el usuario, devolvemos NotFound
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Si el rol es Administrador, devolvemos la respuesta correspondiente
+            if (user.Role != null && user.Role.Name == "Administrador")
+            {
+                CustomTheme customThemeAdmin = await ctx.CustomTheme
+                    .Where(ct => ct.CompanyId == user.CompanyId)
+                    .FirstOrDefaultAsync();
+
+                return Ok(new { auth = true, user = user, CustomTheme = customThemeAdmin, role = "admin" });
+            }
+
+            // Mapear el usuario a ApplicationUserDTO
             ApplicationUserDTO userDTOs = mapper.Map<ApplicationUserDTO>(user);
 
-            FeaturestManagement featurestManagement = await ctx.FeaturestManagement.Where(fm => fm.CompanyId == user.CompanyId).FirstOrDefaultAsync();
+            // Buscar configuraciones adicionales
+            FeaturestManagement featurestManagement = await ctx.FeaturestManagement
+                .Where(fm => fm.CompanyId == user.CompanyId)
+                .FirstOrDefaultAsync();
 
-            userDTOs.FeaturestManagement= featurestManagement;
+            userDTOs.FeaturestManagement = featurestManagement;
 
-            //Usuarios desactivos
-
-            if (user != null && user.Active == false)
+            // Verificar si el usuario está desactivado
+            if (!user.Active)
             {
                 return NotFound();
             }
 
-            //Login
-
-            if (user.Branch.Client.isClient == false || user.Branch.isClient == false || user.isClient == false)
+            // Verificar si el usuario o sus entidades relacionadas están desactivadas
+            if (user.Branch.Client != null && !user.Branch.Client.isClient || !user.Branch.isClient || !user.isClient)
             {
                 return NotFound();
             }
-            CustomTheme customTheme = await ctx.CustomTheme.Where(ct => ct.CompanyId == user.CompanyId).FirstOrDefaultAsync();
+
+            // Recuperar el tema personalizado
+            CustomTheme customTheme = await ctx.CustomTheme
+                .Where(ct => ct.CompanyId == user.CompanyId)
+                .FirstOrDefaultAsync();
 
             return Ok(new { auth = true, token = "no definido", CustomTheme = customTheme, user = userDTOs, Expiration = "no definido", role = "client" });
-
         }
+
 
 
         [HttpPost("/getUser")]

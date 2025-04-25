@@ -11,5 +11,6 @@ namespace ecommerce_freshydeli.DTOs
         public string password { get; set; }
         [Required]
         public int companyId { get; set; }
+        public string? CompanyPin { get; set; }
     }
 }
