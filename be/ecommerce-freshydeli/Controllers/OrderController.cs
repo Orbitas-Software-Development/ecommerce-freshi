@@ -205,5 +205,52 @@ namespace ecommerce_freshydeli.Controllers
             }
         }
 
+        [HttpPost("RejectOrder/{orderId}")]
+        public async Task<IActionResult> RejectOrder(int orderId)
+        {
+            Console.WriteLine($"Rechazando orden {orderId}");
+            try
+            {
+                Order order = await applicationDbContext.Order
+                    .Where(o => o.Id == orderId)
+                    .Include(o => o.Branch)
+                        .ThenInclude(b => b.Client)
+                    .FirstOrDefaultAsync();
+
+                if (order == null)
+                    return NotFound("Orden no encontrada.");
+
+                // Solo se permite rechazar si está en estado pendiente
+                if (order.OrderStatusId != (int)StatusEnum.Pending)
+                    return BadRequest("Solo se pueden rechazar órdenes en estado pendiente.");
+
+                order.OrderStatusId = 4; // Rechazada
+                order.Status = "Rejected";
+                order.notificate = false; // Asumo que también se aplica aquí
+
+                applicationDbContext.Order.Update(order);
+                await applicationDbContext.SaveChangesAsync();
+
+                DboBranch branch = order.Branch;
+
+                EmailServices.SendOrderStatus(new
+                {
+                    ClientName = branch.Client.Name,
+                    BranchName = branch.Name,
+                    OrderId = order.Id,
+                    BranchEmail = branch.Email,
+                    ClientEmail = branch.Client.Email,
+                    OrderStatus = order.OrderStatusId
+                });
+
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
     }
 }
